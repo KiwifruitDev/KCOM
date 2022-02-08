@@ -1,7 +1,5 @@
 ﻿using KiwisCoOpModCore;
 using DiscordRPC;
-using WebSocketSharp;
-using WebSocketSharp.Server;
 
 namespace DiscordRpcPlugin
 {

@@ -67,6 +67,7 @@
             this.labelClientIpAddress = new System.Windows.Forms.Label();
             this.checkBoxClientEnabled = new System.Windows.Forms.CheckBox();
             this.labelClient = new System.Windows.Forms.Label();
+            this.buttonServerChangeMap = new System.Windows.Forms.Button();
             this.numericUpDownServerPort = new System.Windows.Forms.NumericUpDown();
             this.textBoxServerMap = new System.Windows.Forms.TextBox();
             this.labelServerMap = new System.Windows.Forms.Label();
@@ -93,7 +94,7 @@
             this.textBoxInput = new System.Windows.Forms.TextBox();
             this.buttonStart = new System.Windows.Forms.Button();
             this.buttonCommandType = new System.Windows.Forms.Button();
-            this.buttonServerChangeMap = new System.Windows.Forms.Button();
+            this.trelloFAQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitConfig)).BeginInit();
             this.splitConfig.Panel1.SuspendLayout();
@@ -248,6 +249,7 @@
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.trelloFAQToolStripMenuItem,
             this.discordToolStripMenuItem,
             this.gitHubToolStripMenuItem,
             this.steamWorkshopToolStripMenuItem});
@@ -473,6 +475,16 @@
             this.labelClient.TabIndex = 1;
             this.labelClient.Text = "Client:";
             // 
+            // buttonServerChangeMap
+            // 
+            this.buttonServerChangeMap.Location = new System.Drawing.Point(328, 104);
+            this.buttonServerChangeMap.Name = "buttonServerChangeMap";
+            this.buttonServerChangeMap.Size = new System.Drawing.Size(56, 23);
+            this.buttonServerChangeMap.TabIndex = 32;
+            this.buttonServerChangeMap.Text = "Change";
+            this.buttonServerChangeMap.UseVisualStyleBackColor = true;
+            this.buttonServerChangeMap.Click += new System.EventHandler(this.buttonServerChangeMap_Click);
+            // 
             // numericUpDownServerPort
             // 
             this.numericUpDownServerPort.Location = new System.Drawing.Point(206, 44);
@@ -586,6 +598,7 @@
             // 
             // textBoxServerIpAddress
             // 
+            this.textBoxServerIpAddress.Enabled = false;
             this.textBoxServerIpAddress.Location = new System.Drawing.Point(71, 43);
             this.textBoxServerIpAddress.Name = "textBoxServerIpAddress";
             this.textBoxServerIpAddress.Size = new System.Drawing.Size(91, 23);
@@ -696,15 +709,12 @@
             this.buttonCommandType.UseVisualStyleBackColor = true;
             this.buttonCommandType.Click += new System.EventHandler(this.buttonCommandType_Click);
             // 
-            // buttonServerChangeMap
+            // trelloFAQToolStripMenuItem
             // 
-            this.buttonServerChangeMap.Location = new System.Drawing.Point(328, 104);
-            this.buttonServerChangeMap.Name = "buttonServerChangeMap";
-            this.buttonServerChangeMap.Size = new System.Drawing.Size(56, 23);
-            this.buttonServerChangeMap.TabIndex = 32;
-            this.buttonServerChangeMap.Text = "Change";
-            this.buttonServerChangeMap.UseVisualStyleBackColor = true;
-            this.buttonServerChangeMap.Click += new System.EventHandler(this.buttonServerChangeMap_Click);
+            this.trelloFAQToolStripMenuItem.Name = "trelloFAQToolStripMenuItem";
+            this.trelloFAQToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.trelloFAQToolStripMenuItem.Text = "Trello (F.A.Q.)";
+            this.trelloFAQToolStripMenuItem.Click += new System.EventHandler(this.trelloFAQToolStripMenuItem_Click);
             // 
             // UserInterface
             // 
@@ -811,5 +821,6 @@
         private ToolStripStatusLabel toolStripStatusLabelLibraries;
         private ToolStripMenuItem uPnPToolStripMenuItem;
         private Button buttonServerChangeMap;
+        private ToolStripMenuItem trelloFAQToolStripMenuItem;
     }
 }

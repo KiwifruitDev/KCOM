@@ -21,9 +21,18 @@ namespace AlyxGamemode
                 switch (type)
                 {
                     case GamemodeHandleType.ClientClose:
-                        List<IndexedClient> closeConnections = (List<IndexedClient>)vs[0];
-                        IWebSocketConnection closeSocket = (IWebSocketConnection)vs[1];
-                        AlyxGlobalData.instance.RemovePlayer(closeSocket.ConnectionInfo.Id);
+                        if (vs != null)
+                        {
+                            List<IndexedClient> closeConnections = (List<IndexedClient>)vs[0];
+                            IWebSocketConnection closeSocket = (IWebSocketConnection)vs[1];
+                            Player? player = AlyxGlobalData.instance.GetPlayer(closeSocket.ConnectionInfo.Id);
+                            if (player != null)
+                            {
+                                Response disconnect = new Response("status", player.Client.Username + " disconnected");
+                                AlyxGlobalData.instance.RemovePlayer(closeSocket.ConnectionInfo.Id);
+                                closeConnections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(disconnect)));
+                            }
+                        }
                         break;
                     case GamemodeHandleType.PreResponse:
                         if (vs != null)
@@ -38,7 +47,7 @@ namespace AlyxGamemode
                                     {
                                         if (response.data.Contains("has joined the game"))
                                         {
-                                            Response vconsoleInput = new Response("command", "sv_cheats 1;echo INIT KCOM");
+                                            Response vconsoleInput = new Response("command", "addon_enable 2739356543;sv_cheats 1;echo INIT KCOM");
                                             socket.Send(JsonConvert.SerializeObject(vconsoleInput));
                                         }
                                         else if (response.data.Contains("KCOM"))

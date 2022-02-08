@@ -141,6 +141,45 @@ namespace KiwisCoOpMod
             if(!Settings.Default.ClickedUPnP)
                 AskUPnP(true);
         }
+        public void UseUriScheme(Uri uri)
+        {
+            string[] args = uri.ToString().Replace("kcom://", "").Split("/");
+            if (args.Length > 0)
+                UseArgs(args);
+        }
+        public void UseArgs(string[] args)
+        {
+            if (args.Length >= 2)
+            {
+                switch (args[0].ToLower())
+                {
+                    case "connect":
+                        string[] ipPort = args[1].Split(":");
+                        Settings.Default.ClientEnabled = true;
+                        checkBoxClientEnabled.Checked = true;
+                        Settings.Default.ServerEnabled = false;
+                        checkBoxServerEnabled.Checked = false;
+                        Settings.Default.ClientIpAddress = ipPort[0];
+                        textBoxClientIpAddress.Text = ipPort[0];
+                        if (ipPort.Length > 1)
+                        {
+                            Settings.Default.ClientPort = int.Parse(ipPort[1]);
+                            numericUpDownClientPort.Value = int.Parse(ipPort[1]);
+                        }
+                        if(args.Length >= 3)
+                        {
+                            Settings.Default.ClientPassword = args[2];
+                            textBoxClientPassword.Text = args[2];
+                        }
+                        else
+                        {
+                            Settings.Default.ClientPassword = "";
+                            textBoxClientPassword.Text = "";
+                        }
+                        break;
+                }
+            }
+        }
         private void Exit(object? sender, EventArgs e)
         {
             Settings.Default.Save();
@@ -159,7 +198,6 @@ namespace KiwisCoOpMod
                     ServerProgram.instance.Start(gamemodeType, plugins);
                 if (checkBoxClientEnabled.Checked)
                 {
-                    clientProgram.chances = 0; //Settings.Default.ClientAutomaticallyReconnect ? 2 : 0;
                     clientProgram.Start(plugins);
                 }
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PostStart, this);
@@ -169,7 +207,6 @@ namespace KiwisCoOpMod
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PreClose, this);
                 buttonStart.Text = "Start";
                 SetStatus(Color.Red, "Inactive");
-                clientProgram.chances = 0;
                 ServerProgram.instance.Close();
                 clientProgram.Close();
                 started = false;
@@ -540,6 +577,11 @@ namespace KiwisCoOpMod
         private void buttonServerChangeMap_Click(object sender, EventArgs e)
         {
             ServerProgram.instance.ChangeMap(Settings.Default.ServerMap);
+        }
+
+        private void trelloFAQToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://trello.com/b/2xYfYklG/kiwis-co-op-mod-for-half-life-alyx-kcom") { UseShellExecute = true });
         }
     }
 }

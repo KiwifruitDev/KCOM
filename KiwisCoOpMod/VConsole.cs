@@ -7,13 +7,13 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
-using WebSocketSharp;
+using Websocket.Client;
 
 namespace KiwisCoOpMod
 {
     public class VConsole
     {
-        private WebSocket? ws;
+        private WebsocketClient? ws;
         private TcpClient? client;
         private NetworkStream? stream;
         private bool killed = false;
@@ -22,7 +22,7 @@ namespace KiwisCoOpMod
         private UserInterface? ui;
         private int vcAmount;
         private Channel channel = new Channel("VC", Color.Brown);
-        public VConsole(WebSocket ws, UserInterface ui)
+        public VConsole(WebsocketClient ws, UserInterface ui)
         {
             try
             {
@@ -40,7 +40,6 @@ namespace KiwisCoOpMod
                 ui.Invoke(() =>
                 {
                     ui.LogToOutput(channel, "Could not connect to VConsole:", ex.Message);
-                    ui.clientProgram.chances = 0;
                     ui.clientProgram.Close();
                     killed = true;
                 });

@@ -1,5 +1,4 @@
-﻿using WebSocketSharp;
-using KiwisCoOpModCore;
+﻿using KiwisCoOpModCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;

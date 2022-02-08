@@ -6,7 +6,7 @@
     <Nullable>enable</Nullable>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
-	  <Version>2.0.0.0</Version>
+	  <Version>2.0.0.1</Version>
 	  <Product>Kiwi's Co-Op Mod - Half-Life: Alyx Gamemode</Product>
 	  <Copyright>© 2022 KiwifruitDev</Copyright>
 	  <Description>Play Half-Life: Alyx cooperatively with up to 16 players!</Description>
@@ -22,7 +22,6 @@
 	</Target>
 	<ItemGroup>
 	  <PackageReference Include="Fleck" Version="1.2.0" />
-	  <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\KiwisCoOpModCore\KiwisCoOpModCore.csproj" />

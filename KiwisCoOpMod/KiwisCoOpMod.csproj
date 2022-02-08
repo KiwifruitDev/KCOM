@@ -12,7 +12,7 @@
     <RootNamespace>KiwisCoOpMod</RootNamespace>
     <IsPublishable>False</IsPublishable>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <Version>2.0.0.0</Version>
+    <Version>2.0.0.1</Version>
     <Product>Kiwi's Co-Op Mod for Half-Life: Alyx</Product>
     <Copyright>© 2022 KiwifruitDev</Copyright>
     <Description>Play Half-Life: Alyx cooperatively with up to 16 players!</Description>
@@ -29,7 +29,7 @@
     <PackageReference Include="Fleck" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="Open.Nat" Version="2.1.0" />
-    <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
+    <PackageReference Include="Websocket.Client" Version="4.4.43" />
   </ItemGroup>
 
   <ItemGroup>

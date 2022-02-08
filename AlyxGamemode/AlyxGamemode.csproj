@@ -1,0 +1,30 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net6.0-windows7.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
+	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
+	  <Version>2.0.0.0</Version>
+	  <Product>Kiwi's Co-Op Mod - Half-Life: Alyx Gamemode</Product>
+	  <Copyright>© 2022 KiwifruitDev</Copyright>
+	  <Description>Play Half-Life: Alyx cooperatively with up to 16 players!</Description>
+	  <Company>KiwifruitDev</Company>
+  </PropertyGroup>
+	<Target Name="CopyDLLs" AfterTargets="Build">
+		<Message Text="Executing CopyDLLs task" Importance="High" />
+
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)$(ProjectName).pdb" DestinationFolder="$(TargetDir)\..\..\..\KiwisCoOpMod\bin\Release\gamemodes" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)$(ProjectName).pdb" DestinationFolder="$(TargetDir)\..\..\..\KiwisCoOpMod\bin\Debug\gamemodes" />
+
+		<Message Text="Copied build files" Importance="High" />
+	</Target>
+	<ItemGroup>
+	  <PackageReference Include="Fleck" Version="1.2.0" />
+	  <PackageReference Include="WebSocketSharp" Version="1.0.3-rc11" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\KiwisCoOpModCore\KiwisCoOpModCore.csproj" />
+	</ItemGroup>
+</Project>

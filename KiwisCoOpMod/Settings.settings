@@ -72,7 +72,7 @@
       <Value Profile="(Default)">211</Value>
     </Setting>
     <Setting Name="ServerMap" Type="System.String" Scope="User">
-      <Value Profile="(Default)">mp_kiwitest</Value>
+      <Value Profile="(Default)">a3_hotel_lobby_basement</Value>
     </Setting>
     <Setting Name="ClientAutomaticallyReconnect" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>

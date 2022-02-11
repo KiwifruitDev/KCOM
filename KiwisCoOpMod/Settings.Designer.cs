@@ -301,7 +301,7 @@ namespace KiwisCoOpMod {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("mp_kiwitest")]
+        [global::System.Configuration.DefaultSettingValueAttribute("a3_hotel_lobby_basement")]
         public string ServerMap {
             get {
                 return ((string)(this["ServerMap"]));

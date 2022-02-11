@@ -13,24 +13,28 @@
     SOFTWARE.
     -----------------------------------------------------------------------------
 */
-using KiwisCoOpModCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Fleck;
 
 namespace KiwisCoOpModCore
 {
-    public class IndexedClient : Client
+    public class Vector
     {
-        public string Map = "";
-        public IWebSocketConnection Session;
-        public IndexedClient(IWebSocketConnection session, string username, string authId, string map) : base(username, authId)
+        public float X, Y, Z;
+        public Vector()
+        { }
+        public Vector(float X, float Y, float Z)
         {
-            Map = map;
-            Session = session;
+            this.X = X;
+            this.Y = Y;
+            this.Z = Z;
+        }
+        public override string ToString()
+        {
+            return X + " " + Y + " " + Z;
         }
     }
 }

@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
@@ -69,47 +84,56 @@ namespace KiwisCoOpModCore
     {
         private Color color = Color.Gray;
         private string name = "GENERIC";
-        private Wrapper wrapper = new Wrapper();
-        public Channel(string name)
+        private string friendlyName = "Generic";
+        private Wrapper wrapper = new();
+        public Channel(string name, string friendlyName)
         {
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
         }
-        public Channel(string name, Wrapper wrapper)
+        public Channel(string name, string friendlyName, Wrapper wrapper)
         {
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             this.wrapper = wrapper;
         }
-        public Channel(string name, string leftBracket, string rightBracket)
+        public Channel(string name, string friendlyName, string leftBracket, string rightBracket)
         {
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             wrapper = new Wrapper(leftBracket, rightBracket);
         }
-        public Channel(string name, string leftBracket, string rightBracket, string suffix)
+        public Channel(string name, string friendlyName, string leftBracket, string rightBracket, string suffix)
         {
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             wrapper = new Wrapper(leftBracket, rightBracket, suffix);
         }
-        public Channel(string name, Color color)
+        public Channel(string name, string friendlyName, Color color)
         {
             this.color = color;
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
         }
-        public Channel(string name, Color color, Wrapper wrapper)
+        public Channel(string name, string friendlyName, Color color, Wrapper wrapper)
         {
             this.color = color;
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             this.wrapper = wrapper;
         }
-        public Channel(string name, Color color, string leftBracket, string rightBracket)
+        public Channel(string name, string friendlyName, Color color, string leftBracket, string rightBracket)
         {
             this.color = color;
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             wrapper = new Wrapper(leftBracket, rightBracket);
         }
-        public Channel(string name, Color color, string leftBracket, string rightBracket, string suffix)
+        public Channel(string name, string friendlyName, Color color, string leftBracket, string rightBracket, string suffix)
         {
             this.color = color;
             this.name = name.ToUpper();
+            this.friendlyName = friendlyName;
             wrapper = new Wrapper(leftBracket, rightBracket, suffix);
         }
         public string GetName()
@@ -119,6 +143,14 @@ namespace KiwisCoOpModCore
         public void SetName(string name)
         {
             this.name = name.ToUpper();
+        }
+        public string GetFriendlyName()
+        {
+            return friendlyName;
+        }
+        public void SetFriendlyName(string friendlyName)
+        {
+            this.friendlyName = friendlyName;
         }
         public Color GetColor()
         {

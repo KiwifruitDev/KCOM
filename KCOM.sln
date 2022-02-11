@@ -7,9 +7,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiwisCoOpMod", "KiwisCoOpMo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlyxGamemode", "AlyxGamemode\AlyxGamemode.csproj", "{74293F75-4F4F-4E5A-A1C8-D7E807A608F7}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscordRpcPlugin", "DiscordRpcPlugin\DiscordRpcPlugin.csproj", "{51640C6A-A0C3-466F-B4E9-E42DC9DCF034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordRpcPlugin", "DiscordRpcPlugin\DiscordRpcPlugin.csproj", "{51640C6A-A0C3-466F-B4E9-E42DC9DCF034}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiwisCoOpModCore", "KiwisCoOpModCore\KiwisCoOpModCore.csproj", "{C08BF2D8-4FB6-4157-999B-FC8EA53791E0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlyxDeathmatch", "AlyxDeathmatch\AlyxDeathmatch.csproj", "{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{C08BF2D8-4FB6-4157-999B-FC8EA53791E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C08BF2D8-4FB6-4157-999B-FC8EA53791E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C08BF2D8-4FB6-4157-999B-FC8EA53791E0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

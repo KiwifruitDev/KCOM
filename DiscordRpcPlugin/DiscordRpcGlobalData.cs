@@ -1,4 +1,19 @@
-﻿using DiscordRPC;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using DiscordRPC;
 using KiwisCoOpModCore;
 using System;
 using System.Collections.Generic;
@@ -13,10 +28,9 @@ namespace DiscordRpcPlugin
         public static readonly string Application = "939559645754843166";
         public DiscordRpcClient? discordRpcClient;
         private RichPresence? presence;
-        private bool serverStarted = false;
         private Client? client;
         private string? gamemode;
-        public static readonly DiscordRpcGlobalData instance = new DiscordRpcGlobalData();
+        public static readonly DiscordRpcGlobalData instance = new();
         private DiscordRpcGlobalData()
         { }
         public DiscordRpcClient? GetDiscordRpcClient()
@@ -38,10 +52,6 @@ namespace DiscordRpcPlugin
         public bool GetServerStarted()
         {
             return presence;
-        }
-        public void SetServerStarted(bool serverStarted)
-        {
-            this.serverStarted = serverStarted;
         }
         public Client? GetClient()
         {

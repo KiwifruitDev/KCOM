@@ -1,4 +1,19 @@
-﻿using KiwisCoOpModCore;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using KiwisCoOpModCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -10,10 +25,9 @@ namespace AlyxGamemode
 {
     public sealed class AlyxGlobalData
     {
-        public static readonly AlyxGlobalData instance = new AlyxGlobalData();
-        private List<Player> players = new List<Player>();
-        private Location startLocation = new Location();
-        private List<Moveable> manipulatedEntities = new List<Moveable>();
+        public static readonly AlyxGlobalData instance = new();
+        private readonly List<Player> players = new();
+        private readonly List<Moveable> manipulatedEntities = new();
         public bool AddManipulatedEntity(Entity MovedObject, Guid ClientID, List<IndexedClient> Connections)
         {
             Moveable? oldMoveable = manipulatedEntities.Find(m => m.GetMovedObject().Name == MovedObject.Name);
@@ -49,7 +63,7 @@ namespace AlyxGamemode
         {
             if(players.Count < 16)
             {
-                Player player = new Player(players.Count, client);
+                Player player = new(players.Count, client);
                 players.Add(player);
                 return player;
             }

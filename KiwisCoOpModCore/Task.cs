@@ -19,48 +19,53 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Drawing;
 
 namespace KiwisCoOpModCore
 {
-    public enum HandleState
-    {
-        Continue = 0,
-        Handled
-    }
-    public enum GamemodeHandleType
+    public enum TaskType
     {
         None = 0,
-        PreStart,
-        PostStart,
-        PreClose,
-        PostClose,
-        PreResponse,
-        PostResponse,
-        ClientOpen,
-        ClientClose,
+        Button,
+        Toggle,
     }
-    public static class GamemodeHandler
+    public static class TaskHandler
     {
-        public static HandleState Handle(Type gamemodeType, GamemodeHandleType handleType, params object[]? vs)
+        public static bool Handle(List<Type> tasks, params object[]? vs)
         {
-            IGamemode? newGamemode = (IGamemode?)Activator.CreateInstance(gamemodeType, handleType, vs);
-            if (newGamemode != null && newGamemode.State != null)
+            bool handled = false;
+            foreach(Type taskType in tasks)
             {
-                return (HandleState)newGamemode.State;
+                ITask? newGamemode;
+                if (vs != null)
+                    newGamemode = (ITask?)Activator.CreateInstance(taskType);
+                else
+                    newGamemode = (ITask?)Activator.CreateInstance(taskType, vs);
+                if (newGamemode != null)
+                    handled = true;
             }
-            return HandleState.Continue;
+            return handled;
         }
-        public static IGamemode? Instance(Type gamemodeType)
+        public static bool Handle(Type taskType)
         {
-            return (IGamemode?)Activator.CreateInstance(gamemodeType);
+            bool handled = false;
+            ITask? newGamemode = (ITask?)Activator.CreateInstance(taskType);
+            if (newGamemode != null)
+                handled = true;
+            return handled;
+        }
+        public static ITask? Instance(Type taskType)
+        {
+            return (ITask?)Activator.CreateInstance(taskType);
         }
     }
-    public interface IGamemode
+    public interface ITask
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Author { get; set; }
-        public bool Default { get; set; }
-        public HandleState? State { get; set; }
+        public TaskType? Type { get; set; }
+        public bool? ToggleState { get; set; }
+        public Color? DisplayColor { get; set; }
     }
 }

@@ -1,4 +1,19 @@
-﻿using KiwisCoOpModCore;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using KiwisCoOpModCore;
 using DiscordRPC;
 
 namespace DiscordRpcPlugin
@@ -18,10 +33,10 @@ namespace DiscordRpcPlugin
             {
                 case PluginHandleType.UserInterface_Initialized:
 
-                    DiscordRpcClient discord = new DiscordRpcClient(DiscordRpcGlobalData.Application);
+                    DiscordRpcClient discord = new(DiscordRpcGlobalData.Application);
                     DiscordRpcGlobalData.instance.SetDiscordRpcClient(discord);
                     discord.Initialize();
-                    RichPresence richPresence = new RichPresence();
+                    RichPresence richPresence = new();
                     DiscordRpcGlobalData.instance.SetRichPresence(richPresence);
                     richPresence.Details = "Configuring options";
                     richPresence.State = "Inactive";
@@ -52,7 +67,6 @@ namespace DiscordRpcPlugin
                                     if (serverStarted)
                                     {
                                         richPresence2.State = "Running listen server";
-                                        DiscordRpcGlobalData.instance.SetServerStarted(false);
                                     }
                                     else
                                     {
@@ -76,7 +90,7 @@ namespace DiscordRpcPlugin
                         {
                             Type gamemodeType = (Type)vs[0];
                             List<Type> pluginTypes = (List<Type>)vs[1];
-                            Gamemode? gamemode = GamemodeHandler.Instance(gamemodeType);
+                            IGamemode? gamemode = GamemodeHandler.Instance(gamemodeType);
                             if (gamemode != null && gamemode.Name != null)
                             {
                                 richPresence3.Details = "0 players on " + gamemode.Name;
@@ -89,7 +103,6 @@ namespace DiscordRpcPlugin
                                 LargeImageText = "Kiwi's Co-Op Mod",
                             };
                             discord4.SetPresence(richPresence3);
-                            DiscordRpcGlobalData.instance.SetServerStarted(true);
                         }
                     }
                     break;
@@ -100,9 +113,8 @@ namespace DiscordRpcPlugin
                     {
                         if (vs != null)
                         {
-                            Response response = (Response)vs[0];
                             List<IndexedClient> connections = (List<IndexedClient>)vs[1];
-                            richPresence4.Details = connections.Count() + "/16 players on " + DiscordRpcGlobalData.instance.GetGamemode();
+                            richPresence4.Details = connections.Count + "/16 players on " + DiscordRpcGlobalData.instance.GetGamemode();
                             discord5.SetPresence(richPresence4);
                         }
                     }

@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -46,11 +61,11 @@ namespace KiwisCoOpModCore
             bool handled = false;
             foreach(Type pluginType in plugins)
             {
-                Plugin? newGamemode;
+                IPlugin? newGamemode;
                 if (vs == null)
-                    newGamemode = (Plugin?)Activator.CreateInstance(pluginType, handleType);
+                    newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType);
                 else
-                    newGamemode = (Plugin?)Activator.CreateInstance(pluginType, handleType, vs);
+                    newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType, vs);
                 if (newGamemode != null)
                     handled = true;
             }
@@ -59,21 +74,21 @@ namespace KiwisCoOpModCore
         public static bool Handle(Type pluginType, PluginHandleType handleType, params object[]? vs)
         {
             bool handled = false;
-            Plugin? newGamemode;
+            IPlugin? newGamemode;
             if (vs == null)
-                newGamemode = (Plugin?)Activator.CreateInstance(pluginType, handleType);
+                newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType);
             else
-                newGamemode = (Plugin?)Activator.CreateInstance(pluginType, handleType, vs);
+                newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType, vs);
             if (newGamemode != null)
                 handled = true;
             return handled;
         }
-        public static Plugin? Instance(Type pluginType)
+        public static IPlugin? Instance(Type pluginType)
         {
-            return (Plugin?)Activator.CreateInstance(pluginType, PluginHandleType.None);
+            return (IPlugin?)Activator.CreateInstance(pluginType, PluginHandleType.None);
         }
     }
-    public interface Plugin
+    public interface IPlugin
     {
         public string? Name { get; set; }
         public string? Description { get; set; }

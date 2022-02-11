@@ -1,4 +1,19 @@
-﻿using KiwisCoOpModCore;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using KiwisCoOpModCore;
 using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
@@ -13,37 +28,22 @@ namespace KiwisCoOpMod
 {
     public class VConsole
     {
-        private WebsocketClient? ws;
+        private readonly WebsocketClient? ws;
         private TcpClient? client;
         private NetworkStream? stream;
         private bool killed = false;
-        private List<byte[]> commandQueue = new List<byte[]>();
-        private StreamWatcher? watcher;
-        private UserInterface? ui;
+        private readonly List<byte[]> commandQueue = new();
+        private readonly StreamWatcher? watcher;
         private int vcAmount;
-        private Channel channel = new Channel("VC", Color.Brown);
-        public VConsole(WebsocketClient ws, UserInterface ui)
+        public VConsole(WebsocketClient ws)
         {
-            try
-            {
-                this.ui = ui;
-                this.ws = ws;
-                client = new TcpClient("127.0.0.1", Settings.Default.VconsolePort);
-                stream = client.GetStream();
-                WriteCommand("disconnect");
-                watcher = new StreamWatcher(stream);
-                watcher.MessageAvailable += MessageAvailable;
-                PostConnect();
-            }
-            catch (Exception ex)
-            {
-                ui.Invoke(() =>
-                {
-                    ui.LogToOutput(channel, "Could not connect to VConsole:", ex.Message);
-                    ui.clientProgram.Close();
-                    killed = true;
-                });
-            }
+            this.ws = ws;
+            client = new TcpClient("127.0.0.1", Settings.Default.VconsolePort);
+            stream = client.GetStream();
+            WriteCommand("disconnect");
+            watcher = new StreamWatcher(stream);
+            watcher.MessageAvailable += MessageAvailable;
+            PostConnect();
         }
         private void PostConnect()
         {
@@ -84,7 +84,7 @@ namespace KiwisCoOpMod
                             }
                             else
                             {
-                                Response input = new Response("print", newMessage);
+                                Response input = new("print", newMessage);
                                 ws.Send(JsonConvert.SerializeObject(input));
                             }
                         }
@@ -129,16 +129,32 @@ namespace KiwisCoOpMod
 
         public void WriteWindowFocus(bool focused = true)
         {
-            byte[] vcmd = Encoding.ASCII.GetBytes("VFCS").Reverse().ToArray();
-            byte protocol = Convert.ToByte(Settings.Default.VconsoleProtocol);
-            byte dataLength = Convert.ToByte(13);
-            List<byte> dataList = new List<byte>
+            if (stream != null)
             {
-                0, protocol, 0, 0, 0, dataLength, 0, 0, (byte)(focused == true ? 1 : 0)
-            };
-            foreach (byte cmdByte in vcmd)
-            {
-                dataList.Prepend(cmdByte);
+                byte[] vcmd = Encoding.ASCII.GetBytes("VFCS").Reverse().ToArray();
+                byte protocol = Convert.ToByte(Settings.Default.VconsoleProtocol);
+                byte dataLength = Convert.ToByte(13);
+                List<byte> dataList = new()
+                {
+                    0,
+                    protocol,
+                    0,
+                    0,
+                    0,
+                    dataLength,
+                    0,
+                    0,
+                    (byte)(focused == true ? 1 : 0)
+                };
+                foreach (byte cmdByte in vcmd)
+                {
+                    dataList = dataList.Prepend(cmdByte).ToList();
+                }
+                byte[] completeData = dataList.ToArray();
+                if (!killed)
+                    stream.Write(completeData);
+                else
+                    commandQueue.Add(completeData);
             }
         }
         public void WriteCommand(string command, bool urgent = false)
@@ -149,7 +165,7 @@ namespace KiwisCoOpMod
                 byte[] data = Encoding.ASCII.GetBytes(command);
                 byte dataLength = Convert.ToByte(data.Length + 13);
                 byte protocol = Convert.ToByte(Settings.Default.VconsoleProtocol);
-                List<byte> dataList = new List<byte>
+                List<byte> dataList = new()
                 {
                     0, protocol, 0, 0, 0, dataLength, 0, 0
                 };

@@ -13,24 +13,27 @@
     SOFTWARE.
     -----------------------------------------------------------------------------
 */
-using KiwisCoOpModCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Fleck;
+using System.Drawing;
 
 namespace KiwisCoOpModCore
 {
-    public class IndexedClient : Client
+    public class BaseTask : ITask
     {
-        public string Map = "";
-        public IWebSocketConnection Session;
-        public IndexedClient(IWebSocketConnection session, string username, string authId, string map) : base(username, authId)
+        public BaseTask() : base()
         {
-            Map = map;
-            Session = session;
+            Author = "KiwifruitDev";
+            Name = "Base Task";
+            Description = "The start to a new task.";
+            Type = TaskType.None;
+            DisplayColor = Color.White;
         }
+        public BaseTask(params object[]? vs)
+        { }
+        public string? Name { get; set; }
+        public string? Description { get; set; }
+        public string? Author { get; set; }
+        public TaskType? Type { get; set; }
+        public bool? ToggleState { get; set; }
+        public Color? DisplayColor { get; set; }
     }
 }

@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -43,9 +58,7 @@ namespace KiwisCoOpMod
 
         protected void OnMessageAvailable(MessageAvailableEventArgs e)
         {
-            var handler = MessageAvailable;
-            if (handler != null)
-                handler(this, e);
+            MessageAvailable?.Invoke(this, e);
         }
 
         protected async void Read()
@@ -55,14 +68,14 @@ namespace KiwisCoOpMod
                 if (stream != null)
                 {
                     byte[] headerBuffer = new byte[10];
-                    await stream.ReadAsync(headerBuffer, 0, headerBuffer.Length);
+                    await stream.ReadAsync(headerBuffer);
                     byte[] type = new byte[4] {
                         headerBuffer[0], headerBuffer[1], headerBuffer[2], headerBuffer[3]
                     };
                     string commandType = Encoding.ASCII.GetString(type);
                     byte length = (byte)(headerBuffer[9] - headerBuffer.Length);
                     byte[] data = new byte[length];
-                    await stream.ReadAsync(data, 0, length);
+                    await stream.ReadAsync(data.AsMemory(0, length));
                     OnMessageAvailable(new MessageAvailableEventArgs(commandType, data));
                 }
             }

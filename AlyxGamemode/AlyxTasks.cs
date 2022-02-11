@@ -16,21 +16,22 @@
 using KiwisCoOpModCore;
 using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Fleck;
 
-namespace KiwisCoOpModCore
+namespace AlyxGamemode
 {
-    public class IndexedClient : Client
+    public class AlyxTask_Precache : BaseTask
     {
-        public string Map = "";
-        public IWebSocketConnection Session;
-        public IndexedClient(IWebSocketConnection session, string username, string authId, string map) : base(username, authId)
+        public AlyxTask_Precache() : base()
         {
-            Map = map;
-            Session = session;
+            Author = "KiwifruitDev";
+            Name = "Force all players to precache";
+            Description = "Changes everyone's map to mp_kiwitest and back.";
+            Type = TaskType.Button;
+            DisplayColor = Color.Orange;
         }
     }
 }

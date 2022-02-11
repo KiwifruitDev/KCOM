@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -33,11 +48,15 @@ namespace AlyxGamemode
         TriggerActivateIndex,
         EntityRemoved,
         EntityFired,
+        NPCHealth,
     }
     public class Packet
     {
         public PacketType type = PacketType.None;
-        public string[] args = new string[0];
+        public string[] args = Array.Empty<string>();
+        public Packet()
+        {
+        }
         public Packet(string type)
         {
             this.type = ParseType(type);
@@ -68,126 +87,75 @@ namespace AlyxGamemode
         }
         public bool IsValid()
         {
-            switch(type)
+            return type switch
             {
-                case PacketType.None:
-                    return false;
-            }
-            return true;
+                PacketType.None => false,
+                _ => true,
+            };
         }
-        private PacketType ParseType(string type)
+        private static PacketType ParseType(string type)
         {
-            switch(type.ToUpper())
+            return type.ToUpper() switch
             {
-                case "NONE":
-                    return PacketType.None;
-                case "PLYR":
-                    return PacketType.PlayerPosAng;
-                case "HEAD":
-                    return PacketType.HeadPosAng;
-                case "HAND":
-                    return PacketType.HandPosAng;
-                case "INIT":
-                    return PacketType.Initialization;
-                case "IENT":
-                    return PacketType.InitializedEntities;
-                case "RHND":
-                    return PacketType.RightHandIndexes;
-                case "LHND":
-                    return PacketType.LeftHandIndexes;
-                case "HSET":
-                    return PacketType.HeadsetIndexes;
-                case "TAGS":
-                    return PacketType.TextIndexes;
-                case "NPCS":
-                    return PacketType.ColliderIndexes;
-                case "PRFX":
-                    return PacketType.Prefix;
-                case "ALIV":
-                    return PacketType.Alive;
-                case "DMGE":
-                    return PacketType.ColliderDamage;
-                case "PROP":
-                    return PacketType.PhysicsObjectIndexStartPos;
-                case "PHYS":
-                    return PacketType.PhysicsObjectPosAng;
-                case "MAPN":
-                    return PacketType.MapName;
-                case "BUTN":
-                    return PacketType.ButtonIndexStartPos;
-                case "BPRS":
-                    return PacketType.ButtonPressIndex;
-                case "DOOR":
-                    return PacketType.DoorIndexStartPos;
-                case "BRAK":
-                    return PacketType.BrokenPropIndex;
-                case "TRIG":
-                    return PacketType.TriggerIndexStartPos;
-                case "TRGD":
-                    return PacketType.TriggerActivateIndex;
-                case "EREM":
-                    return PacketType.EntityRemoved;
-                case "FIRE":
-                    return PacketType.EntityFired;
-                default:
-                    return PacketType.None;
-            }
+                "PLYR" => PacketType.PlayerPosAng,
+                "HEAD" => PacketType.HeadPosAng,
+                "HAND" => PacketType.HandPosAng,
+                "INIT" => PacketType.Initialization,
+                "IENT" => PacketType.InitializedEntities,
+                "RHND" => PacketType.RightHandIndexes,
+                "LHND" => PacketType.LeftHandIndexes,
+                "HSET" => PacketType.HeadsetIndexes,
+                "TAGS" => PacketType.TextIndexes,
+                "NPCS" => PacketType.ColliderIndexes,
+                "PRFX" => PacketType.Prefix,
+                "ALIV" => PacketType.Alive,
+                "DMGE" => PacketType.ColliderDamage,
+                "PROP" => PacketType.PhysicsObjectIndexStartPos,
+                "PHYS" => PacketType.PhysicsObjectPosAng,
+                "MAPN" => PacketType.MapName,
+                "BUTN" => PacketType.ButtonIndexStartPos,
+                "BPRS" => PacketType.ButtonPressIndex,
+                "DOOR" => PacketType.DoorIndexStartPos,
+                "BRAK" => PacketType.BrokenPropIndex,
+                "TRIG" => PacketType.TriggerIndexStartPos,
+                "TRGD" => PacketType.TriggerActivateIndex,
+                "EREM" => PacketType.EntityRemoved,
+                "FIRE" => PacketType.EntityFired,
+                "NPHP" => PacketType.NPCHealth,
+                _ => PacketType.None,
+            };
         }
         public override string ToString()
         {
-            switch (type)
+            return type switch
             {
-                case PacketType.PlayerPosAng:
-                    return "PLYR";
-                case PacketType.HeadPosAng:
-                    return "HEAD";
-                case PacketType.HandPosAng:
-                    return "HAND";
-                case PacketType.Initialization:
-                    return "INIT";
-                case PacketType.InitializedEntities:
-                    return "IENT";
-                case PacketType.RightHandIndexes:
-                    return "RHND";
-                case PacketType.LeftHandIndexes:
-                    return "LHND";
-                case PacketType.HeadsetIndexes:
-                    return "HSET";
-                case PacketType.TextIndexes:
-                    return "TAGS";
-                case PacketType.ColliderIndexes:
-                    return "NPCS";
-                case PacketType.Prefix:
-                    return "PRFX";
-                case PacketType.Alive:
-                    return "ALIV";
-                case PacketType.ColliderDamage:
-                    return "DMGE";
-                case PacketType.PhysicsObjectIndexStartPos:
-                    return "PROP";
-                case PacketType.PhysicsObjectPosAng:
-                    return "PHYS";
-                case PacketType.MapName:
-                    return "MAPN";
-                case PacketType.ButtonIndexStartPos:
-                    return "BUTN";
-                case PacketType.ButtonPressIndex:
-                    return "BUTN";
-                case PacketType.DoorIndexStartPos:
-                    return "DOOR";
-                case PacketType.BrokenPropIndex:
-                    return "BRAK";
-                case PacketType.TriggerIndexStartPos:
-                    return "TRIG";
-                case PacketType.TriggerActivateIndex:
-                    return "TRGD";
-                case PacketType.EntityRemoved:
-                    return "EREM";
-                case PacketType.EntityFired:
-                    return "FIRE";
-                default:
-                    return "NONE";
-            }
+                PacketType.PlayerPosAng => "PLYR",
+                PacketType.HeadPosAng => "HEAD",
+                PacketType.HandPosAng => "HAND",
+                PacketType.Initialization => "INIT",
+                PacketType.InitializedEntities => "IENT",
+                PacketType.RightHandIndexes => "RHND",
+                PacketType.LeftHandIndexes => "LHND",
+                PacketType.HeadsetIndexes => "HSET",
+                PacketType.TextIndexes => "TAGS",
+                PacketType.ColliderIndexes => "NPCS",
+                PacketType.Prefix => "PRFX",
+                PacketType.Alive => "ALIV",
+                PacketType.ColliderDamage => "DMGE",
+                PacketType.PhysicsObjectIndexStartPos => "PROP",
+                PacketType.PhysicsObjectPosAng => "PHYS",
+                PacketType.MapName => "MAPN",
+                PacketType.ButtonIndexStartPos => "BUTN",
+                PacketType.ButtonPressIndex => "BUTN",
+                PacketType.DoorIndexStartPos => "DOOR",
+                PacketType.BrokenPropIndex => "BRAK",
+                PacketType.TriggerIndexStartPos => "TRIG",
+                PacketType.TriggerActivateIndex => "TRGD",
+                PacketType.EntityRemoved => "EREM",
+                PacketType.EntityFired => "FIRE",
+                PacketType.NPCHealth => "NPHP",
+                _ => "NONE",
+            };
         }
     }
 }

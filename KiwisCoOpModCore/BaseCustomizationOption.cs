@@ -17,23 +17,26 @@ using System.Drawing;
 
 namespace KiwisCoOpModCore
 {
-    public class CoreGamemode : IGamemode
+    public class BaseCustomizationOption : ICustomizationOption
     {
-        public CoreGamemode() : base()
+        public BaseCustomizationOption() : base()
         {
             Author = "KiwifruitDev";
-            Name = "Core Gamemode";
-            Description = "The absolute minimum.";
+            Name = "Base CustomizationOption";
+            Description = "The start to a new customization option.";
+            ModelName = "models/characters/alyx/alyx.vmdl";
+            Type = CustomizationOptionType.None;
+            DisplayImageBase64 = "R0lGODlhAQABAIAAAAAAAAAAACH5BAAAAAAALAAAAAABAAEAAAICTAEAOw==";
             Default = false;
         }
-        public CoreGamemode(GamemodeHandleType type, params object[]? vs)
-        {
-            State = HandleState.Continue;
-        }
-        public HandleState? State { get; set; }
+        public BaseCustomizationOption(params object[]? vs)
+        { }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Author { get; set; }
+        public string? ModelName { get; set; }
+        public CustomizationOptionType? Type { get; set; }
+        public string? DisplayImageBase64 { get; set; }
         public bool Default { get; set; }
     }
 }

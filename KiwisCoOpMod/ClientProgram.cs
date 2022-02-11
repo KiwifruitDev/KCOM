@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+    Kiwi's Co-Op Mod for Half-Life: Alyx
+    Copyright (c) 2022 KiwifruitDev
+    All rights reserved.
+    This software is licensed under the MIT License.
+    -----------------------------------------------------------------------------
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+    -----------------------------------------------------------------------------
+*/
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,13 +28,13 @@ namespace KiwisCoOpMod
     public class ClientProgram
     {
         private WebsocketClient? ws;
-        private UserInterface ui;
-        private Channel channel = new Channel("CL", Color.Green);
-        private Channel chatChannel = new Channel("CHAT", Color.Black);
-        private Channel statusChannel = new Channel("STATUS", Color.DeepPink);
-        private Channel vConsoleChannel = new Channel("VC", Color.Maroon);
+        private readonly UserInterface ui;
+        private readonly Channel channel = new("CL", "Client", Color.Green);
+        private readonly Channel chatChannel = new("CHAT", "Chat", Color.Black);
+        private readonly Channel statusChannel = new("STATUS", "Status", Color.DeepPink);
+        private readonly Channel vConsoleChannel = new("VC", "VConsole", Color.Maroon);
         private VConsole? vConsole;
-        private List<Type> plugins = new List<Type>();
+        private List<Type> plugins = new();
         public int version = 0; // Update version if netcode changes.
         public string map = "";
         public ClientProgram(UserInterface ui)
@@ -32,8 +47,10 @@ namespace KiwisCoOpMod
             {
                 PluginHandler.Handle(pluginTypes, PluginHandleType.Client_PreStart, ui);
                 plugins = pluginTypes;
-                ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort));
-                ws.ReconnectTimeout = TimeSpan.FromSeconds(30);
+                ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort))
+                {
+                    ReconnectTimeout = TimeSpan.FromSeconds(30)
+                };
                 ws.Start();
                 ws.MessageReceived.Subscribe(msg =>
                 {
@@ -54,20 +71,44 @@ namespace KiwisCoOpMod
                                 }
                                 if (ws != null && Settings.Default.ClientMemo != "")
                                 {
-                                    Response input = new Response("chat", "(Memo) " + Settings.Default.ClientMemo);
+                                    Response input = new("chat", "(Memo) " + Settings.Default.ClientMemo);
                                     ws.Send(JsonConvert.SerializeObject(input));
                                 }
                                 if (vConsole != null && response.map != null)
                                 {
-                                    Thread thr = new Thread(new ThreadStart(() =>
-                                    {
-                                        Thread.Sleep(5000);
-                                        vConsole.WriteCommand("addon_play " + response.map + ";addon_tools_map " + response.map);
-                                    }));
-                                    thr.Start();
+                                    vConsole.WriteCommand("addon_play " + response.map + ";addon_tools_map " + response.map);
                                 }
                                 if (response.map != null)
                                     map = response.map;
+                                if (response.customizationOptionsAuthor != null
+                                    && response.customizationOptionsDefault != null
+                                    && response.customizationOptionsDescription != null
+                                    && response.customizationOptionsImage != null
+                                    && response.customizationOptionsModelName != null
+                                    && response.customizationOptionsName != null
+                                    && response.customizationOptionsType != null)
+                                {
+                                    for (int i = 0; i < response.customizationOptionsAuthor.Length; i++)
+                                    {
+                                        BaseCustomizationOption option = new();
+                                        option.Author = response.customizationOptionsAuthor[i];
+                                        option.Default = response.customizationOptionsDefault[i];
+                                        option.Description = response.customizationOptionsDescription[i];
+                                        option.DisplayImageBase64 = response.customizationOptionsImage[i];
+                                        option.ModelName = response.customizationOptionsModelName[i];
+                                        option.Name = response.customizationOptionsName[i];
+                                        option.Type = response.customizationOptionsType[i] switch
+                                        {
+                                            "hat" => CustomizationOptionType.Hat,
+                                            "head" => CustomizationOptionType.Head,
+                                            "collider" => CustomizationOptionType.Collider,
+                                            "lefthand" => CustomizationOptionType.LeftHand,
+                                            "righthand" => CustomizationOptionType.RightHand,
+                                            _ => CustomizationOptionType.None,
+                                        };
+                                        ui.Invoke(() => ui.AddCustomizationOption(option));
+                                    }
+                                }
                                 break;
                             case "chat":
                                 if (response.data != null && response.remoteClientUsername != null)
@@ -95,20 +136,6 @@ namespace KiwisCoOpMod
                                         ui.Invoke(() => ui.LogToOutput(vConsoleChannel, response.data));
                                 }
                                 break;
-                            case "map":
-                                if (ws != null && vConsole != null && response.data != null && Settings.Default.ClientPrintVconsole)
-                                {
-                                    if (map != response.data)
-                                    {
-                                        if (ui != null)
-                                            ui.Invoke(() => ui.LogToOutput(vConsoleChannel, "Changing map to", response.data + "..."));
-                                        vConsole.WriteCommand("addon_play " + response.data + "; addon_tools_map " + response.data);
-                                        Response input = new Response("map", response.data);
-                                        ws.Send(JsonConvert.SerializeObject(input));
-                                        map = response.data;
-                                    }
-                                }
-                                break;
                             default:
                                 ui.Invoke(() => ui.LogToOutput(channel, "UNIMPLEMENTED TYPE: " + response.type + "!"));
                                 break;
@@ -120,13 +147,15 @@ namespace KiwisCoOpMod
                         ui.Invoke(() => ui.LogToOutput(channel, "SERVER SENT INVALID DATA!"));
                     }
                 });
-                Response input = new Response("client");
-                input.clientUsername = Settings.Default.ClientUsername;
-                input.clientAuthId = Settings.Default.ClientAuthId;
-                input.password = Settings.Default.ClientPassword;
+                Response input = new("client")
+                {
+                    clientUsername = Settings.Default.ClientUsername,
+                    clientAuthId = Settings.Default.ClientAuthId,
+                    password = Settings.Default.ClientPassword
+                };
                 ws.Send(JsonConvert.SerializeObject(input));
                 ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
-                vConsole = new VConsole(ws, ui);
+                vConsole = new VConsole(ws);
                 PluginHandler.Handle(plugins, PluginHandleType.Client_PostStart, ui, ws);
             }
         }
@@ -150,6 +179,13 @@ namespace KiwisCoOpMod
             if (ws != null && ws.IsStarted)
             {
                 ws.Send(new Response("chat", text).ToString());
+            }
+        }
+        public void ChangeCustomizationOption(string modelName)
+        {
+            if (ws != null && ws.IsStarted)
+            {
+                ws.Send(new Response("customize", modelName).ToString());
             }
         }
     }

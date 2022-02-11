@@ -62,10 +62,10 @@
 Hover over each option above to view a tooltip for more information.
 Scroll down for help regarding recommended configurations.
 
-To create a listen server, check both "Enabled" checkboxes and set the "Client" column's "IP Address" text box to "127.0.0.1" setting the "Server" column's "IP Address" text box to "[::]", then click the "Start" button.
+To create a listen server, check both "Enabled" checkboxes and set the "Client" column's "IP Address" text box to "localhost" setting the "Server" column's "IP Address" text box to "[::]", then click the "Start" button.
 To create a dedicated server, uncheck the "Client" column's "Enabled" checkbox and check the "Server" column's "Enabled" checkbox, then set the "Server" column's "IP Address" text box to "[::]" and click the "Start" button.
 To connect to a remote server, uncheck the "Server" column's "Enabled" checkbox and check the "Client" column's "Enabled" checkbox, then set the "Client" column's "IP Address" check box to the public IP address of the remote server and click the "Start" button.
-==============================================================================================</value>
+===========================================================================================</value>
   </data>
   <metadata name="menuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>17, 17</value>
@@ -73,12 +73,12 @@ To connect to a remote server, uncheck the "Server" column's "Enabled" checkbox 
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>125, 17</value>
   </metadata>
-  <data name="checkBoxClientEnabled.ToolTip" xml:space="preserve">
+  <data name="checkBoxServerEnabled.ToolTip" xml:space="preserve">
     <value>If checked, the client system will be enabled and will connect to a remote server.
 If you are hosting a dedicated server, you should set uncheck this.
 Note: To create a listen server, enable both the server and client and set both IPs to localhost.</value>
   </data>
-  <data name="checkBoxServerEnabled.ToolTip" xml:space="preserve">
+  <data name="checkBoxClientEnabled.ToolTip" xml:space="preserve">
     <value>If checked, the client system will be enabled and will connect to a remote server.
 If you are hosting a dedicated server, you should set uncheck this.
 Note: To create a listen server, enable both the server and client and set both IPs to localhost.</value>
@@ -86,8 +86,8 @@ Note: To create a listen server, enable both the server and client and set both 
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>215, 17</value>
   </metadata>
-  <metadata name="$this.Locked" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
-    <value>True</value>
+  <metadata name="$this.TrayHeight" type="System.Int32, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>65</value>
   </metadata>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
   <data name="$this.Icon" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">

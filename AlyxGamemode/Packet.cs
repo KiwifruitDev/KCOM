@@ -49,6 +49,7 @@ namespace AlyxGamemode
         EntityRemoved,
         EntityFired,
         NPCHealth,
+        KCOMCommand,
     }
     public class Packet
     {
@@ -122,6 +123,7 @@ namespace AlyxGamemode
                 "EREM" => PacketType.EntityRemoved,
                 "FIRE" => PacketType.EntityFired,
                 "NPHP" => PacketType.NPCHealth,
+                "CMND" => PacketType.KCOMCommand,
                 _ => PacketType.None,
             };
         }
@@ -154,6 +156,7 @@ namespace AlyxGamemode
                 PacketType.EntityRemoved => "EREM",
                 PacketType.EntityFired => "FIRE",
                 PacketType.NPCHealth => "NPHP",
+                PacketType.KCOMCommand => "CMND",
                 _ => "NONE",
             };
         }

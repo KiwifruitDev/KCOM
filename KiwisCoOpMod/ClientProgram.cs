@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using System.ComponentModel;
 using KiwisCoOpModCore;
 using Websocket.Client;
+using System.Diagnostics;
 
 namespace KiwisCoOpMod
 {
@@ -49,9 +50,13 @@ namespace KiwisCoOpMod
                 plugins = pluginTypes;
                 ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort))
                 {
-                    ReconnectTimeout = TimeSpan.FromSeconds(30)
+                    ReconnectTimeout = TimeSpan.FromSeconds(60)
                 };
                 ws.Start();
+                ws.DisconnectionHappened.Subscribe(info =>
+                {
+                    ui.Invoke(() => ui.LogToOutput(channel, "Disconnected: " + info.Type.ToString()));
+                });
                 ws.MessageReceived.Subscribe(msg =>
                 {
                     Response? response = JsonConvert.DeserializeObject<Response>(msg.Text);
@@ -69,44 +74,12 @@ namespace KiwisCoOpMod
                                 {
                                     ui.Invoke(() => ui.LogToOutput(channel, "Server is running an older version! Please ask the owner to update their server."));
                                 }
-                                if (ws != null && Settings.Default.ClientMemo != "")
-                                {
-                                    Response input = new("chat", "(Memo) " + Settings.Default.ClientMemo);
-                                    ws.Send(JsonConvert.SerializeObject(input));
-                                }
                                 if (vConsole != null && response.map != null)
                                 {
-                                    vConsole.WriteCommand("addon_play " + response.map + ";addon_tools_map " + response.map);
-                                }
-                                if (response.map != null)
-                                    map = response.map;
-                                if (response.customizationOptionsAuthor != null
-                                    && response.customizationOptionsDefault != null
-                                    && response.customizationOptionsDescription != null
-                                    && response.customizationOptionsImage != null
-                                    && response.customizationOptionsModelName != null
-                                    && response.customizationOptionsName != null
-                                    && response.customizationOptionsType != null)
-                                {
-                                    for (int i = 0; i < response.customizationOptionsAuthor.Length; i++)
+                                    if (map != response.map)
                                     {
-                                        BaseCustomizationOption option = new();
-                                        option.Author = response.customizationOptionsAuthor[i];
-                                        option.Default = response.customizationOptionsDefault[i];
-                                        option.Description = response.customizationOptionsDescription[i];
-                                        option.DisplayImageBase64 = response.customizationOptionsImage[i];
-                                        option.ModelName = response.customizationOptionsModelName[i];
-                                        option.Name = response.customizationOptionsName[i];
-                                        option.Type = response.customizationOptionsType[i] switch
-                                        {
-                                            "hat" => CustomizationOptionType.Hat,
-                                            "head" => CustomizationOptionType.Head,
-                                            "collider" => CustomizationOptionType.Collider,
-                                            "lefthand" => CustomizationOptionType.LeftHand,
-                                            "righthand" => CustomizationOptionType.RightHand,
-                                            _ => CustomizationOptionType.None,
-                                        };
-                                        ui.Invoke(() => ui.AddCustomizationOption(option));
+                                        vConsole.WriteCommand("addon_play " + response.map + ";addon_tools_map " + response.map);
+                                        map = response.map;
                                     }
                                 }
                                 break;
@@ -147,14 +120,16 @@ namespace KiwisCoOpMod
                         ui.Invoke(() => ui.LogToOutput(channel, "SERVER SENT INVALID DATA!"));
                     }
                 });
-                Response input = new("client")
+                ws.ReconnectionHappened.Subscribe(recinfo =>
                 {
-                    clientUsername = Settings.Default.ClientUsername,
-                    clientAuthId = Settings.Default.ClientAuthId,
-                    password = Settings.Default.ClientPassword
-                };
-                ws.Send(JsonConvert.SerializeObject(input));
-                ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
+                    Response input = new("client")
+                    {
+                        clientUsername = Settings.Default.ClientUsername,
+                        password = Settings.Default.ClientPassword
+                    };
+                    ws.Send(JsonConvert.SerializeObject(input));
+                    ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
+                });
                 vConsole = new VConsole(ws);
                 PluginHandler.Handle(plugins, PluginHandleType.Client_PostStart, ui, ws);
             }
@@ -176,16 +151,9 @@ namespace KiwisCoOpMod
         }
         public void Chat(string text)
         {
-            if (ws != null && ws.IsStarted)
+            if (ws != null && ws.IsStarted && text.Length > 0)
             {
                 ws.Send(new Response("chat", text).ToString());
-            }
-        }
-        public void ChangeCustomizationOption(string modelName)
-        {
-            if (ws != null && ws.IsStarted)
-            {
-                ws.Send(new Response("customize", modelName).ToString());
             }
         }
     }

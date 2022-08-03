@@ -37,15 +37,14 @@
             this.saveOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientPlayerCollisionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientPrintVConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientHostModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientAutomaticallyReconnectToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serverDisableUserVConsoleInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamemodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientPrintVConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverDisableUserVConsoleInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOptionsOnExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.trelloFAQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.discordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -65,65 +64,38 @@
             this.buttonCommandType = new System.Windows.Forms.Button();
             this.tabControlBottom = new System.Windows.Forms.TabControl();
             this.tabPageOutput = new System.Windows.Forms.TabPage();
-            this.tabPageCharacter = new System.Windows.Forms.TabPage();
-            this.pictureBoxRightHand = new System.Windows.Forms.PictureBox();
-            this.pictureBoxLeftHand = new System.Windows.Forms.PictureBox();
-            this.pictureBoxCollider = new System.Windows.Forms.PictureBox();
-            this.pictureBoxHead = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.comboBoxRightHand = new System.Windows.Forms.ComboBox();
-            this.labelLeftHand = new System.Windows.Forms.Label();
-            this.comboBoxLeftHand = new System.Windows.Forms.ComboBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.comboBoxCollider = new System.Windows.Forms.ComboBox();
-            this.labelHead = new System.Windows.Forms.Label();
-            this.comboBoxHead = new System.Windows.Forms.ComboBox();
-            this.labelHat = new System.Windows.Forms.Label();
-            this.pictureBoxHat = new System.Windows.Forms.PictureBox();
-            this.comboBoxHat = new System.Windows.Forms.ComboBox();
             this.tabPageServer = new System.Windows.Forms.TabPage();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
+            this.labelHelpServerPassword = new System.Windows.Forms.Label();
+            this.labelHelpServerPort = new System.Windows.Forms.Label();
+            this.buttonServerVconsoleSend = new System.Windows.Forms.Button();
+            this.labelServerVconsole = new System.Windows.Forms.Label();
+            this.textBoxServerVconsole = new System.Windows.Forms.TextBox();
             this.buttonServerChangeMap = new System.Windows.Forms.Button();
             this.numericUpDownServerPort = new System.Windows.Forms.NumericUpDown();
             this.textBoxServerMap = new System.Windows.Forms.TextBox();
-            this.textBoxServerIpAddress = new System.Windows.Forms.TextBox();
-            this.textBoxServerMemo = new System.Windows.Forms.TextBox();
-            this.textBoxServerHostAuthId = new System.Windows.Forms.TextBox();
             this.textBoxServerPassword = new System.Windows.Forms.TextBox();
-            this.textBoxServerHostUsername = new System.Windows.Forms.TextBox();
-            this.labelServerIpAddress = new System.Windows.Forms.Label();
             this.labelServerMap = new System.Windows.Forms.Label();
             this.labelServerPort = new System.Windows.Forms.Label();
-            this.labelServerMemo = new System.Windows.Forms.Label();
-            this.labelServerHostUsername = new System.Windows.Forms.Label();
             this.labelServerPassword = new System.Windows.Forms.Label();
-            this.labelServerHostAuthId = new System.Windows.Forms.Label();
             this.tabPageClient = new System.Windows.Forms.TabPage();
-            this.buttonClientRandomizeAuthId = new System.Windows.Forms.Button();
+            this.labelHelpUsername = new System.Windows.Forms.Label();
+            this.labelHelpClientPassword = new System.Windows.Forms.Label();
+            this.labelHelpClientIpAddressPort = new System.Windows.Forms.Label();
             this.numericUpDownClientPort = new System.Windows.Forms.NumericUpDown();
             this.labelClientIpAddress = new System.Windows.Forms.Label();
-            this.textBoxClientMemo = new System.Windows.Forms.TextBox();
             this.textBoxClientIpAddress = new System.Windows.Forms.TextBox();
-            this.textBoxClientAuthId = new System.Windows.Forms.TextBox();
             this.textBoxClientUsername = new System.Windows.Forms.TextBox();
             this.textBoxClientPassword = new System.Windows.Forms.TextBox();
-            this.labelClientMemo = new System.Windows.Forms.Label();
             this.labelClientPort = new System.Windows.Forms.Label();
             this.labelClientUsername = new System.Windows.Forms.Label();
-            this.labelClientAuthId = new System.Windows.Forms.Label();
             this.labelClientPassword = new System.Windows.Forms.Label();
             this.tabControlTop = new System.Windows.Forms.TabControl();
-            this.buttonCharacterUpdate = new System.Windows.Forms.Button();
-            this.labelCharacterUpdate = new System.Windows.Forms.Label();
             this.menuStrip.SuspendLayout();
             this.statusStrip.SuspendLayout();
             this.tabControlBottom.SuspendLayout();
             this.tabPageOutput.SuspendLayout();
-            this.tabPageCharacter.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRightHand)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeftHand)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCollider)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHead)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHat)).BeginInit();
             this.tabPageServer.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownServerPort)).BeginInit();
             this.tabPageClient.SuspendLayout();
@@ -147,6 +119,7 @@
             this.menuStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
+            this.viewToolStripMenuItem,
             this.helpToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
@@ -183,38 +156,39 @@
             this.closeToolStripMenuItem.Name = "closeToolStripMenuItem";
             this.closeToolStripMenuItem.Size = new System.Drawing.Size(192, 22);
             this.closeToolStripMenuItem.Text = "Exit";
+            this.closeToolStripMenuItem.Click += new System.EventHandler(this.closeToolStripMenuItem_Click);
             // 
             // editToolStripMenuItem
             // 
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.advancedOptionsToolStripMenuItem,
             this.gamemodeToolStripMenuItem,
             this.pluginsToolStripMenuItem,
+            this.advancedOptionsToolStripMenuItem,
             this.saveOptionsOnExitToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
-            this.editToolStripMenuItem.Size = new System.Drawing.Size(39, 20);
-            this.editToolStripMenuItem.Text = "Edit";
+            this.editToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.editToolStripMenuItem.Text = "Options";
+            // 
+            // gamemodeToolStripMenuItem
+            // 
+            this.gamemodeToolStripMenuItem.Name = "gamemodeToolStripMenuItem";
+            this.gamemodeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.gamemodeToolStripMenuItem.Text = "Gamemode";
+            // 
+            // pluginsToolStripMenuItem
+            // 
+            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.pluginsToolStripMenuItem.Text = "Plugins";
             // 
             // advancedOptionsToolStripMenuItem
             // 
             this.advancedOptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clientPlayerCollisionToolStripMenuItem,
             this.clientPrintVConsoleToolStripMenuItem,
-            this.clientHostModeToolStripMenuItem,
-            this.clientAutomaticallyReconnectToolStripMenuItem,
             this.serverDisableUserVConsoleInputToolStripMenuItem});
             this.advancedOptionsToolStripMenuItem.Name = "advancedOptionsToolStripMenuItem";
-            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.advancedOptionsToolStripMenuItem.Text = "Advanced Options";
-            // 
-            // clientPlayerCollisionToolStripMenuItem
-            // 
-            this.clientPlayerCollisionToolStripMenuItem.CheckOnClick = true;
-            this.clientPlayerCollisionToolStripMenuItem.Enabled = false;
-            this.clientPlayerCollisionToolStripMenuItem.Name = "clientPlayerCollisionToolStripMenuItem";
-            this.clientPlayerCollisionToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.clientPlayerCollisionToolStripMenuItem.Text = "Client: Player Collision";
-            this.clientPlayerCollisionToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ClientPlayerCollisionToolStripMenuItem_CheckedChanged);
+            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.advancedOptionsToolStripMenuItem.Text = "Advanced";
             // 
             // clientPrintVConsoleToolStripMenuItem
             // 
@@ -224,24 +198,6 @@
             this.clientPrintVConsoleToolStripMenuItem.Text = "Client: Print VConsole";
             this.clientPrintVConsoleToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ClientPrintVConsoleToolStripMenuItem_CheckedChanged);
             // 
-            // clientHostModeToolStripMenuItem
-            // 
-            this.clientHostModeToolStripMenuItem.CheckOnClick = true;
-            this.clientHostModeToolStripMenuItem.Enabled = false;
-            this.clientHostModeToolStripMenuItem.Name = "clientHostModeToolStripMenuItem";
-            this.clientHostModeToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.clientHostModeToolStripMenuItem.Text = "Client: Host Mode";
-            this.clientHostModeToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ClientHostModeToolStripMenuItem_CheckedChanged);
-            // 
-            // clientAutomaticallyReconnectToolStripMenuItem
-            // 
-            this.clientAutomaticallyReconnectToolStripMenuItem.CheckOnClick = true;
-            this.clientAutomaticallyReconnectToolStripMenuItem.Enabled = false;
-            this.clientAutomaticallyReconnectToolStripMenuItem.Name = "clientAutomaticallyReconnectToolStripMenuItem";
-            this.clientAutomaticallyReconnectToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.clientAutomaticallyReconnectToolStripMenuItem.Text = "Client: Automatically Reconnect";
-            this.clientAutomaticallyReconnectToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ClientAutomaticallyReconnectToolStripMenuItem_CheckedChanged);
-            // 
             // serverDisableUserVConsoleInputToolStripMenuItem
             // 
             this.serverDisableUserVConsoleInputToolStripMenuItem.CheckOnClick = true;
@@ -250,27 +206,30 @@
             this.serverDisableUserVConsoleInputToolStripMenuItem.Text = "Server: Disable User VConsole Input";
             this.serverDisableUserVConsoleInputToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ServerDisableUserVConsoleInputToolStripMenuItem_CheckedChanged);
             // 
-            // gamemodeToolStripMenuItem
-            // 
-            this.gamemodeToolStripMenuItem.Name = "gamemodeToolStripMenuItem";
-            this.gamemodeToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.gamemodeToolStripMenuItem.Text = "Gamemode";
-            // 
-            // pluginsToolStripMenuItem
-            // 
-            this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
-            this.pluginsToolStripMenuItem.Text = "Plugins";
-            // 
             // saveOptionsOnExitToolStripMenuItem
             // 
             this.saveOptionsOnExitToolStripMenuItem.Checked = true;
             this.saveOptionsOnExitToolStripMenuItem.CheckOnClick = true;
             this.saveOptionsOnExitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.saveOptionsOnExitToolStripMenuItem.Name = "saveOptionsOnExitToolStripMenuItem";
-            this.saveOptionsOnExitToolStripMenuItem.Size = new System.Drawing.Size(182, 22);
+            this.saveOptionsOnExitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
             this.saveOptionsOnExitToolStripMenuItem.Text = "Save Options on Exit";
             this.saveOptionsOnExitToolStripMenuItem.CheckedChanged += new System.EventHandler(this.SaveOptionsOnExitToolStripMenuItem_CheckedChanged);
+            // 
+            // viewToolStripMenuItem
+            // 
+            this.viewToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.alwaysOnTopToolStripMenuItem});
+            this.viewToolStripMenuItem.Name = "viewToolStripMenuItem";
+            this.viewToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
+            this.viewToolStripMenuItem.Text = "View";
+            // 
+            // alwaysOnTopToolStripMenuItem
+            // 
+            this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
+            this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
@@ -316,10 +275,10 @@
             this.checkBoxServerEnabled.AutoSize = true;
             this.checkBoxServerEnabled.Location = new System.Drawing.Point(6, 6);
             this.checkBoxServerEnabled.Name = "checkBoxServerEnabled";
-            this.checkBoxServerEnabled.Size = new System.Drawing.Size(68, 19);
+            this.checkBoxServerEnabled.Size = new System.Drawing.Size(513, 19);
             this.checkBoxServerEnabled.TabIndex = 15;
-            this.checkBoxServerEnabled.Text = "Enabled";
-            this.toolTip.SetToolTip(this.checkBoxServerEnabled, resources.GetString("checkBoxServerEnabled.ToolTip"));
+            this.checkBoxServerEnabled.Text = "Enabled - Check if hosting a server. Make sure to provide players with your publi" +
+    "c IP address.";
             this.checkBoxServerEnabled.UseVisualStyleBackColor = true;
             this.checkBoxServerEnabled.CheckedChanged += new System.EventHandler(this.CheckBoxServerEnabled_CheckedChanged);
             // 
@@ -328,10 +287,10 @@
             this.checkBoxClientEnabled.AutoSize = true;
             this.checkBoxClientEnabled.Location = new System.Drawing.Point(6, 6);
             this.checkBoxClientEnabled.Name = "checkBoxClientEnabled";
-            this.checkBoxClientEnabled.Size = new System.Drawing.Size(68, 19);
+            this.checkBoxClientEnabled.Size = new System.Drawing.Size(717, 19);
             this.checkBoxClientEnabled.TabIndex = 2;
-            this.checkBoxClientEnabled.Text = "Enabled";
-            this.toolTip.SetToolTip(this.checkBoxClientEnabled, resources.GetString("checkBoxClientEnabled.ToolTip"));
+            this.checkBoxClientEnabled.Text = "Enabled - Check if connecting to a remote server. Make sure to enter a public IP " +
+    "address unless you are connecting to a local server.";
             this.checkBoxClientEnabled.UseVisualStyleBackColor = true;
             this.checkBoxClientEnabled.CheckedChanged += new System.EventHandler(this.CheckBoxClientEnabled_CheckedChanged);
             // 
@@ -343,7 +302,7 @@
             this.toolStripStatusLabelVconsolePort,
             this.toolStripStatusLabelVconsoleProtocol,
             this.toolStripStatusLabelLibraries});
-            this.statusStrip.Location = new System.Drawing.Point(0, 428);
+            this.statusStrip.Location = new System.Drawing.Point(0, 429);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(800, 22);
             this.statusStrip.SizingGrip = false;
@@ -360,7 +319,7 @@
             // toolStripStatusLabelVersion
             // 
             this.toolStripStatusLabelVersion.Name = "toolStripStatusLabelVersion";
-            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(90, 17);
+            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(91, 17);
             this.toolStripStatusLabelVersion.Text = "Version: v0.0.0.0";
             // 
             // toolStripStatusLabelVconsolePort
@@ -385,15 +344,15 @@
             // 
             this.textBoxInput.Location = new System.Drawing.Point(94, 402);
             this.textBoxInput.Name = "textBoxInput";
-            this.textBoxInput.Size = new System.Drawing.Size(632, 23);
+            this.textBoxInput.Size = new System.Drawing.Size(608, 23);
             this.textBoxInput.TabIndex = 6;
             this.textBoxInput.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.TextBoxInput_KeyPress);
             // 
             // buttonStart
             // 
-            this.buttonStart.Location = new System.Drawing.Point(732, 402);
+            this.buttonStart.Location = new System.Drawing.Point(708, 402);
             this.buttonStart.Name = "buttonStart";
-            this.buttonStart.Size = new System.Drawing.Size(56, 23);
+            this.buttonStart.Size = new System.Drawing.Size(76, 23);
             this.buttonStart.TabIndex = 7;
             this.buttonStart.Text = "Start";
             this.buttonStart.UseVisualStyleBackColor = true;
@@ -428,184 +387,23 @@
             this.tabPageOutput.TabIndex = 0;
             this.tabPageOutput.Text = "Global";
             // 
-            // tabPageCharacter
-            // 
-            this.tabPageCharacter.Controls.Add(this.labelCharacterUpdate);
-            this.tabPageCharacter.Controls.Add(this.buttonCharacterUpdate);
-            this.tabPageCharacter.Controls.Add(this.pictureBoxRightHand);
-            this.tabPageCharacter.Controls.Add(this.pictureBoxLeftHand);
-            this.tabPageCharacter.Controls.Add(this.pictureBoxCollider);
-            this.tabPageCharacter.Controls.Add(this.pictureBoxHead);
-            this.tabPageCharacter.Controls.Add(this.label2);
-            this.tabPageCharacter.Controls.Add(this.comboBoxRightHand);
-            this.tabPageCharacter.Controls.Add(this.labelLeftHand);
-            this.tabPageCharacter.Controls.Add(this.comboBoxLeftHand);
-            this.tabPageCharacter.Controls.Add(this.label1);
-            this.tabPageCharacter.Controls.Add(this.comboBoxCollider);
-            this.tabPageCharacter.Controls.Add(this.labelHead);
-            this.tabPageCharacter.Controls.Add(this.comboBoxHead);
-            this.tabPageCharacter.Controls.Add(this.labelHat);
-            this.tabPageCharacter.Controls.Add(this.pictureBoxHat);
-            this.tabPageCharacter.Controls.Add(this.comboBoxHat);
-            this.tabPageCharacter.Location = new System.Drawing.Point(4, 24);
-            this.tabPageCharacter.Name = "tabPageCharacter";
-            this.tabPageCharacter.Size = new System.Drawing.Size(768, 164);
-            this.tabPageCharacter.TabIndex = 2;
-            this.tabPageCharacter.Text = "Character";
-            // 
-            // pictureBoxRightHand
-            // 
-            this.pictureBoxRightHand.Location = new System.Drawing.Point(318, 89);
-            this.pictureBoxRightHand.Name = "pictureBoxRightHand";
-            this.pictureBoxRightHand.Size = new System.Drawing.Size(24, 24);
-            this.pictureBoxRightHand.TabIndex = 29;
-            this.pictureBoxRightHand.TabStop = false;
-            // 
-            // pictureBoxLeftHand
-            // 
-            this.pictureBoxLeftHand.Location = new System.Drawing.Point(402, 88);
-            this.pictureBoxLeftHand.Name = "pictureBoxLeftHand";
-            this.pictureBoxLeftHand.Size = new System.Drawing.Size(24, 24);
-            this.pictureBoxLeftHand.TabIndex = 28;
-            this.pictureBoxLeftHand.TabStop = false;
-            // 
-            // pictureBoxCollider
-            // 
-            this.pictureBoxCollider.Location = new System.Drawing.Point(348, 61);
-            this.pictureBoxCollider.Name = "pictureBoxCollider";
-            this.pictureBoxCollider.Size = new System.Drawing.Size(48, 72);
-            this.pictureBoxCollider.TabIndex = 27;
-            this.pictureBoxCollider.TabStop = false;
-            // 
-            // pictureBoxHead
-            // 
-            this.pictureBoxHead.Location = new System.Drawing.Point(360, 31);
-            this.pictureBoxHead.Name = "pictureBoxHead";
-            this.pictureBoxHead.Size = new System.Drawing.Size(24, 24);
-            this.pictureBoxHead.TabIndex = 26;
-            this.pictureBoxHead.TabStop = false;
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(108, 92);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(70, 15);
-            this.label2.TabIndex = 25;
-            this.label2.Text = "Right Hand:";
-            // 
-            // comboBoxRightHand
-            // 
-            this.comboBoxRightHand.Enabled = false;
-            this.comboBoxRightHand.FormattingEnabled = true;
-            this.comboBoxRightHand.Location = new System.Drawing.Point(184, 89);
-            this.comboBoxRightHand.Name = "comboBoxRightHand";
-            this.comboBoxRightHand.Size = new System.Drawing.Size(128, 23);
-            this.comboBoxRightHand.TabIndex = 24;
-            this.comboBoxRightHand.SelectedIndexChanged += new System.EventHandler(this.SelectedIndexChanged);
-            // 
-            // labelLeftHand
-            // 
-            this.labelLeftHand.AutoSize = true;
-            this.labelLeftHand.Location = new System.Drawing.Point(432, 92);
-            this.labelLeftHand.Name = "labelLeftHand";
-            this.labelLeftHand.Size = new System.Drawing.Size(62, 15);
-            this.labelLeftHand.TabIndex = 23;
-            this.labelLeftHand.Text = "Left Hand:";
-            // 
-            // comboBoxLeftHand
-            // 
-            this.comboBoxLeftHand.Enabled = false;
-            this.comboBoxLeftHand.FormattingEnabled = true;
-            this.comboBoxLeftHand.Location = new System.Drawing.Point(500, 89);
-            this.comboBoxLeftHand.Name = "comboBoxLeftHand";
-            this.comboBoxLeftHand.Size = new System.Drawing.Size(128, 23);
-            this.comboBoxLeftHand.TabIndex = 22;
-            this.comboBoxLeftHand.SelectedIndexChanged += new System.EventHandler(this.SelectedIndexChanged);
-            // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(251, 141);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(51, 15);
-            this.label1.TabIndex = 21;
-            this.label1.Text = "Collider:";
-            // 
-            // comboBoxCollider
-            // 
-            this.comboBoxCollider.Enabled = false;
-            this.comboBoxCollider.FormattingEnabled = true;
-            this.comboBoxCollider.Location = new System.Drawing.Point(308, 138);
-            this.comboBoxCollider.Name = "comboBoxCollider";
-            this.comboBoxCollider.Size = new System.Drawing.Size(128, 23);
-            this.comboBoxCollider.TabIndex = 20;
-            this.comboBoxCollider.SelectedIndexChanged += new System.EventHandler(this.SelectedIndexChanged);
-            // 
-            // labelHead
-            // 
-            this.labelHead.AutoSize = true;
-            this.labelHead.Location = new System.Drawing.Point(182, 35);
-            this.labelHead.Name = "labelHead";
-            this.labelHead.Size = new System.Drawing.Size(38, 15);
-            this.labelHead.TabIndex = 19;
-            this.labelHead.Text = "Head:";
-            // 
-            // comboBoxHead
-            // 
-            this.comboBoxHead.Enabled = false;
-            this.comboBoxHead.FormattingEnabled = true;
-            this.comboBoxHead.Location = new System.Drawing.Point(226, 32);
-            this.comboBoxHead.Name = "comboBoxHead";
-            this.comboBoxHead.Size = new System.Drawing.Size(128, 23);
-            this.comboBoxHead.TabIndex = 18;
-            this.comboBoxHead.SelectedIndexChanged += new System.EventHandler(this.SelectedIndexChanged);
-            // 
-            // labelHat
-            // 
-            this.labelHat.AutoSize = true;
-            this.labelHat.Location = new System.Drawing.Point(191, 7);
-            this.labelHat.Name = "labelHat";
-            this.labelHat.Size = new System.Drawing.Size(29, 15);
-            this.labelHat.TabIndex = 17;
-            this.labelHat.Text = "Hat:";
-            // 
-            // pictureBoxHat
-            // 
-            this.pictureBoxHat.Location = new System.Drawing.Point(360, 3);
-            this.pictureBoxHat.Name = "pictureBoxHat";
-            this.pictureBoxHat.Size = new System.Drawing.Size(24, 24);
-            this.pictureBoxHat.TabIndex = 1;
-            this.pictureBoxHat.TabStop = false;
-            // 
-            // comboBoxHat
-            // 
-            this.comboBoxHat.Enabled = false;
-            this.comboBoxHat.FormattingEnabled = true;
-            this.comboBoxHat.Location = new System.Drawing.Point(226, 4);
-            this.comboBoxHat.Name = "comboBoxHat";
-            this.comboBoxHat.Size = new System.Drawing.Size(128, 23);
-            this.comboBoxHat.TabIndex = 0;
-            this.comboBoxHat.SelectedIndexChanged += new System.EventHandler(this.SelectedIndexChanged);
-            // 
             // tabPageServer
             // 
+            this.tabPageServer.Controls.Add(this.label2);
+            this.tabPageServer.Controls.Add(this.label1);
+            this.tabPageServer.Controls.Add(this.labelHelpServerPassword);
+            this.tabPageServer.Controls.Add(this.labelHelpServerPort);
+            this.tabPageServer.Controls.Add(this.buttonServerVconsoleSend);
+            this.tabPageServer.Controls.Add(this.labelServerVconsole);
+            this.tabPageServer.Controls.Add(this.textBoxServerVconsole);
             this.tabPageServer.Controls.Add(this.buttonServerChangeMap);
             this.tabPageServer.Controls.Add(this.checkBoxServerEnabled);
             this.tabPageServer.Controls.Add(this.numericUpDownServerPort);
             this.tabPageServer.Controls.Add(this.textBoxServerMap);
-            this.tabPageServer.Controls.Add(this.textBoxServerIpAddress);
-            this.tabPageServer.Controls.Add(this.textBoxServerMemo);
-            this.tabPageServer.Controls.Add(this.textBoxServerHostAuthId);
             this.tabPageServer.Controls.Add(this.textBoxServerPassword);
-            this.tabPageServer.Controls.Add(this.textBoxServerHostUsername);
-            this.tabPageServer.Controls.Add(this.labelServerIpAddress);
             this.tabPageServer.Controls.Add(this.labelServerMap);
             this.tabPageServer.Controls.Add(this.labelServerPort);
-            this.tabPageServer.Controls.Add(this.labelServerMemo);
-            this.tabPageServer.Controls.Add(this.labelServerHostUsername);
             this.tabPageServer.Controls.Add(this.labelServerPassword);
-            this.tabPageServer.Controls.Add(this.labelServerHostAuthId);
             this.tabPageServer.Location = new System.Drawing.Point(4, 24);
             this.tabPageServer.Name = "tabPageServer";
             this.tabPageServer.Padding = new System.Windows.Forms.Padding(3);
@@ -613,93 +411,115 @@
             this.tabPageServer.TabIndex = 1;
             this.tabPageServer.Text = "Server";
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(345, 122);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(309, 15);
+            this.label2.TabIndex = 39;
+            this.label2.Text = "Type in a VConsole command to be input by every client.";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(345, 92);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(399, 15);
+            this.label1.TabIndex = 38;
+            this.label1.Text = "The current map, players will be forced to load this map when connecting.";
+            // 
+            // labelHelpServerPassword
+            // 
+            this.labelHelpServerPassword.AutoSize = true;
+            this.labelHelpServerPassword.Location = new System.Drawing.Point(274, 63);
+            this.labelHelpServerPassword.Name = "labelHelpServerPassword";
+            this.labelHelpServerPassword.Size = new System.Drawing.Size(442, 15);
+            this.labelHelpServerPassword.TabIndex = 37;
+            this.labelHelpServerPassword.Text = "If desired, set this value. Every client should enter this password before connec" +
+    "ting.";
+            // 
+            // labelHelpServerPort
+            // 
+            this.labelHelpServerPort.AutoSize = true;
+            this.labelHelpServerPort.Location = new System.Drawing.Point(275, 34);
+            this.labelHelpServerPort.Name = "labelHelpServerPort";
+            this.labelHelpServerPort.Size = new System.Drawing.Size(484, 15);
+            this.labelHelpServerPort.TabIndex = 36;
+            this.labelHelpServerPort.Text = "Set this to an available port number. Make sure to try UPnP port mapping in the F" +
+    "ile menu.";
+            // 
+            // buttonServerVconsoleSend
+            // 
+            this.buttonServerVconsoleSend.Location = new System.Drawing.Point(275, 118);
+            this.buttonServerVconsoleSend.Name = "buttonServerVconsoleSend";
+            this.buttonServerVconsoleSend.Size = new System.Drawing.Size(64, 23);
+            this.buttonServerVconsoleSend.TabIndex = 35;
+            this.buttonServerVconsoleSend.Text = "Send";
+            this.buttonServerVconsoleSend.UseVisualStyleBackColor = true;
+            this.buttonServerVconsoleSend.Click += new System.EventHandler(this.buttonServerVconsoleSend_Click);
+            // 
+            // labelServerVconsole
+            // 
+            this.labelServerVconsole.AutoSize = true;
+            this.labelServerVconsole.Location = new System.Drawing.Point(12, 121);
+            this.labelServerVconsole.Name = "labelServerVconsole";
+            this.labelServerVconsole.Size = new System.Drawing.Size(60, 15);
+            this.labelServerVconsole.TabIndex = 34;
+            this.labelServerVconsole.Text = "VConsole:";
+            // 
+            // textBoxServerVconsole
+            // 
+            this.textBoxServerVconsole.Location = new System.Drawing.Point(78, 118);
+            this.textBoxServerVconsole.Name = "textBoxServerVconsole";
+            this.textBoxServerVconsole.Size = new System.Drawing.Size(191, 23);
+            this.textBoxServerVconsole.TabIndex = 33;
+            this.textBoxServerVconsole.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxServerVconsole_KeyPress);
+            // 
             // buttonServerChangeMap
             // 
-            this.buttonServerChangeMap.Location = new System.Drawing.Point(334, 61);
+            this.buttonServerChangeMap.Location = new System.Drawing.Point(275, 88);
             this.buttonServerChangeMap.Name = "buttonServerChangeMap";
-            this.buttonServerChangeMap.Size = new System.Drawing.Size(56, 23);
+            this.buttonServerChangeMap.Size = new System.Drawing.Size(64, 23);
             this.buttonServerChangeMap.TabIndex = 32;
-            this.buttonServerChangeMap.Text = "Change";
+            this.buttonServerChangeMap.Text = "Update";
             this.buttonServerChangeMap.UseVisualStyleBackColor = true;
             this.buttonServerChangeMap.Click += new System.EventHandler(this.ButtonServerChangeMap_Click);
             // 
             // numericUpDownServerPort
             // 
-            this.numericUpDownServerPort.Location = new System.Drawing.Point(212, 31);
+            this.numericUpDownServerPort.Location = new System.Drawing.Point(77, 31);
             this.numericUpDownServerPort.Maximum = new decimal(new int[] {
             99999,
             0,
             0,
             0});
             this.numericUpDownServerPort.Name = "numericUpDownServerPort";
-            this.numericUpDownServerPort.Size = new System.Drawing.Size(50, 23);
+            this.numericUpDownServerPort.Size = new System.Drawing.Size(192, 23);
             this.numericUpDownServerPort.TabIndex = 31;
             this.numericUpDownServerPort.ValueChanged += new System.EventHandler(this.NumericUpDownServerPort_ValueChanged);
             // 
             // textBoxServerMap
             // 
-            this.textBoxServerMap.Location = new System.Drawing.Point(46, 60);
+            this.textBoxServerMap.Location = new System.Drawing.Point(78, 89);
             this.textBoxServerMap.Name = "textBoxServerMap";
-            this.textBoxServerMap.Size = new System.Drawing.Size(282, 23);
+            this.textBoxServerMap.Size = new System.Drawing.Size(191, 23);
             this.textBoxServerMap.TabIndex = 30;
             this.textBoxServerMap.TextChanged += new System.EventHandler(this.TextBoxServerMap_TextChanged);
-            // 
-            // textBoxServerIpAddress
-            // 
-            this.textBoxServerIpAddress.Enabled = false;
-            this.textBoxServerIpAddress.Location = new System.Drawing.Point(77, 31);
-            this.textBoxServerIpAddress.Name = "textBoxServerIpAddress";
-            this.textBoxServerIpAddress.Size = new System.Drawing.Size(91, 23);
-            this.textBoxServerIpAddress.TabIndex = 17;
-            this.textBoxServerIpAddress.TextChanged += new System.EventHandler(this.TextBoxServerIpAddress_TextChanged);
-            // 
-            // textBoxServerMemo
-            // 
-            this.textBoxServerMemo.Location = new System.Drawing.Point(515, 61);
-            this.textBoxServerMemo.Name = "textBoxServerMemo";
-            this.textBoxServerMemo.Size = new System.Drawing.Size(247, 23);
-            this.textBoxServerMemo.TabIndex = 27;
-            this.textBoxServerMemo.TextChanged += new System.EventHandler(this.TextBoxServerMemo_TextChanged);
-            // 
-            // textBoxServerHostAuthId
-            // 
-            this.textBoxServerHostAuthId.Enabled = false;
-            this.textBoxServerHostAuthId.Location = new System.Drawing.Point(706, 30);
-            this.textBoxServerHostAuthId.Name = "textBoxServerHostAuthId";
-            this.textBoxServerHostAuthId.Size = new System.Drawing.Size(56, 23);
-            this.textBoxServerHostAuthId.TabIndex = 25;
-            this.textBoxServerHostAuthId.TextChanged += new System.EventHandler(this.TextBoxServerHostAuthId_TextChanged);
+            this.textBoxServerMap.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.textBoxServerMap_KeyPress);
             // 
             // textBoxServerPassword
             // 
-            this.textBoxServerPassword.Location = new System.Drawing.Point(334, 31);
+            this.textBoxServerPassword.Location = new System.Drawing.Point(77, 60);
             this.textBoxServerPassword.Name = "textBoxServerPassword";
-            this.textBoxServerPassword.Size = new System.Drawing.Size(56, 23);
+            this.textBoxServerPassword.Size = new System.Drawing.Size(192, 23);
             this.textBoxServerPassword.TabIndex = 22;
             this.textBoxServerPassword.TextChanged += new System.EventHandler(this.TextBoxServerPassword_TextChanged);
-            // 
-            // textBoxServerHostUsername
-            // 
-            this.textBoxServerHostUsername.Enabled = false;
-            this.textBoxServerHostUsername.Location = new System.Drawing.Point(493, 31);
-            this.textBoxServerHostUsername.Name = "textBoxServerHostUsername";
-            this.textBoxServerHostUsername.Size = new System.Drawing.Size(126, 23);
-            this.textBoxServerHostUsername.TabIndex = 23;
-            this.textBoxServerHostUsername.TextChanged += new System.EventHandler(this.TextBoxServerHostUsername_TextChanged);
-            // 
-            // labelServerIpAddress
-            // 
-            this.labelServerIpAddress.AutoSize = true;
-            this.labelServerIpAddress.Location = new System.Drawing.Point(6, 34);
-            this.labelServerIpAddress.Name = "labelServerIpAddress";
-            this.labelServerIpAddress.Size = new System.Drawing.Size(65, 15);
-            this.labelServerIpAddress.TabIndex = 16;
-            this.labelServerIpAddress.Text = "IP Address:";
             // 
             // labelServerMap
             // 
             this.labelServerMap.AutoSize = true;
-            this.labelServerMap.Location = new System.Drawing.Point(6, 63);
+            this.labelServerMap.Location = new System.Drawing.Point(37, 92);
             this.labelServerMap.Name = "labelServerMap";
             this.labelServerMap.Size = new System.Drawing.Size(34, 15);
             this.labelServerMap.TabIndex = 29;
@@ -708,65 +528,34 @@
             // labelServerPort
             // 
             this.labelServerPort.AutoSize = true;
-            this.labelServerPort.Location = new System.Drawing.Point(174, 34);
+            this.labelServerPort.Location = new System.Drawing.Point(39, 34);
             this.labelServerPort.Name = "labelServerPort";
             this.labelServerPort.Size = new System.Drawing.Size(32, 15);
             this.labelServerPort.TabIndex = 18;
             this.labelServerPort.Text = "Port:";
             // 
-            // labelServerMemo
-            // 
-            this.labelServerMemo.AutoSize = true;
-            this.labelServerMemo.Location = new System.Drawing.Point(396, 65);
-            this.labelServerMemo.Name = "labelServerMemo";
-            this.labelServerMemo.Size = new System.Drawing.Size(113, 15);
-            this.labelServerMemo.TabIndex = 26;
-            this.labelServerMemo.Text = "Message of the Day:";
-            // 
-            // labelServerHostUsername
-            // 
-            this.labelServerHostUsername.AutoSize = true;
-            this.labelServerHostUsername.Enabled = false;
-            this.labelServerHostUsername.Location = new System.Drawing.Point(396, 34);
-            this.labelServerHostUsername.Name = "labelServerHostUsername";
-            this.labelServerHostUsername.Size = new System.Drawing.Size(91, 15);
-            this.labelServerHostUsername.TabIndex = 20;
-            this.labelServerHostUsername.Text = "Host Username:";
-            // 
             // labelServerPassword
             // 
             this.labelServerPassword.AutoSize = true;
-            this.labelServerPassword.Location = new System.Drawing.Point(268, 34);
+            this.labelServerPassword.Location = new System.Drawing.Point(11, 63);
             this.labelServerPassword.Name = "labelServerPassword";
             this.labelServerPassword.Size = new System.Drawing.Size(60, 15);
             this.labelServerPassword.TabIndex = 21;
             this.labelServerPassword.Text = "Password:";
             // 
-            // labelServerHostAuthId
-            // 
-            this.labelServerHostAuthId.AutoSize = true;
-            this.labelServerHostAuthId.Enabled = false;
-            this.labelServerHostAuthId.Location = new System.Drawing.Point(625, 34);
-            this.labelServerHostAuthId.Name = "labelServerHostAuthId";
-            this.labelServerHostAuthId.Size = new System.Drawing.Size(75, 15);
-            this.labelServerHostAuthId.TabIndex = 24;
-            this.labelServerHostAuthId.Text = "Host AuthID:";
-            // 
             // tabPageClient
             // 
-            this.tabPageClient.Controls.Add(this.buttonClientRandomizeAuthId);
+            this.tabPageClient.Controls.Add(this.labelHelpUsername);
+            this.tabPageClient.Controls.Add(this.labelHelpClientPassword);
+            this.tabPageClient.Controls.Add(this.labelHelpClientIpAddressPort);
             this.tabPageClient.Controls.Add(this.checkBoxClientEnabled);
             this.tabPageClient.Controls.Add(this.numericUpDownClientPort);
             this.tabPageClient.Controls.Add(this.labelClientIpAddress);
-            this.tabPageClient.Controls.Add(this.textBoxClientMemo);
             this.tabPageClient.Controls.Add(this.textBoxClientIpAddress);
-            this.tabPageClient.Controls.Add(this.textBoxClientAuthId);
             this.tabPageClient.Controls.Add(this.textBoxClientUsername);
             this.tabPageClient.Controls.Add(this.textBoxClientPassword);
-            this.tabPageClient.Controls.Add(this.labelClientMemo);
             this.tabPageClient.Controls.Add(this.labelClientPort);
             this.tabPageClient.Controls.Add(this.labelClientUsername);
-            this.tabPageClient.Controls.Add(this.labelClientAuthId);
             this.tabPageClient.Controls.Add(this.labelClientPassword);
             this.tabPageClient.Location = new System.Drawing.Point(4, 24);
             this.tabPageClient.Name = "tabPageClient";
@@ -775,26 +564,44 @@
             this.tabPageClient.TabIndex = 0;
             this.tabPageClient.Text = "Client";
             // 
-            // buttonClientRandomizeAuthId
+            // labelHelpUsername
             // 
-            this.buttonClientRandomizeAuthId.Location = new System.Drawing.Point(734, 30);
-            this.buttonClientRandomizeAuthId.Name = "buttonClientRandomizeAuthId";
-            this.buttonClientRandomizeAuthId.Size = new System.Drawing.Size(24, 24);
-            this.buttonClientRandomizeAuthId.TabIndex = 20;
-            this.buttonClientRandomizeAuthId.Text = "+";
-            this.buttonClientRandomizeAuthId.UseVisualStyleBackColor = true;
-            this.buttonClientRandomizeAuthId.Click += new System.EventHandler(this.ButtonClientRandomizeAuthId_Click);
+            this.labelHelpUsername.AutoSize = true;
+            this.labelHelpUsername.Location = new System.Drawing.Point(275, 92);
+            this.labelHelpUsername.Name = "labelHelpUsername";
+            this.labelHelpUsername.Size = new System.Drawing.Size(357, 15);
+            this.labelHelpUsername.TabIndex = 23;
+            this.labelHelpUsername.Text = "Type a username to identify yourself to both the server and others.\r\n";
+            // 
+            // labelHelpClientPassword
+            // 
+            this.labelHelpClientPassword.AutoSize = true;
+            this.labelHelpClientPassword.Location = new System.Drawing.Point(275, 63);
+            this.labelHelpClientPassword.Name = "labelHelpClientPassword";
+            this.labelHelpClientPassword.Size = new System.Drawing.Size(351, 15);
+            this.labelHelpClientPassword.TabIndex = 22;
+            this.labelHelpClientPassword.Text = "If the remote server has a password set, type it in here if provided.\r\n";
+            // 
+            // labelHelpClientIpAddressPort
+            // 
+            this.labelHelpClientIpAddressPort.AutoSize = true;
+            this.labelHelpClientIpAddressPort.Location = new System.Drawing.Point(275, 34);
+            this.labelHelpClientIpAddressPort.Name = "labelHelpClientIpAddressPort";
+            this.labelHelpClientIpAddressPort.Size = new System.Drawing.Size(480, 15);
+            this.labelHelpClientIpAddressPort.TabIndex = 21;
+            this.labelHelpClientIpAddressPort.Text = "Set this to the IP address of the remote server, or use \"localhost\" if you\'re run" +
+    "ning a server.";
             // 
             // numericUpDownClientPort
             // 
-            this.numericUpDownClientPort.Location = new System.Drawing.Point(212, 31);
+            this.numericUpDownClientPort.Location = new System.Drawing.Point(205, 31);
             this.numericUpDownClientPort.Maximum = new decimal(new int[] {
             99999,
             0,
             0,
             0});
             this.numericUpDownClientPort.Name = "numericUpDownClientPort";
-            this.numericUpDownClientPort.Size = new System.Drawing.Size(50, 23);
+            this.numericUpDownClientPort.Size = new System.Drawing.Size(64, 23);
             this.numericUpDownClientPort.TabIndex = 19;
             this.numericUpDownClientPort.ValueChanged += new System.EventHandler(this.NumericUpDownClientPort_ValueChanged);
             // 
@@ -807,54 +614,29 @@
             this.labelClientIpAddress.TabIndex = 3;
             this.labelClientIpAddress.Text = "IP Address:";
             // 
-            // textBoxClientMemo
-            // 
-            this.textBoxClientMemo.Location = new System.Drawing.Point(57, 60);
-            this.textBoxClientMemo.Name = "textBoxClientMemo";
-            this.textBoxClientMemo.Size = new System.Drawing.Size(333, 23);
-            this.textBoxClientMemo.TabIndex = 14;
-            this.textBoxClientMemo.TextChanged += new System.EventHandler(this.TextBoxClientMemo_TextChanged);
-            // 
             // textBoxClientIpAddress
             // 
             this.textBoxClientIpAddress.Location = new System.Drawing.Point(77, 31);
             this.textBoxClientIpAddress.Name = "textBoxClientIpAddress";
-            this.textBoxClientIpAddress.Size = new System.Drawing.Size(91, 23);
+            this.textBoxClientIpAddress.Size = new System.Drawing.Size(96, 23);
             this.textBoxClientIpAddress.TabIndex = 4;
             this.textBoxClientIpAddress.TextChanged += new System.EventHandler(this.TextBoxClientIpAddress_TextChanged);
             // 
-            // textBoxClientAuthId
-            // 
-            this.textBoxClientAuthId.Location = new System.Drawing.Point(678, 30);
-            this.textBoxClientAuthId.Name = "textBoxClientAuthId";
-            this.textBoxClientAuthId.Size = new System.Drawing.Size(50, 23);
-            this.textBoxClientAuthId.TabIndex = 12;
-            this.textBoxClientAuthId.TextChanged += new System.EventHandler(this.TextBoxClientAuthId_TextChanged);
-            // 
             // textBoxClientUsername
             // 
-            this.textBoxClientUsername.Location = new System.Drawing.Point(465, 31);
+            this.textBoxClientUsername.Location = new System.Drawing.Point(77, 89);
             this.textBoxClientUsername.Name = "textBoxClientUsername";
-            this.textBoxClientUsername.Size = new System.Drawing.Size(154, 23);
+            this.textBoxClientUsername.Size = new System.Drawing.Size(192, 23);
             this.textBoxClientUsername.TabIndex = 10;
             this.textBoxClientUsername.TextChanged += new System.EventHandler(this.TextBoxClientUsername_TextChanged);
             // 
             // textBoxClientPassword
             // 
-            this.textBoxClientPassword.Location = new System.Drawing.Point(334, 31);
+            this.textBoxClientPassword.Location = new System.Drawing.Point(77, 60);
             this.textBoxClientPassword.Name = "textBoxClientPassword";
-            this.textBoxClientPassword.Size = new System.Drawing.Size(56, 23);
+            this.textBoxClientPassword.Size = new System.Drawing.Size(192, 23);
             this.textBoxClientPassword.TabIndex = 9;
             this.textBoxClientPassword.TextChanged += new System.EventHandler(this.TextBoxClientPassword_TextChanged);
-            // 
-            // labelClientMemo
-            // 
-            this.labelClientMemo.AutoSize = true;
-            this.labelClientMemo.Location = new System.Drawing.Point(6, 63);
-            this.labelClientMemo.Name = "labelClientMemo";
-            this.labelClientMemo.Size = new System.Drawing.Size(45, 15);
-            this.labelClientMemo.TabIndex = 13;
-            this.labelClientMemo.Text = "Memo:";
             // 
             // labelClientPort
             // 
@@ -868,25 +650,16 @@
             // labelClientUsername
             // 
             this.labelClientUsername.AutoSize = true;
-            this.labelClientUsername.Location = new System.Drawing.Point(396, 34);
+            this.labelClientUsername.Location = new System.Drawing.Point(8, 92);
             this.labelClientUsername.Name = "labelClientUsername";
             this.labelClientUsername.Size = new System.Drawing.Size(63, 15);
             this.labelClientUsername.TabIndex = 7;
             this.labelClientUsername.Text = "Username:";
             // 
-            // labelClientAuthId
-            // 
-            this.labelClientAuthId.AutoSize = true;
-            this.labelClientAuthId.Location = new System.Drawing.Point(625, 35);
-            this.labelClientAuthId.Name = "labelClientAuthId";
-            this.labelClientAuthId.Size = new System.Drawing.Size(47, 15);
-            this.labelClientAuthId.TabIndex = 11;
-            this.labelClientAuthId.Text = "AuthID:";
-            // 
             // labelClientPassword
             // 
             this.labelClientPassword.AutoSize = true;
-            this.labelClientPassword.Location = new System.Drawing.Point(268, 34);
+            this.labelClientPassword.Location = new System.Drawing.Point(11, 63);
             this.labelClientPassword.Name = "labelClientPassword";
             this.labelClientPassword.Size = new System.Drawing.Size(60, 15);
             this.labelClientPassword.TabIndex = 8;
@@ -896,39 +669,17 @@
             // 
             this.tabControlTop.Controls.Add(this.tabPageClient);
             this.tabControlTop.Controls.Add(this.tabPageServer);
-            this.tabControlTop.Controls.Add(this.tabPageCharacter);
             this.tabControlTop.Location = new System.Drawing.Point(12, 27);
             this.tabControlTop.Name = "tabControlTop";
             this.tabControlTop.SelectedIndex = 0;
             this.tabControlTop.Size = new System.Drawing.Size(776, 192);
             this.tabControlTop.TabIndex = 9;
             // 
-            // buttonCharacterUpdate
-            // 
-            this.buttonCharacterUpdate.Location = new System.Drawing.Point(708, 138);
-            this.buttonCharacterUpdate.Name = "buttonCharacterUpdate";
-            this.buttonCharacterUpdate.Size = new System.Drawing.Size(56, 23);
-            this.buttonCharacterUpdate.TabIndex = 30;
-            this.buttonCharacterUpdate.Text = "Update";
-            this.buttonCharacterUpdate.UseVisualStyleBackColor = true;
-            this.buttonCharacterUpdate.Click += new System.EventHandler(this.buttonCharacterUpdate_Click);
-            // 
-            // labelCharacterUpdate
-            // 
-            this.labelCharacterUpdate.AutoSize = true;
-            this.labelCharacterUpdate.Location = new System.Drawing.Point(432, 20);
-            this.labelCharacterUpdate.Name = "labelCharacterUpdate";
-            this.labelCharacterUpdate.Size = new System.Drawing.Size(306, 45);
-            this.labelCharacterUpdate.TabIndex = 31;
-            this.labelCharacterUpdate.Text = "Clients can only see changes made to character models\r\nonce they have completely " +
-    "loaded into the desired map.\r\nClick \"Update\" to re-transmit these changes to eve" +
-    "ryone.\r\n";
-            // 
             // UserInterface
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(800, 451);
             this.Controls.Add(this.tabControlBottom);
             this.Controls.Add(this.tabControlTop);
             this.Controls.Add(this.buttonCommandType);
@@ -951,13 +702,6 @@
             this.statusStrip.PerformLayout();
             this.tabControlBottom.ResumeLayout(false);
             this.tabPageOutput.ResumeLayout(false);
-            this.tabPageCharacter.ResumeLayout(false);
-            this.tabPageCharacter.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxRightHand)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxLeftHand)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxCollider)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHead)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.pictureBoxHat)).EndInit();
             this.tabPageServer.ResumeLayout(false);
             this.tabPageServer.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.numericUpDownServerPort)).EndInit();
@@ -990,11 +734,8 @@
         private ToolStripMenuItem editToolStripMenuItem;
         private ToolStripMenuItem advancedOptionsToolStripMenuItem;
         private ToolStripMenuItem clientPrintVConsoleToolStripMenuItem;
-        private ToolStripMenuItem clientHostModeToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
         private ToolStripMenuItem steamWorkshopToolStripMenuItem;
-        private ToolStripMenuItem clientPlayerCollisionToolStripMenuItem;
-        private ToolStripMenuItem clientAutomaticallyReconnectToolStripMenuItem;
         private ToolStripMenuItem saveOptionsOnExitToolStripMenuItem;
         private ToolStripMenuItem serverDisableUserVConsoleInputToolStripMenuItem;
         private ToolStripMenuItem saveOptionsToolStripMenuItem;
@@ -1005,56 +746,37 @@
         private ToolStripMenuItem trelloFAQToolStripMenuItem;
         private TabControl tabControlBottom;
         private TabPage tabPageOutput;
-        private TabPage tabPageCharacter;
-        private PictureBox pictureBoxRightHand;
-        private PictureBox pictureBoxLeftHand;
-        private PictureBox pictureBoxCollider;
-        private PictureBox pictureBoxHead;
-        private Label label2;
-        private ComboBox comboBoxRightHand;
-        private Label labelLeftHand;
-        private ComboBox comboBoxLeftHand;
-        private Label label1;
-        private ComboBox comboBoxCollider;
-        private Label labelHead;
-        private ComboBox comboBoxHead;
-        private Label labelHat;
-        private PictureBox pictureBoxHat;
-        private ComboBox comboBoxHat;
         private TabPage tabPageServer;
         private Button buttonServerChangeMap;
         private CheckBox checkBoxServerEnabled;
         private NumericUpDown numericUpDownServerPort;
         private TextBox textBoxServerMap;
-        private TextBox textBoxServerIpAddress;
-        private TextBox textBoxServerMemo;
-        private TextBox textBoxServerHostAuthId;
         private TextBox textBoxServerPassword;
-        private TextBox textBoxServerHostUsername;
-        private Label labelServerIpAddress;
         private Label labelServerMap;
         private Label labelServerPort;
-        private Label labelServerMemo;
-        private Label labelServerHostUsername;
         private Label labelServerPassword;
-        private Label labelServerHostAuthId;
         private TabPage tabPageClient;
-        private Button buttonClientRandomizeAuthId;
         private CheckBox checkBoxClientEnabled;
         private NumericUpDown numericUpDownClientPort;
         private Label labelClientIpAddress;
-        private TextBox textBoxClientMemo;
         private TextBox textBoxClientIpAddress;
-        private TextBox textBoxClientAuthId;
         private TextBox textBoxClientUsername;
         private TextBox textBoxClientPassword;
-        private Label labelClientMemo;
         private Label labelClientPort;
         private Label labelClientUsername;
-        private Label labelClientAuthId;
         private Label labelClientPassword;
         private TabControl tabControlTop;
-        private Label labelCharacterUpdate;
-        private Button buttonCharacterUpdate;
+        private Label labelHelpClientPassword;
+        private Label labelHelpClientIpAddressPort;
+        private Label labelHelpUsername;
+        private Button buttonServerVconsoleSend;
+        private Label labelServerVconsole;
+        private TextBox textBoxServerVconsole;
+        private Label labelHelpServerPort;
+        private Label labelHelpServerPassword;
+        private Label label1;
+        private Label label2;
+        private ToolStripMenuItem viewToolStripMenuItem;
+        private ToolStripMenuItem alwaysOnTopToolStripMenuItem;
     }
 }

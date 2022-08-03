@@ -22,6 +22,7 @@ using Newtonsoft.Json;
 using KiwisCoOpModCore;
 using Fleck;
 using System.Reflection;
+using System.Diagnostics;
 
 namespace KiwisCoOpMod
 {
@@ -33,7 +34,6 @@ namespace KiwisCoOpMod
         public List<IndexedClient> connections = new() { };
         public Type? gamemodeType;
         public List<Type> plugins = new();
-        public List<ICustomizationOption> customizationOptions = new();
         public void Start(Type type, List<Type> plugins)
         {
             if (wss == null)
@@ -45,7 +45,7 @@ namespace KiwisCoOpMod
                     this.plugins = plugins;
                     PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreStart, type, plugins);
                     gamemodeType = type;
-                    wss = new WebSocketServer("ws://" + Settings.Default.ServerIpAddress + ":" + Settings.Default.ServerPort);
+                    wss = new WebSocketServer("ws://[::]:" + Settings.Default.ServerPort);
                     wss.Start(socket =>
                     {
                         socket.OnOpen = () => OnClose(socket);
@@ -83,18 +83,7 @@ namespace KiwisCoOpMod
         }
         private void LoadFromDllFile(string appDir, string dll)
         {
-            Assembly gamemodeAssembly = Assembly.LoadFrom(Path.Combine(appDir, dll));
-            foreach (Type assemblyType in gamemodeAssembly.GetTypes())
-            {
-                if (assemblyType.GetInterface("ICustomizationOption") != null)
-                {
-                    ICustomizationOption? customizationOption = (ICustomizationOption?)Activator.CreateInstance(assemblyType);
-                    if (customizationOption != null)
-                    {
-                        customizationOptions.Add(customizationOption);
-                    }
-                }
-            }
+            Assembly.LoadFrom(Path.Combine(appDir, dll));
         }
         public void Close()
         {
@@ -120,6 +109,14 @@ namespace KiwisCoOpMod
                 con.Session.Send(JsonConvert.SerializeObject(output2));
             }
         }
+        public void GlobalVConsole(string command)
+        {
+            Response output2 = new("command", command);
+            foreach (IndexedClient con in connections)
+            {
+                con.Session.Send(JsonConvert.SerializeObject(output2));
+            }
+        }
         public void OnOpen(IWebSocketConnection socket)
         {
             if (gamemodeType != null)
@@ -137,20 +134,33 @@ namespace KiwisCoOpMod
                 GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.ClientClose, connections, socket);
                 PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_ClientClose, connections, socket);
             }
+            foreach(IndexedClient client in connections)
+            {
+                if(client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
+                {
+                    connections.Remove(client);
+                    Response outputDisconnect = new("status")
+                    {
+                        data = client.Username = " disconnected"
+                    };
+                    connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(outputDisconnect)));
+                    break;
+                }
+            }
         }
         public void OnMessage(string message, IWebSocketConnection socket)
         {
-            Response? response = JsonConvert.DeserializeObject<Response>(message);
+            Response ? response = JsonConvert.DeserializeObject<Response>(message);
             if (gamemodeType != null && response != null && response.type != null)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map, customizationOptions);
-                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, map, customizationOptions) == HandleState.Continue)
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map);
+                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, map) == HandleState.Continue)
                 {
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map, customizationOptions);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map);
                     switch (response.type.ToLower())
                     {
                         case "client":
-                            if (response.clientUsername != null && response.clientAuthId != null && response.password != null)
+                            if (response.clientUsername != null && response.password != null)
                             {
                                 if (Settings.Default.ServerPassword != "" && response.password != Settings.Default.ServerPassword)
                                 {
@@ -161,14 +171,7 @@ namespace KiwisCoOpMod
                                 {
                                     foreach (IndexedClient indexed1 in connections)
                                     {
-                                        if (indexed1.Username == response.clientUsername && indexed1.AuthId != response.clientAuthId)
-                                        {
-                                            Response output2 = new("status", "A client is already connected with this username: " + response.clientUsername);
-                                            socket.Send(JsonConvert.SerializeObject(output2));
-                                            socket.Close();
-                                            break;
-                                        }
-                                        else if (indexed1.Username == response.clientUsername)
+                                        if (indexed1.Username == response.clientUsername)
                                         {
                                             Response output2 = new("status", "Client reconnected elsewhere, closing connection...");
                                             socket.Send(JsonConvert.SerializeObject(output2));
@@ -177,47 +180,27 @@ namespace KiwisCoOpMod
                                             break;
                                         }
                                     }
-                                    if(response.clientUsername != null && response.clientAuthId != null)
+                                    if(response.clientUsername != null)
                                     {
                                         Response output2 = new("authenticated")
                                         {
                                             clientUsername = response.clientUsername,
-                                            clientAuthId = response.clientAuthId,
                                             map = map,
-                                            customizationOptionsName = new string[customizationOptions.Count],
-                                            customizationOptionsDescription = new string[customizationOptions.Count],
-                                            customizationOptionsAuthor = new string[customizationOptions.Count],
-                                            customizationOptionsImage = new string[customizationOptions.Count],
-                                            customizationOptionsDefault = new bool[customizationOptions.Count],
-                                            customizationOptionsType = new string[customizationOptions.Count],
-                                            customizationOptionsModelName = new string[customizationOptions.Count],
                                         };
-                                        for(int i = 0; i < customizationOptions.Count; i++)
+                                        IndexedClient client = new(socket, response.clientUsername, map);
+                                        connections.Add(client);
+                                        Response outputJoin = new("status")
                                         {
-                                            output2.customizationOptionsName[i] = customizationOptions[i].Name;
-                                            output2.customizationOptionsDescription[i] = customizationOptions[i].Description;
-                                            output2.customizationOptionsAuthor[i] = customizationOptions[i].Author;
-                                            output2.customizationOptionsImage[i] = customizationOptions[i].DisplayImageBase64;
-                                            output2.customizationOptionsDefault[i] = customizationOptions[i].Default;
-                                            output2.customizationOptionsModelName[i] = customizationOptions[i].ModelName;
-                                            output2.customizationOptionsType[i] = customizationOptions[i].Type switch
-                                            {
-                                                CustomizationOptionType.Head => "head",
-                                                CustomizationOptionType.LeftHand => "lefthand",
-                                                CustomizationOptionType.RightHand => "righthand",
-                                                CustomizationOptionType.Hat => "hat",
-                                                CustomizationOptionType.Collider => "collider",
-                                                _ => "none",
-                                            };
-                                        }
-                                        connections.Add(new IndexedClient(socket, response.clientUsername, response.clientAuthId, map));
+                                            data = client.Username + " connected"
+                                        };
+                                        connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(outputJoin)));
                                         socket.Send(JsonConvert.SerializeObject(output2));
                                     }
                                 }
                             }
                             else
                             {
-                                Response output2 = new("status", "Invalid username and/or AuthID! Closing connection...");
+                                Response output2 = new("status", "Invalid username! Closing connection...");
                                 socket.Send(JsonConvert.SerializeObject(output2));
                                 socket.Close();
                             }
@@ -228,6 +211,7 @@ namespace KiwisCoOpMod
                             {
                                 if (response.data != null)
                                 {
+                                    if (response.data.Length == 0) return;
                                     if (response.data.StartsWith("/"))
                                     {
                                         string command = response.data.Split(" ").ToArray().First().Replace("/", "").ToLower();
@@ -235,7 +219,6 @@ namespace KiwisCoOpMod
                                         Response output3 = new("status", response.data)
                                         {
                                             clientUsername = indexedClient.Username,
-                                            clientAuthId = indexedClient.AuthId,
                                             data = "Unknown command '" + command + "'"
                                         };
                                         switch (command)
@@ -281,8 +264,7 @@ namespace KiwisCoOpMod
                                     {
                                         Response output5 = new("vconsole", response.data)
                                         {
-                                            clientUsername = indexed2.Username,
-                                            clientAuthId = indexed2.AuthId
+                                            clientUsername = indexed2.Username
                                         };
                                         socket.Send(JsonConvert.SerializeObject(output5));
                                     }
@@ -297,9 +279,9 @@ namespace KiwisCoOpMod
                             socket.Close();
                             break;
                     }
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map, customizationOptions);
-                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, map, customizationOptions);
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map, customizationOptions);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map);
+                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map);
                 }
             }
         }

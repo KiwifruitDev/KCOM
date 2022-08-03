@@ -27,11 +27,13 @@ namespace AlyxGamemode
             Author = "KiwifruitDev";
             Name = "Half-Life: Alyx";
             Description = "Play Half-Life: Alyx with up to 16 players!";
-            Default = true;
         }
         public AlyxGamemode(GamemodeHandleType type, params object[]? vs)
         {
+            int APIVersion = 3;
             State = HandleState.Continue;
+            bool overrideState = false;
+            Random rnd = new Random();
             try
             {
                 switch (type)
@@ -66,33 +68,8 @@ namespace AlyxGamemode
                             List<IndexedClient> connections = (List<IndexedClient>)vs[1];
                             IWebSocketConnection socket = (IWebSocketConnection)vs[2];
                             string map = (string)vs[3];
-                            List<ICustomizationOption> customizationOptions = (List<ICustomizationOption>)vs[4];
                             switch (response.type)
                             {
-                                case "customize":
-                                    ICustomizationOption? customizationOption = customizationOptions.Find(o => o.ModelName == response.data);
-                                    if(customizationOption != null)
-                                    {
-                                        string optionType = "";
-                                        optionType = customizationOption.Type switch
-                                        {
-                                            CustomizationOptionType.Head => "head",
-                                            CustomizationOptionType.LeftHand => "lefthand",
-                                            CustomizationOptionType.RightHand => "righthand",
-                                            CustomizationOptionType.Hat => "hat",
-                                            CustomizationOptionType.Collider => "collider",
-                                            _ => "none",
-                                        };
-                                        Player? player = AlyxGlobalData.instance.GetPlayer(socket.ConnectionInfo.Id);
-                                        if (player != null)
-                                        {
-                                            int playerIndex = player.Index;
-                                            Response vconsoleInput = new("command", "kcom_customize " + playerIndex + " " + optionType + " " + response.data);
-                                            connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(vconsoleInput)));
-                                        }
-                                    }
-                                    State = HandleState.Handled;
-                                    break;
                                 case "print":
                                     if (response.data != null)
                                     {
@@ -198,7 +175,7 @@ namespace AlyxGamemode
                                                             }
                                                             break;
                                                         case PacketType.Initialization:
-                                                            Response vconsoleInput2 = new("command", "ent_create logic_script {targetname kcom_script};ent_create logic_timer {targetname kcom_timer refiretime 0.01};echo IENT KCOM");
+                                                            Response vconsoleInput2 = new("command", "ent_remove kcom_script;ent_create logic_script {targetname kcom_script};ent_create logic_timer {targetname kcom_timer refiretime 0.01};echo IENT KCOM");
                                                             Response output3 = new("status", "Initializing co-op...");
                                                             socket.Send(JsonConvert.SerializeObject(output3));
                                                             socket.Send(JsonConvert.SerializeObject(vconsoleInput2));
@@ -207,8 +184,8 @@ namespace AlyxGamemode
                                                             Thread thr = new(new ThreadStart(() =>
                                                             {
                                                                 Thread.Sleep(2500);
-                                                                Response vconsoleInput5 = new("command", "unpause;ent_fire kcom_timer addoutput OnTimer>kcom_script>RunScriptFile>kcom_interval>0>-1");
-                                                                Response output4 = new("status", "Co-op initialized!");
+                                                                Response vconsoleInput5 = new("command", "play kcom/jingle_up2;unpause;ent_fire kcom_timer addoutput OnTimer>kcom_script>RunScriptFile>kcom_interval>0>-1");
+                                                                Response output4 = new("status", "♫ Co-op initialized!");
                                                                 socket.Send(JsonConvert.SerializeObject(output4));
                                                                 socket.Send(JsonConvert.SerializeObject(vconsoleInput5));
                                                             }));
@@ -244,12 +221,7 @@ namespace AlyxGamemode
                                                             break;
                                                         case PacketType.MapName:
                                                             string suffix = "";
-                                                            if(packet.args[0] == "mp_kiwitest")
-                                                            {
-                                                                Response stopPrecache = new("command", "addon_play "+map+"; addon_tools_map "+map);
-                                                                socket.Send(JsonConvert.SerializeObject(stopPrecache));
-                                                            }
-                                                            else if (packet.args[0] != player.Client.Map)
+                                                            if (packet.args[0] != player.Client.Map)
                                                             {
                                                                 Response mapOutput = new("command", "addon_play " + packet.args[0] + "; addon_tools_map " + packet.args[0]);
                                                                 foreach (IndexedClient broadcast in connections)
@@ -264,6 +236,12 @@ namespace AlyxGamemode
                                                             }
                                                             Response output2 = new("status", "Detected map: " + packet.args[0] + suffix);
                                                             socket.Send(JsonConvert.SerializeObject(output2));
+                                                            int gamemodeAPIVersion = int.Parse(packet.args[1]);
+                                                            if (gamemodeAPIVersion != APIVersion)
+                                                            {
+                                                                Response versionOutput = new("status", "Version mismatch! This client reports API version " + APIVersion + ", gamemode reported API version " + gamemodeAPIVersion + ". Please update the client and respective Workshop addons.");
+                                                                socket.Send(JsonConvert.SerializeObject(versionOutput));
+                                                            }
                                                             break;
                                                         case PacketType.ButtonIndexStartPos:
                                                         case PacketType.ButtonPressIndex:
@@ -298,9 +276,16 @@ namespace AlyxGamemode
                                                             Response p = new("command", "kcom_npc_sethealth " + string.Join(" ", packet.args));
                                                             connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(p)));
                                                             break;
+                                                        case PacketType.KCOMCommand:
+                                                            response.type = "chat";
+                                                            response.data = "/" + string.Join(" ", packet.args.Take(packet.args.Count() - 1));
+                                                            State = HandleState.Continue;
+                                                            overrideState = true;
+                                                            break;
                                                     }
                                                 }
-                                                State = HandleState.Handled;
+                                                if(!overrideState)
+                                                    State = HandleState.Handled;
                                             }
                                         }
                                     }
@@ -326,8 +311,13 @@ namespace AlyxGamemode
                                                 Player? player = AlyxGlobalData.instance.AddPlayer(client);
                                                 if (player != null)
                                                 {
-                                                    Response output2 = new("status", client.Username + " joined as index " + player.Index);
-                                                    connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(output2)));
+                                                    Response output2 = new("status", "♫ " + client.Username + " joined as index " + player.Index);
+                                                    Response blip = new("command", "play kcom/blip" + rnd.Next(1, 4));
+                                                    connections.ForEach(c =>
+                                                    {
+                                                        c.Session.Send(JsonConvert.SerializeObject(blip));
+                                                        c.Session.Send(JsonConvert.SerializeObject(output2));
+                                                    });
                                                 }
                                                 else
                                                 {
@@ -335,13 +325,6 @@ namespace AlyxGamemode
                                                     socket.Send(JsonConvert.SerializeObject(output2));
                                                     socket.Close();
                                                 }
-                                                Thread thr = new(new ThreadStart(() =>
-                                                {
-                                                    Thread.Sleep(5000);
-                                                    Response precacheMap = new("command", "addon_play mp_kiwitest; addon_tools_map mp_kiwitest");
-                                                    socket.Send(JsonConvert.SerializeObject(precacheMap));
-                                                }));
-                                                thr.Start();
                                                 break;
                                             }
                                         }

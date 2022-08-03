@@ -25,7 +25,6 @@ namespace DiscordRpcPlugin
             Author = "KiwifruitDev";
             Name = "Discord Rich Presence";
             Description = "Share your session status on Discord!";
-            Default = true;
         }
         public DiscordRpcPlugin(PluginHandleType type, params object[]? vs)
         {
@@ -73,8 +72,8 @@ namespace DiscordRpcPlugin
                                         richPresence2.State = "Running client";
                                         richPresence2.Details = "Connected to a server";
                                     }
-                                    if (response.clientUsername != null && response.clientAuthId != null)
-                                        DiscordRpcGlobalData.instance.SetClient(new Client(response.clientUsername, response.clientAuthId));
+                                    if (response.clientUsername != null)
+                                        DiscordRpcGlobalData.instance.SetClient(new Client(response.clientUsername));
                                     discord3.SetPresence(richPresence2);
                                     break;
                             }

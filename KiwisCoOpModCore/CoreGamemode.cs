@@ -24,7 +24,6 @@ namespace KiwisCoOpModCore
             Author = "KiwifruitDev";
             Name = "Core Gamemode";
             Description = "The absolute minimum.";
-            Default = false;
         }
         public CoreGamemode(GamemodeHandleType type, params object[]? vs)
         {
@@ -34,6 +33,5 @@ namespace KiwisCoOpModCore
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Author { get; set; }
-        public bool Default { get; set; }
     }
 }

@@ -1,0 +1,125 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+    "Addon.KCOM_Blip" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/blip1.vsnd",
+            "sounds/kcom/blip2.vsnd",
+            "sounds/kcom/blip3.vsnd",
+		]
+	}
+    "Addon.KCOM_Blip1" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/blip1.vsnd",
+		]
+	}
+    "Addon.KCOM_Blip2" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/blip2.vsnd",
+		]
+	}
+    "Addon.KCOM_Blip3" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/blip3.vsnd",
+		]
+	}
+    "Addon.KCOM_JingleUpShort" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/jingle_up_short.vsnd",
+		]
+	}
+    "Addon.KCOM_JingleUp1" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/jingle_up1.vsnd",
+		]
+	}
+    "Addon.KCOM_JingleUp2" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/jingle_up2.vsnd",
+		]
+	}
+    "Addon.KCOM_JingleUp3" = 
+	{
+		type = "hlvr_default_3d"
+		volume = 1.0
+		volume_falloff_min = 70.0
+		volume_falloff_max = 2700.0
+		volume_fade_out = 1
+		volume_fade_in = 0
+		spread_min = 30
+		spread_max = 150
+		vsnd_files = 
+		[
+			"sounds/kcom/jingle_up3.vsnd",
+		]
+	}
+}

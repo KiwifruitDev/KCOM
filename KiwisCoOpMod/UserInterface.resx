@@ -58,13 +58,12 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="richTextBoxOutput.Text" xml:space="preserve">
-    <value>Welcome to Kiwi's Co-Op Mod for Half-Life Alyx!
-Hover over each option above to view a tooltip for more information.
-Scroll down for help regarding recommended configurations.
-
-To create a listen server, check both "Enabled" checkboxes and set the "Client" column's "IP Address" text box to "localhost" setting the "Server" column's "IP Address" text box to "[::]", then click the "Start" button.
-To create a dedicated server, uncheck the "Client" column's "Enabled" checkbox and check the "Server" column's "Enabled" checkbox, then set the "Server" column's "IP Address" text box to "[::]" and click the "Start" button.
-To connect to a remote server, uncheck the "Server" column's "Enabled" checkbox and check the "Client" column's "Enabled" checkbox, then set the "Client" column's "IP Address" check box to the public IP address of the remote server and click the "Start" button.
+    <value>Welcome to Kiwi's Co-Op Mod for Half-Life: Alyx!
+Ensure that Half-Life: Alyx uses these launch parameters:
+-console -vconsole -language english
+When starting KCOM, make sure that the VConsole window is not open.
+For help/support, please visit the Discord server linked in the "Help" menu above.
+Thank you for your interest in KCOM, enjoy!
 ===========================================================================================</value>
   </data>
   <metadata name="menuStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
@@ -73,16 +72,6 @@ To connect to a remote server, uncheck the "Server" column's "Enabled" checkbox 
   <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>125, 17</value>
   </metadata>
-  <data name="checkBoxServerEnabled.ToolTip" xml:space="preserve">
-    <value>If checked, the client system will be enabled and will connect to a remote server.
-If you are hosting a dedicated server, you should set uncheck this.
-Note: To create a listen server, enable both the server and client and set both IPs to localhost.</value>
-  </data>
-  <data name="checkBoxClientEnabled.ToolTip" xml:space="preserve">
-    <value>If checked, the client system will be enabled and will connect to a remote server.
-If you are hosting a dedicated server, you should set uncheck this.
-Note: To create a listen server, enable both the server and client and set both IPs to localhost.</value>
-  </data>
   <metadata name="statusStrip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>215, 17</value>
   </metadata>

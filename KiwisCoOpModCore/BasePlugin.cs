@@ -29,13 +29,11 @@ namespace KiwisCoOpModCore
             Author = "KiwifruitDev";
             Name = "Base Plugin";
             Description = "The absolute minimum.";
-            Default = false;
         }
         public BasePlugin(PluginHandleType type, params object[]? vs)
         { }
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Author { get; set; }
-        public bool Default { get; set; }
     }
 }

@@ -1,0 +1,26 @@
+<!-- kv3 encoding:text:version{e21c7f3c-8a33-41c5-9977-a76d3a32aa0d} format:generic:version{7412167c-06e9-4698-aff2-e63eb59037e7} -->
+{
+	resourceManifest = 
+	[
+		[ 
+			"maps/mp_kiwitest.vmap",
+            "models/kiwimp_alyx/alyx.vmdl",
+            "models/props/choreo_office/headset_prop.vmdl",
+            "models/hands/alyx_glove_left.vmdl",
+            "models/hands/alyx_glove_right.vmdl",
+            "models/characters/combine_soldier_captain/combine_captain.vmdl",
+            "models/characters/alyx/alyx.vmdl",
+            "models/characters/eli/eli_end.vmdl",
+            "models/characters/eli/eli.vmdl",
+            "models/characters/combine_grunt/combine_grunt.vmdl",
+            "models/creatures/zombie_classic/zombie_classic.vmdl",
+            "models/creatures/zombie_blind/zombie_blind.vmdl",
+            "models/characters/citizens/citizens_male.vmdl",
+            "models/characters/citizens/citizen_female_02.vmdl",
+            "models/player.vmdl",
+            "models/editor/playerstart.vmdl",
+            "models/characters/gordon/gordon.vmdl",
+            "models/props/construction/hat_construction.vmdl",
+		],
+	]
+}

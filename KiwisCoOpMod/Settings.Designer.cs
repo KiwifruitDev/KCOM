@@ -12,7 +12,7 @@ namespace KiwisCoOpMod {
     
     
     [global::System.Runtime.CompilerServices.CompilerGeneratedAttribute()]
-    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.0.3.0")]
+    [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.Editors.SettingsDesigner.SettingsSingleFileGenerator", "17.1.0.0")]
     internal sealed partial class Settings : global::System.Configuration.ApplicationSettingsBase {
         
         private static Settings defaultInstance = ((Settings)(global::System.Configuration.ApplicationSettingsBase.Synchronized(new Settings())));
@@ -37,18 +37,6 @@ namespace KiwisCoOpMod {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("[::]")]
-        public string ServerIpAddress {
-            get {
-                return ((string)(this["ServerIpAddress"]));
-            }
-            set {
-                this["ServerIpAddress"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("")]
         public string ServerPassword {
             get {
@@ -56,42 +44,6 @@ namespace KiwisCoOpMod {
             }
             set {
                 this["ServerPassword"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ServerMemo {
-            get {
-                return ((string)(this["ServerMemo"]));
-            }
-            set {
-                this["ServerMemo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ServerHostUsername {
-            get {
-                return ((string)(this["ServerHostUsername"]));
-            }
-            set {
-                this["ServerHostUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ServerHostAuthId {
-            get {
-                return ((string)(this["ServerHostAuthId"]));
-            }
-            set {
-                this["ServerHostAuthId"] = value;
             }
         }
         
@@ -121,30 +73,6 @@ namespace KiwisCoOpMod {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("10")]
-        public int ServerUpdateInterval {
-            get {
-                return ((int)(this["ServerUpdateInterval"]));
-            }
-            set {
-                this["ServerUpdateInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("30000")]
-        public int ServerTimeoutInterval {
-            get {
-                return ((int)(this["ServerTimeoutInterval"]));
-            }
-            set {
-                this["ServerTimeoutInterval"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
         public bool ClientEnabled {
             get {
@@ -157,18 +85,6 @@ namespace KiwisCoOpMod {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ClientPlayerCollision {
-            get {
-                return ((bool)(this["ClientPlayerCollision"]));
-            }
-            set {
-                this["ClientPlayerCollision"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("False")]
         public bool ClientPrintVconsole {
             get {
@@ -176,18 +92,6 @@ namespace KiwisCoOpMod {
             }
             set {
                 this["ClientPrintVconsole"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("False")]
-        public bool ClientHostMode {
-            get {
-                return ((bool)(this["ClientHostMode"]));
-            }
-            set {
-                this["ClientHostMode"] = value;
             }
         }
         
@@ -217,37 +121,13 @@ namespace KiwisCoOpMod {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ClientMemo {
-            get {
-                return ((string)(this["ClientMemo"]));
-            }
-            set {
-                this["ClientMemo"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("Someone")]
         public string ClientUsername {
             get {
                 return ((string)(this["ClientUsername"]));
             }
             set {
                 this["ClientUsername"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
-        public string ClientAuthId {
-            get {
-                return ((string)(this["ClientAuthId"]));
-            }
-            set {
-                this["ClientAuthId"] = value;
             }
         }
         
@@ -260,18 +140,6 @@ namespace KiwisCoOpMod {
             }
             set {
                 this["ClientPort"] = value;
-            }
-        }
-        
-        [global::System.Configuration.UserScopedSettingAttribute()]
-        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("5000")]
-        public int ClientGracePeriod {
-            get {
-                return ((int)(this["ClientGracePeriod"]));
-            }
-            set {
-                this["ClientGracePeriod"] = value;
             }
         }
         
@@ -356,6 +224,30 @@ namespace KiwisCoOpMod {
             }
             set {
                 this["ClickedUPnP"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("[\"Half-Life: Alyx\",\"Discord Rich Presence\"]")]
+        public string CurrentAddons {
+            get {
+                return ((string)(this["CurrentAddons"]));
+            }
+            set {
+                this["CurrentAddons"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool AlwaysOnTop {
+            get {
+                return ((bool)(this["AlwaysOnTop"]));
+            }
+            set {
+                this["AlwaysOnTop"] = value;
             }
         }
     }

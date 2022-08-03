@@ -17,6 +17,7 @@ using KiwisCoOpModCore;
 using System.Reflection;
 using Open.Nat;
 using System.Diagnostics;
+using Newtonsoft.Json;
 
 namespace KiwisCoOpMod
 {
@@ -30,7 +31,7 @@ namespace KiwisCoOpMod
         private Type gamemodeType = typeof(CoreGamemode);
         private readonly List<AddonInitializer> addons = new();
         private readonly List<Type> plugins = new();
-        private readonly List<ICustomizationOption> customizations = new();
+        List<string>? currentAddons;
         public UserInterface()
         {
             InitializeComponent();
@@ -42,28 +43,23 @@ namespace KiwisCoOpMod
             toolStripStatusLabelVconsoleProtocol.Text = "VConsole Protocol: " + Settings.Default.VconsoleProtocol;
             // Client settings
             checkBoxClientEnabled.Checked = Settings.Default.ClientEnabled;
-            clientPlayerCollisionToolStripMenuItem.Checked = Settings.Default.ClientPlayerCollision;
             clientPrintVConsoleToolStripMenuItem.Checked = Settings.Default.ClientPrintVconsole;
-            clientHostModeToolStripMenuItem.Checked = Settings.Default.ClientHostMode;
-            clientAutomaticallyReconnectToolStripMenuItem.Checked = Settings.Default.ClientAutomaticallyReconnect;
             textBoxClientIpAddress.Text = Settings.Default.ClientIpAddress;
             textBoxClientPassword.Text = Settings.Default.ClientPassword;
-            textBoxClientMemo.Text = Settings.Default.ClientMemo;
             textBoxClientUsername.Text = Settings.Default.ClientUsername;
-            textBoxClientAuthId.Text = Settings.Default.ClientAuthId;
             numericUpDownClientPort.Value = Settings.Default.ClientPort;
             // Server settings
             checkBoxServerEnabled.Checked = Settings.Default.ServerEnabled;
-            textBoxServerIpAddress.Text = Settings.Default.ServerIpAddress;
             textBoxServerPassword.Text = Settings.Default.ServerPassword;
-            textBoxServerMemo.Text = Settings.Default.ServerMemo;
-            textBoxServerHostUsername.Text = Settings.Default.ServerHostUsername;
-            textBoxServerHostAuthId.Text = Settings.Default.ServerHostAuthId;
             textBoxServerMap.Text = Settings.Default.ServerMap;
             numericUpDownServerPort.Value = Settings.Default.ServerPort;
+            serverDisableUserVConsoleInputToolStripMenuItem.Checked = Settings.Default.ServerDisableUserVconsoleInput;
             // Options
             saveOptionsOnExitToolStripMenuItem.Checked = Settings.Default.SaveOptionsOnExit;
-            Application.ApplicationExit += new EventHandler(Exit);
+            currentAddons = JsonConvert.DeserializeObject<List<string>>(Settings.Default.CurrentAddons);
+            alwaysOnTopToolStripMenuItem.Checked = Settings.Default.AlwaysOnTop;
+            TopMost = Settings.Default.AlwaysOnTop;
+            Application.ApplicationExit += new EventHandler(closeToolStripMenuItem_Click);
             // Base gamemode
             CoreGamemode gamemode = new();
             ToolStripMenuItem baseItem = new(gamemode.Name)
@@ -111,12 +107,6 @@ namespace KiwisCoOpMod
                                     item.Click += SelectAddon;
                                     gamemodeToolStripMenuItem.DropDownItems.Add(item);
                                     addons.Add(new AddonInitializer(newGamemode.Name, type, AddonType.Gamemode));
-                                    if (newGamemode.Default)
-                                    {
-                                        SelectAddon(item, new EventArgs());
-                                        if (first)
-                                            first = false;
-                                    }
                                 }
                             }
                         }
@@ -145,17 +135,27 @@ namespace KiwisCoOpMod
                                     };
                                     item.Click += SelectAddon;
                                     pluginsToolStripMenuItem.DropDownItems.Add(item);
-
-                                    
-                                    if (newPlugin.Default)
-                                    {
-                                        SelectAddon(item, new EventArgs());
-                                    }
+                                    addons.Add(new AddonInitializer(newPlugin.Name, type, AddonType.Plugin));
                                 }
                             }
                         }
                     }
                 }
+                // Automatically select saved addons
+                foreach(ToolStripItem pluginItem in pluginsToolStripMenuItem.DropDownItems)
+                {
+                    if (currentAddons.Contains(pluginItem.Text))
+                        SelectAddon(pluginItem, new EventArgs());
+                }
+                foreach (ToolStripItem gamemodeItem in gamemodeToolStripMenuItem.DropDownItems)
+                {
+                    if (currentAddons.Contains(gamemodeItem.Text))
+                    {
+                        SelectAddon(gamemodeItem, new EventArgs());
+                        first = false;
+                    }
+                }
+                // Regression to core gamemode
                 if (first)
                 {
                     SelectAddon(baseItem, new EventArgs());
@@ -166,33 +166,6 @@ namespace KiwisCoOpMod
             clientProgram = new ClientProgram(this);
             if(!Settings.Default.ClickedUPnP)
                 AskUPnP(true);
-        }
-        public void AddCustomizationOption(ICustomizationOption option)
-        {
-            ComboBox comboBox = option.Type switch
-            {
-                CustomizationOptionType.Hat => comboBoxHat,
-                CustomizationOptionType.Head => comboBoxHead,
-                CustomizationOptionType.Collider => comboBoxCollider,
-                CustomizationOptionType.LeftHand => comboBoxLeftHand,
-                CustomizationOptionType.RightHand => comboBoxRightHand,
-                _ => new ComboBox(),
-            };
-            if (comboBox.Name != "")
-            {
-                comboBox.Enabled = true;
-                int index = comboBox.Items.Add(option.Name);
-                customizations.Add(option);
-                if (option.Default)
-                {
-                    comboBox.SelectedIndex = index;
-                    //SelectedIndexChanged(comboBox, new EventArgs());
-                }
-            }
-            else
-            {
-                comboBox.Dispose();
-            }
         }
         public void UseUriScheme(Uri uri)
         {
@@ -233,14 +206,24 @@ namespace KiwisCoOpMod
                 }
             }
         }
+        private void Save()
+        {
+            Settings.Default.CurrentAddons = JsonConvert.SerializeObject(currentAddons);
+            Settings.Default.Save();
+        }
         private void Exit(object? sender, EventArgs e)
         {
-            Settings.Default.Save();
+            Save();
         }
         public void Start()
         {
             if(!started && (checkBoxServerEnabled.Checked || checkBoxClientEnabled.Checked))
             {
+                // Silent listen server toggle
+                if (checkBoxClientEnabled.Checked && textBoxClientIpAddress.Text == "localhost")
+                    checkBoxServerEnabled.Checked = true;
+                else if (checkBoxClientEnabled.Checked)
+                    checkBoxServerEnabled.Checked = false;
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PreStart, this);
                 started = true;
                 buttonStart.Text = "Stop";
@@ -266,7 +249,7 @@ namespace KiwisCoOpMod
                 DateTime endTime = DateTime.Now;
                 LogToOutput(channel, "Stopped at", endTime.ToString(@"hh\:mm\:ss") + ", active for", (endTime - startTime).ToString(@"hh\:mm\:ss"));
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PostClose, this);
-                Settings.Default.Save();
+                Save();
                 Application.Restart();
             }
             gamemodeToolStripMenuItem.Enabled = !started;
@@ -288,9 +271,13 @@ namespace KiwisCoOpMod
                                 foreach (ToolStripMenuItem menuItem in gamemodeToolStripMenuItem.DropDownItems)
                                 {
                                     menuItem.Checked = false;
+                                    if (currentAddons.Contains(menuItem.Text))
+                                        currentAddons.Remove(menuItem.Text);
                                 }
                                 gamemodeType = initializer.Type;
                                 item.Checked = true;
+                                if (!currentAddons.Contains(item.Text))
+                                    currentAddons.Add(item.Text);
                                 //LogToOutput(channel, "Gamemode changed to", item.Text);
                                 break;
                             case AddonType.Plugin:
@@ -298,6 +285,8 @@ namespace KiwisCoOpMod
                                 if (item.Checked)
                                 {
                                     plugins.Add(initializer.Type);
+                                    if (!currentAddons.Contains(item.Text))
+                                        currentAddons.Add(item.Text);
                                     PluginHandler.Handle(initializer.Type, PluginHandleType.UserInterface_Initialized);
                                     //LogToOutput(channel, "Plugin", item.Text, "added");
                                 }
@@ -305,6 +294,8 @@ namespace KiwisCoOpMod
                                 {
                                     PluginHandler.Handle(initializer.Type, PluginHandleType.UserInterface_Exit);
                                     plugins.Remove(initializer.Type);
+                                    if (currentAddons.Contains(item.Text))
+                                        currentAddons.Remove(item.Text);
                                     //LogToOutput(channel, "Plugin", item.Text, "removed");
                                 }
                                 break;
@@ -460,84 +451,6 @@ namespace KiwisCoOpMod
             }
         }
 
-        private void ButtonClientRandomizeAuthId_Click(object sender, EventArgs e)
-        {
-            string randomizedAuthId = "";
-            for (int i = 0; i < 6; i++)
-            {
-                int randomNumber = random.Next(63)+1;
-                char character = randomNumber switch
-                {
-                    1 => '1',
-                    2 => '2',
-                    3 => '3',
-                    4 => '4',
-                    5 => '5',
-                    6 => '6',
-                    7 => '7',
-                    8 => '8',
-                    9 => '9',
-                    10 => '0',
-                    11 => 'a',
-                    12 => 'b',
-                    13 => 'c',
-                    14 => 'd',
-                    15 => 'e',
-                    16 => 'f',
-                    17 => 'g',
-                    18 => 'h',
-                    19 => 'i',
-                    20 => 'j',
-                    21 => 'k',
-                    22 => 'l',
-                    23 => 'm',
-                    24 => 'n',
-                    25 => 'o',
-                    26 => 'p',
-                    27 => 'q',
-                    28 => 'r',
-                    29 => 's',
-                    30 => 't',
-                    31 => 'u',
-                    32 => 'v',
-                    33 => 'w',
-                    34 => 'x',
-                    35 => 'y',
-                    36 => 'z',
-                    37 => 'A',
-                    38 => 'B',
-                    39 => 'C',
-                    40 => 'D',
-                    41 => 'E',
-                    42 => 'F',
-                    43 => 'G',
-                    44 => 'H',
-                    45 => 'I',
-                    46 => 'J',
-                    47 => 'K',
-                    48 => 'L',
-                    49 => 'M',
-                    50 => 'N',
-                    51 => 'O',
-                    52 => 'P',
-                    53 => 'Q',
-                    54 => 'R',
-                    55 => 'S',
-                    56 => 'T',
-                    57 => 'U',
-                    58 => 'V',
-                    59 => 'W',
-                    60 => 'X',
-                    61 => 'Y',
-                    62 => 'Z',
-                    _ => (char)randomNumber,
-                };
-                randomizedAuthId += character;
-            }
-            Settings.Default.ClientAuthId = randomizedAuthId;
-            textBoxClientAuthId.Text = randomizedAuthId;
-        }
-
         private void TextBoxClientIpAddress_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.ClientIpAddress = textBoxClientIpAddress.Text;
@@ -547,77 +460,26 @@ namespace KiwisCoOpMod
         {
             Settings.Default.ClientPassword = textBoxClientPassword.Text;
         }
-
         private void TextBoxClientUsername_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.ClientUsername = textBoxClientUsername.Text;
         }
-
-        private void TextBoxClientAuthId_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ClientAuthId = textBoxClientAuthId.Text;
-        }
-
-        private void TextBoxClientMemo_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ClientMemo = textBoxClientMemo.Text;
-        }
-
-        private void TextBoxServerIpAddress_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ServerIpAddress = textBoxServerIpAddress.Text;
-        }
-
         private void NumericUpDownClientPort_ValueChanged(object sender, EventArgs e)
         {
             Settings.Default.ClientPort = (int)numericUpDownClientPort.Value;
         }
-
         private void NumericUpDownServerPort_ValueChanged(object sender, EventArgs e)
         {
             Settings.Default.ServerPort = (int)numericUpDownServerPort.Value;
         }
-
         private void TextBoxServerPassword_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.ServerPassword = textBoxServerPassword.Text;
         }
-
-        private void TextBoxServerMemo_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ServerMemo = textBoxServerMemo.Text;
-        }
-
         private void TextBoxServerMap_TextChanged(object sender, EventArgs e)
         {
             Settings.Default.ServerMap = textBoxServerMap.Text;
         }
-
-        private void TextBoxServerHostUsername_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ServerHostUsername = textBoxServerHostUsername.Text;
-        }
-
-        private void TextBoxServerHostAuthId_TextChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ServerHostAuthId = textBoxServerHostAuthId.Text;
-        }
-
-        private void ClientAutomaticallyReconnectToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ClientAutomaticallyReconnect = clientAutomaticallyReconnectToolStripMenuItem.Checked;
-        }
-
-        private void ClientPlayerCollisionToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ClientPlayerCollision = clientPlayerCollisionToolStripMenuItem.Checked;
-        }
-
-        private void ClientHostModeToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
-        {
-            Settings.Default.ClientHostMode = clientHostModeToolStripMenuItem.Checked;
-        }
-
         private void SaveOptionsOnExitToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
         {
             Settings.Default.SaveOptionsOnExit = saveOptionsOnExitToolStripMenuItem.Checked;
@@ -635,7 +497,7 @@ namespace KiwisCoOpMod
 
         private void SaveOptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            Settings.Default.Save();
+            Save();
             SetStatus(channel.GetColor(), "Options saved");
         }
 
@@ -687,41 +549,40 @@ namespace KiwisCoOpMod
             Process.Start(new ProcessStartInfo("https://trello.com/b/2xYfYklG/kiwis-co-op-mod-for-half-life-alyx-kcom") { UseShellExecute = true });
         }
 
-        private void SelectedIndexChanged(object sender, EventArgs e)
+        private void buttonServerVconsoleSend_Click(object sender, EventArgs e)
         {
-            ComboBox comboBox = (ComboBox)sender;
-            if (comboBox.SelectedItem != null)
+            string command = textBoxServerVconsole.Text;
+            ServerProgram.instance.GlobalVConsole(command);
+            textBoxServerVconsole.Text = "";
+        }
+
+        private void textBoxServerVconsole_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
             {
-                ICustomizationOption? option = customizations.Find(o => o.Name == comboBox.SelectedItem.ToString());
-                if (option != null)
-                {
-                    toolTip.SetToolTip(comboBox, option.Author + "\n" + option.Description + "\n" + option.ModelName);
-                    PictureBox pictureBox;
-                    if (option.DisplayImageBase64 != null)
-                    {
-                        pictureBox = option.Type switch
-                        {
-                            CustomizationOptionType.Hat => pictureBoxHat,
-                            CustomizationOptionType.Head => pictureBoxHead,
-                            CustomizationOptionType.Collider => pictureBoxCollider,
-                            CustomizationOptionType.LeftHand => pictureBoxLeftHand,
-                            CustomizationOptionType.RightHand => pictureBoxRightHand,
-                            _ => new PictureBox(),
-                        };
-                        if (pictureBox.Name != "")
-                            pictureBox.Image = Image.FromStream(new MemoryStream(Convert.FromBase64String(option.DisplayImageBase64)));
-                        else
-                            pictureBox.Dispose();
-                    }
-                    if (option.ModelName != null)
-                        clientProgram.ChangeCustomizationOption(option.ModelName);
-                }
+                buttonServerVconsoleSend_Click(sender, e);
             }
         }
 
-        private void buttonCharacterUpdate_Click(object sender, EventArgs e)
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            customizations.ForEach(c => clientProgram.ChangeCustomizationOption(c.ModelName));
+            Save();
+            Application.Exit();
+        }
+
+        private void alwaysOnTopToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            alwaysOnTopToolStripMenuItem.Checked = !alwaysOnTopToolStripMenuItem.Checked;
+            Settings.Default.AlwaysOnTop = alwaysOnTopToolStripMenuItem.Checked;
+            TopMost = alwaysOnTopToolStripMenuItem.Checked;
+        }
+
+        private void textBoxServerMap_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (e.KeyChar == (char)Keys.Return)
+            {
+                ButtonServerChangeMap_Click(sender, e);
+            }
         }
     }
 }

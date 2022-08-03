@@ -29,18 +29,10 @@ namespace KiwisCoOpModCore
         public string? map;
         public string? remoteClientUsername;
         public string? clientUsername;
-        public string? clientAuthId;
         public string? password;
         public readonly static int internalVersion = 0;
         public int? version = internalVersion;
         public bool urgent;
-        public string[]? customizationOptionsName;
-        public string[]? customizationOptionsDescription;
-        public string[]? customizationOptionsAuthor;
-        public string[]? customizationOptionsModelName;
-        public string[]? customizationOptionsType;
-        public string[]? customizationOptionsImage;
-        public bool[]? customizationOptionsDefault;
         public Response()
         { }
         public Response(string type)

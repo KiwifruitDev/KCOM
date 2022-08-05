@@ -85,6 +85,7 @@ namespace KiwisCoOpMod
                             else
                             {
                                 Response input = new("print", newMessage);
+                                input.timestamp = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
                                 ws.Send(JsonConvert.SerializeObject(input));
                             }
                         }

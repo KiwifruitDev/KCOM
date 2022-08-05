@@ -39,17 +39,17 @@
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamemodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.advancedOptionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.clientPrintVConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.serverDisableUserVConsoleInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.clientPrintVConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOptionsOnExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.helpToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.trelloFAQToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.discordToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.aboutToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gitHubToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.steamWorkshopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.koFiToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.toolTip = new System.Windows.Forms.ToolTip(this.components);
             this.checkBoxServerEnabled = new System.Windows.Forms.CheckBox();
             this.checkBoxClientEnabled = new System.Windows.Forms.CheckBox();
@@ -120,7 +120,8 @@
             this.fileToolStripMenuItem,
             this.editToolStripMenuItem,
             this.viewToolStripMenuItem,
-            this.helpToolStripMenuItem});
+            this.helpToolStripMenuItem,
+            this.aboutToolStripMenuItem});
             this.menuStrip.Location = new System.Drawing.Point(0, 0);
             this.menuStrip.Name = "menuStrip";
             this.menuStrip.Size = new System.Drawing.Size(800, 24);
@@ -163,7 +164,8 @@
             this.editToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.gamemodeToolStripMenuItem,
             this.pluginsToolStripMenuItem,
-            this.advancedOptionsToolStripMenuItem,
+            this.clientPrintVConsoleToolStripMenuItem,
+            this.serverDisableUserVConsoleInputToolStripMenuItem,
             this.saveOptionsOnExitToolStripMenuItem});
             this.editToolStripMenuItem.Name = "editToolStripMenuItem";
             this.editToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
@@ -172,31 +174,14 @@
             // gamemodeToolStripMenuItem
             // 
             this.gamemodeToolStripMenuItem.Name = "gamemodeToolStripMenuItem";
-            this.gamemodeToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.gamemodeToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.gamemodeToolStripMenuItem.Text = "Gamemode";
             // 
             // pluginsToolStripMenuItem
             // 
             this.pluginsToolStripMenuItem.Name = "pluginsToolStripMenuItem";
-            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.pluginsToolStripMenuItem.Text = "Plugins";
-            // 
-            // advancedOptionsToolStripMenuItem
-            // 
-            this.advancedOptionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.clientPrintVConsoleToolStripMenuItem,
-            this.serverDisableUserVConsoleInputToolStripMenuItem});
-            this.advancedOptionsToolStripMenuItem.Name = "advancedOptionsToolStripMenuItem";
-            this.advancedOptionsToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
-            this.advancedOptionsToolStripMenuItem.Text = "Advanced";
-            // 
-            // clientPrintVConsoleToolStripMenuItem
-            // 
-            this.clientPrintVConsoleToolStripMenuItem.CheckOnClick = true;
-            this.clientPrintVConsoleToolStripMenuItem.Name = "clientPrintVConsoleToolStripMenuItem";
-            this.clientPrintVConsoleToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.clientPrintVConsoleToolStripMenuItem.Text = "Client: Print VConsole";
-            this.clientPrintVConsoleToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ClientPrintVConsoleToolStripMenuItem_CheckedChanged);
             // 
             // serverDisableUserVConsoleInputToolStripMenuItem
             // 
@@ -204,7 +189,15 @@
             this.serverDisableUserVConsoleInputToolStripMenuItem.Name = "serverDisableUserVConsoleInputToolStripMenuItem";
             this.serverDisableUserVConsoleInputToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.serverDisableUserVConsoleInputToolStripMenuItem.Text = "Server: Disable User VConsole Input";
-            this.serverDisableUserVConsoleInputToolStripMenuItem.CheckedChanged += new System.EventHandler(this.ServerDisableUserVConsoleInputToolStripMenuItem_CheckedChanged);
+            this.serverDisableUserVConsoleInputToolStripMenuItem.Click += new System.EventHandler(this.ServerDisableUserVConsoleInputToolStripMenuItem_CheckedChanged);
+            // 
+            // clientPrintVConsoleToolStripMenuItem
+            // 
+            this.clientPrintVConsoleToolStripMenuItem.CheckOnClick = true;
+            this.clientPrintVConsoleToolStripMenuItem.Name = "clientPrintVConsoleToolStripMenuItem";
+            this.clientPrintVConsoleToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.clientPrintVConsoleToolStripMenuItem.Text = "Client: Print VConsole";
+            this.clientPrintVConsoleToolStripMenuItem.Click += new System.EventHandler(this.ClientPrintVConsoleToolStripMenuItem_CheckedChanged);
             // 
             // saveOptionsOnExitToolStripMenuItem
             // 
@@ -212,7 +205,7 @@
             this.saveOptionsOnExitToolStripMenuItem.CheckOnClick = true;
             this.saveOptionsOnExitToolStripMenuItem.CheckState = System.Windows.Forms.CheckState.Checked;
             this.saveOptionsOnExitToolStripMenuItem.Name = "saveOptionsOnExitToolStripMenuItem";
-            this.saveOptionsOnExitToolStripMenuItem.Size = new System.Drawing.Size(181, 22);
+            this.saveOptionsOnExitToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.saveOptionsOnExitToolStripMenuItem.Text = "Save Options on Exit";
             this.saveOptionsOnExitToolStripMenuItem.CheckedChanged += new System.EventHandler(this.SaveOptionsOnExitToolStripMenuItem_CheckedChanged);
             // 
@@ -227,34 +220,34 @@
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopToolStripMenuItem_Click);
             // 
             // helpToolStripMenuItem
             // 
             this.helpToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.trelloFAQToolStripMenuItem,
-            this.discordToolStripMenuItem,
-            this.gitHubToolStripMenuItem,
-            this.steamWorkshopToolStripMenuItem});
+            this.discordToolStripMenuItem});
             this.helpToolStripMenuItem.Name = "helpToolStripMenuItem";
             this.helpToolStripMenuItem.Size = new System.Drawing.Size(44, 20);
             this.helpToolStripMenuItem.Text = "Help";
             // 
-            // trelloFAQToolStripMenuItem
-            // 
-            this.trelloFAQToolStripMenuItem.Name = "trelloFAQToolStripMenuItem";
-            this.trelloFAQToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
-            this.trelloFAQToolStripMenuItem.Text = "Trello (F.A.Q.)";
-            this.trelloFAQToolStripMenuItem.Click += new System.EventHandler(this.TrelloFAQToolStripMenuItem_Click);
-            // 
             // discordToolStripMenuItem
             // 
             this.discordToolStripMenuItem.Name = "discordToolStripMenuItem";
-            this.discordToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.discordToolStripMenuItem.Size = new System.Drawing.Size(114, 22);
             this.discordToolStripMenuItem.Text = "Discord";
             this.discordToolStripMenuItem.Click += new System.EventHandler(this.DiscordToolStripMenuItem_Click);
+            // 
+            // aboutToolStripMenuItem
+            // 
+            this.aboutToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.gitHubToolStripMenuItem,
+            this.steamWorkshopToolStripMenuItem,
+            this.koFiToolStripMenuItem});
+            this.aboutToolStripMenuItem.Name = "aboutToolStripMenuItem";
+            this.aboutToolStripMenuItem.Size = new System.Drawing.Size(52, 20);
+            this.aboutToolStripMenuItem.Text = "About";
             // 
             // gitHubToolStripMenuItem
             // 
@@ -269,6 +262,13 @@
             this.steamWorkshopToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
             this.steamWorkshopToolStripMenuItem.Text = "Steam Workshop";
             this.steamWorkshopToolStripMenuItem.Click += new System.EventHandler(this.SteamWorkshopToolStripMenuItem_Click);
+            // 
+            // koFiToolStripMenuItem
+            // 
+            this.koFiToolStripMenuItem.Name = "koFiToolStripMenuItem";
+            this.koFiToolStripMenuItem.Size = new System.Drawing.Size(164, 22);
+            this.koFiToolStripMenuItem.Text = "Donate via Ko-fi";
+            this.koFiToolStripMenuItem.Click += new System.EventHandler(this.koFiToolStripMenuItem_Click);
             // 
             // checkBoxServerEnabled
             // 
@@ -725,25 +725,19 @@
         private TextBox textBoxInput;
         private ToolStripStatusLabel toolStripStatusLabelVersion;
         private ToolStripMenuItem discordToolStripMenuItem;
-        private ToolStripMenuItem gitHubToolStripMenuItem;
         private Button buttonStart;
         private ToolStripStatusLabel toolStripStatusLabelVconsolePort;
         private ToolStripStatusLabel toolStripStatusLabelConnection;
         private ToolStripStatusLabel toolStripStatusLabelVconsoleProtocol;
         private Button buttonCommandType;
         private ToolStripMenuItem editToolStripMenuItem;
-        private ToolStripMenuItem advancedOptionsToolStripMenuItem;
-        private ToolStripMenuItem clientPrintVConsoleToolStripMenuItem;
         private ToolStripMenuItem closeToolStripMenuItem;
-        private ToolStripMenuItem steamWorkshopToolStripMenuItem;
         private ToolStripMenuItem saveOptionsOnExitToolStripMenuItem;
-        private ToolStripMenuItem serverDisableUserVConsoleInputToolStripMenuItem;
         private ToolStripMenuItem saveOptionsToolStripMenuItem;
         private ToolStripMenuItem gamemodeToolStripMenuItem;
         private ToolStripMenuItem pluginsToolStripMenuItem;
         private ToolStripStatusLabel toolStripStatusLabelLibraries;
         private ToolStripMenuItem uPnPToolStripMenuItem;
-        private ToolStripMenuItem trelloFAQToolStripMenuItem;
         private TabControl tabControlBottom;
         private TabPage tabPageOutput;
         private TabPage tabPageServer;
@@ -778,5 +772,11 @@
         private Label label2;
         private ToolStripMenuItem viewToolStripMenuItem;
         private ToolStripMenuItem alwaysOnTopToolStripMenuItem;
+        private ToolStripMenuItem aboutToolStripMenuItem;
+        private ToolStripMenuItem koFiToolStripMenuItem;
+        private ToolStripMenuItem steamWorkshopToolStripMenuItem;
+        private ToolStripMenuItem serverDisableUserVConsoleInputToolStripMenuItem;
+        private ToolStripMenuItem clientPrintVConsoleToolStripMenuItem;
+        private ToolStripMenuItem gitHubToolStripMenuItem;
     }
 }

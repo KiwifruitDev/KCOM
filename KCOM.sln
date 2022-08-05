@@ -11,7 +11,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DiscordRpcPlugin", "Discord
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiwisCoOpModCore", "KiwisCoOpModCore\KiwisCoOpModCore.csproj", "{C08BF2D8-4FB6-4157-999B-FC8EA53791E0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AlyxDeathmatch", "AlyxDeathmatch\AlyxDeathmatch.csproj", "{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AlyxDeathmatch", "AlyxDeathmatch\AlyxDeathmatch.csproj", "{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LuaInterpreterPlugin", "LuaInterpreterPlugin\LuaInterpreterPlugin.csproj", "{3C88CEA5-C0AC-4BC8-981F-823FB7A8C387}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,10 @@ Global
 		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{66E80AF4-2E49-41FD-ACC3-CFE8289E7F01}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3C88CEA5-C0AC-4BC8-981F-823FB7A8C387}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3C88CEA5-C0AC-4BC8-981F-823FB7A8C387}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3C88CEA5-C0AC-4BC8-981F-823FB7A8C387}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3C88CEA5-C0AC-4BC8-981F-823FB7A8C387}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -25,6 +25,7 @@
 - Physics objects are synced across clients
 - Trigger outputs are synced across clients
 - Custom addon (gamemode/plugin) support
+- Lua scripting support
 - Support for Workshop maps
 - Discord rich presence
 - Addon contents within GitHub
@@ -34,7 +35,7 @@
 - Subscribe to the [Workshop Addon](https://steamcommunity.com/sharedfiles/filedetails/?id=2739356543) on Steam
 - Download the [latest release](https://github.com/TeamPopplio/KCOM/releases) from GitHub
 - Extract the contents of the zip file to a safe place (e.g. a new folder on your desktop)
-- Set the following launch options for Half-Life: Alyx in Steam: `-console -vconsole -language english`
+- Set the following launch options for Half-Life: Alyx in Steam: `-console -vconsole -language english -low`
 - Launch the game
 - Open KCOM using `KiwisCoOpMod.exe`
 - Follow instructions within the KCOM application
@@ -63,6 +64,14 @@
 - Ensure that the port is forwarded, try UPnP mapping via "File" > "Forward Port via UPnP"
 - Click on the "Start" button to start the server
 - KCOM is now hosting a server! You can now provide your *public* IP address to peers
+
+## Debugging
+
+- Use Visual Studio 2022 or later to rebuild all projects for KCOM (x64)
+- Place [DiscordRPC.dll](https://github.com/discord/discord-rpc/releases) (x64) in the `libraries/` folder where KCOM was compiled
+- Place [lua54.dll](http://luabinaries.sourceforge.net/download.html) (x64) in the root folder where KCOM was compiled
+- In Visual Studio, set "KiwisCoOpMod" as the startup project and click the start button
+- Visual Studio will automatically launch KCOM
 
 ## Help & Support
 

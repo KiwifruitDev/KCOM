@@ -50,7 +50,8 @@ namespace KiwisCoOpMod
                 plugins = pluginTypes;
                 ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort))
                 {
-                    ReconnectTimeout = TimeSpan.FromSeconds(60)
+                    ReconnectTimeout = TimeSpan.FromSeconds(60),
+                    IsReconnectionEnabled = false
                 };
                 ws.Start();
                 ws.DisconnectionHappened.Subscribe(info =>
@@ -78,6 +79,7 @@ namespace KiwisCoOpMod
                                 {
                                     if (map != response.map)
                                     {
+                                        ui.Invoke(() => ui.LogToOutput(channel, "Changing map to " + response.map));
                                         vConsole.WriteCommand("addon_play " + response.map + ";addon_tools_map " + response.map);
                                         map = response.map;
                                     }
@@ -125,8 +127,9 @@ namespace KiwisCoOpMod
                     Response input = new("client")
                     {
                         clientUsername = Settings.Default.ClientUsername,
-                        password = Settings.Default.ClientPassword
-                    };
+                        password = Settings.Default.ClientPassword,
+                        timestamp = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
+                };
                     ws.Send(JsonConvert.SerializeObject(input));
                     ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
                 });
@@ -136,7 +139,7 @@ namespace KiwisCoOpMod
         }
         public void Close()
         {
-            if (ws != null && ws.IsStarted)
+            if (ws != null)
             {
                 PluginHandler.Handle(plugins, PluginHandleType.Client_PreClose, ui, ws);
                 ws.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Closed by KCOM.");
@@ -153,7 +156,9 @@ namespace KiwisCoOpMod
         {
             if (ws != null && ws.IsStarted && text.Length > 0)
             {
-                ws.Send(new Response("chat", text).ToString());
+                Response chatResponse = new("chat", text);
+                chatResponse.timestamp = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalMilliseconds;
+                ws.Send(chatResponse.ToString());
             }
         }
     }

@@ -249,8 +249,8 @@ namespace KiwisCoOpMod
                 DateTime endTime = DateTime.Now;
                 LogToOutput(channel, "Stopped at", endTime.ToString(@"hh\:mm\:ss") + ", active for", (endTime - startTime).ToString(@"hh\:mm\:ss"));
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PostClose, this);
-                Save();
-                Application.Restart();
+                //Save();
+                //Application.Restart();
             }
             gamemodeToolStripMenuItem.Enabled = !started;
             pluginsToolStripMenuItem.Enabled = !started;
@@ -306,17 +306,10 @@ namespace KiwisCoOpMod
             }
         }
 
-        public void LogToOutput(params object[] text)
+        public void LogToOutputGeneric(params object[] text)
         {
             richTextBoxOutput.Select(richTextBoxOutput.TextLength, 0);
             richTextBoxOutput.SelectionColor = Color.Black;
-            richTextBoxOutput.AppendText("\n" + string.Join(" ", text));
-        }
-
-        public void LogToOutput(Color color, params object[] text)
-        {
-            richTextBoxOutput.Select(richTextBoxOutput.TextLength, 0);
-            richTextBoxOutput.SelectionColor = color;
             richTextBoxOutput.AppendText("\n" + string.Join(" ", text));
         }
 
@@ -396,6 +389,7 @@ namespace KiwisCoOpMod
             {
                 "Chat" => "Command",
                 "Command" => "VConsole",
+                "VConsole" => "Server",
                 _ => "Chat",
             };
         }
@@ -418,7 +412,8 @@ namespace KiwisCoOpMod
         private void TextBoxInput_Enter(object sender, EventArgs e)
         {
             string prefix = "";
-            switch(buttonCommandType.Text)
+            LogToOutputGeneric("> " + prefix + textBoxInput.Text);
+            switch (buttonCommandType.Text)
             {
                 case "Command":
                     prefix = "/";
@@ -426,6 +421,10 @@ namespace KiwisCoOpMod
                 case "VConsole":
                     prefix = "/vc ";
                     break;
+                case "Server":
+                    ServerProgram.instance.Command(textBoxInput.Text.Split(" ").ToList());
+                    textBoxInput.Text = "";
+                    return;
             }
             clientProgram.Chat(prefix + textBoxInput.Text);
             textBoxInput.Text = "";
@@ -436,6 +435,7 @@ namespace KiwisCoOpMod
             if (e.KeyChar == (char)Keys.Return)
             {
                 string prefix = "";
+                LogToOutputGeneric("> " + prefix + textBoxInput.Text);
                 switch (buttonCommandType.Text)
                 {
                     case "Command":
@@ -444,8 +444,11 @@ namespace KiwisCoOpMod
                     case "VConsole":
                         prefix = "/vc ";
                         break;
+                    case "Server":
+                        ServerProgram.instance.Command(textBoxInput.Text.Split(" ").ToList());
+                        textBoxInput.Text = "";
+                        return;
                 }
-                LogToOutput("> "+prefix + textBoxInput.Text);
                 clientProgram.Chat(prefix + textBoxInput.Text);
                 textBoxInput.Text = "";
             }
@@ -498,7 +501,7 @@ namespace KiwisCoOpMod
         private void SaveOptionsToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Save();
-            SetStatus(channel.GetColor(), "Options saved");
+            LogToOutput(channel, "Options saved");
         }
 
         private void UPnPToolStripMenuItem_Click(object sender, EventArgs e)
@@ -544,11 +547,6 @@ namespace KiwisCoOpMod
             ServerProgram.instance.ChangeMap(Settings.Default.ServerMap);
         }
 
-        private void TrelloFAQToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            Process.Start(new ProcessStartInfo("https://trello.com/b/2xYfYklG/kiwis-co-op-mod-for-half-life-alyx-kcom") { UseShellExecute = true });
-        }
-
         private void buttonServerVconsoleSend_Click(object sender, EventArgs e)
         {
             string command = textBoxServerVconsole.Text;
@@ -583,6 +581,11 @@ namespace KiwisCoOpMod
             {
                 ButtonServerChangeMap_Click(sender, e);
             }
+        }
+
+        private void koFiToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Process.Start(new ProcessStartInfo("https://ko-fi.com/kiwifruitdev") { UseShellExecute = true });
         }
     }
 }

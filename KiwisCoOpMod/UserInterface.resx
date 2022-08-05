@@ -60,7 +60,7 @@
   <data name="richTextBoxOutput.Text" xml:space="preserve">
     <value>Welcome to Kiwi's Co-Op Mod for Half-Life: Alyx!
 Ensure that Half-Life: Alyx uses these launch parameters:
--console -vconsole -language english
+-console -vconsole -language english -low
 When starting KCOM, make sure that the VConsole window is not open.
 For help/support, please visit the Discord server linked in the "Help" menu above.
 Thank you for your interest in KCOM, enjoy!

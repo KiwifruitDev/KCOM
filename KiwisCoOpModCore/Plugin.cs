@@ -52,7 +52,9 @@ namespace KiwisCoOpModCore
         Server_PreGamemode_ClientOpen,
         Server_PostGamemode_ClientOpen,
         Server_PreGamemode_ClientClose,
-        Server_PostGamemode_ClientClose
+        Server_PostGamemode_ClientClose,
+        Server_PreGamemode_Command,
+        Server_PostGamemode_Command,
     }
     public static class PluginHandler
     {

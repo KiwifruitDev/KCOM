@@ -33,8 +33,10 @@ namespace KiwisCoOpModCore
         public readonly static int internalVersion = 0;
         public int? version = internalVersion;
         public bool urgent;
+        public long? timestamp;
         public Response()
-        { }
+        {
+        }
         public Response(string type)
         {
             this.type = type;

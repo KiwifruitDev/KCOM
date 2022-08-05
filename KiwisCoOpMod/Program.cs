@@ -20,6 +20,7 @@ namespace KiwisCoOpMod
 {
     internal static class Program
     {
+        public static readonly UserInterface userInterface = new(); // WORKAROUND SPECIFICALLY FOR LUA
         const string UriScheme = "kcom";
         const string FriendlyName = "Kiwi's Co-Op Mod";
         /// <summary>
@@ -29,7 +30,6 @@ namespace KiwisCoOpMod
         static void Main(string[] args)
         {
             ApplicationConfiguration.Initialize();
-            UserInterface userInterface = new();
             RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme);
             RegistryKey defaultIcon = key.CreateSubKey("DefaultIcon");
             RegistryKey commandKey = key.CreateSubKey(@"shell\open\command");
@@ -44,12 +44,12 @@ namespace KiwisCoOpMod
             {
                 if (Uri.TryCreate(args[0], UriKind.Absolute, out var uri) && string.Equals(uri.Scheme, UriScheme, StringComparison.OrdinalIgnoreCase))
                 {
-                    userInterface.LogToOutput("Received the following URI scheme:", uri);
+                    userInterface.LogToOutputGeneric("Received the following URI scheme:", uri);
                     userInterface.UseUriScheme(uri);
                 }
                 else
                 {
-                    userInterface.LogToOutput("Received the following command line arguments:", string.Join(" ", args));
+                    userInterface.LogToOutputGeneric("Received the following command line arguments:", string.Join(" ", args));
                     userInterface.UseArgs(args);
                 }
             }

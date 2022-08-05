@@ -34,7 +34,7 @@ namespace KiwisCoOpMod
         private readonly Channel chatChannel = new("CHAT", "Chat", Color.Black);
         private readonly Channel statusChannel = new("STATUS", "Status", Color.DeepPink);
         private readonly Channel vConsoleChannel = new("VC", "VConsole", Color.Maroon);
-        private VConsole? vConsole;
+        private readonly VConsole? vConsole = new();
         private List<Type> plugins = new();
         public int version = 0; // Update version if netcode changes.
         public string map = "";
@@ -133,7 +133,10 @@ namespace KiwisCoOpMod
                     ws.Send(JsonConvert.SerializeObject(input));
                     ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
                 });
-                vConsole = new VConsole(ws);
+                if (vConsole != null)
+                {
+                    vConsole.Connect(ws);
+                }
                 PluginHandler.Handle(plugins, PluginHandleType.Client_PostStart, ui, ws);
             }
         }

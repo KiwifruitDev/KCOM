@@ -28,26 +28,29 @@ namespace KiwisCoOpMod
 {
     public class VConsole
     {
-        private readonly WebsocketClient? ws;
+        private WebsocketClient? ws;
         private TcpClient? client;
         private NetworkStream? stream;
         private bool killed = false;
-        private readonly List<byte[]> commandQueue = new();
-        private readonly StreamWatcher? watcher;
+        private List<byte[]> commandQueue = new();
+        private StreamWatcher? watcher;
         private int vcAmount;
-        public VConsole(WebsocketClient ws)
+        public VConsole()
+        {
+        }
+        public void Connect(WebsocketClient ws)
         {
             this.ws = ws;
+            Connect();
+        }
+        public void Connect()
+        {
+            WriteCommand("disconnect");
             client = new TcpClient("127.0.0.1", Settings.Default.VconsolePort);
             stream = client.GetStream();
-            WriteCommand("disconnect");
             watcher = new StreamWatcher(stream);
             watcher.MessageAvailable += MessageAvailable;
-            PostConnect();
-        }
-        private void PostConnect()
-        {
-            if(watcher != null)
+            if (watcher != null)
                 watcher.SetWorking(true);
             killed = false;
             WriteWindowFocus(true);
@@ -71,8 +74,9 @@ namespace KiwisCoOpMod
                     case "PRNT":
                         byte[] message = e.Data.Skip(30).SkipLast(1).ToArray();
                         string newMessage = Encoding.ASCII.GetString(message).Replace("\n", "");
-                        if(newMessage != "")
+                        if(newMessage != "" && !newMessage.Contains("Command buffer full"))
                         {
+                            /*
                             if (newMessage.Contains("Command buffer full"))
                             {
                                 vcAmount += 1;
@@ -84,10 +88,11 @@ namespace KiwisCoOpMod
                             }
                             else
                             {
+                            */
                                 Response input = new("print", newMessage);
                                 input.timestamp = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds;
                                 ws.Send(JsonConvert.SerializeObject(input));
-                            }
+                            //}
                         }
                         break;
                 }
@@ -105,7 +110,7 @@ namespace KiwisCoOpMod
                 watcher.SetWorking(false);
             client = new TcpClient("127.0.0.1", Settings.Default.VconsolePort);
             stream = client.GetStream();
-            PostConnect();
+            Connect();
         }
 
         public void Disconnect()
@@ -154,8 +159,8 @@ namespace KiwisCoOpMod
                 byte[] completeData = dataList.ToArray();
                 if (!killed)
                     stream.Write(completeData);
-                else
-                    commandQueue.Add(completeData);
+                //else
+                    //commandQueue.Add(completeData);
             }
         }
         public void WriteCommand(string command, bool urgent = false)

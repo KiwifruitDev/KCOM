@@ -16,6 +16,8 @@
 using KiwisCoOpModCore;
 using Newtonsoft.Json;
 using Fleck;
+using System.Collections.Generic;
+using System;
 
 namespace LuaInterpreterPlugin
 {

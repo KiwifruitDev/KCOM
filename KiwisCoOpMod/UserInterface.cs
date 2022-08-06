@@ -18,6 +18,12 @@ using System.Reflection;
 using Open.Nat;
 using System.Diagnostics;
 using Newtonsoft.Json;
+using System.Windows.Forms;
+using System;
+using System.Collections.Generic;
+using System.Drawing;
+using System.IO;
+using System.Linq;
 
 namespace KiwisCoOpMod
 {
@@ -34,6 +40,8 @@ namespace KiwisCoOpMod
         List<string>? currentAddons;
         public UserInterface()
         {
+            AutoScaleMode = AutoScaleMode.None;
+            Font = new Font(Font.Name, 8.25f * 96f / CreateGraphics().DpiX, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont);
             InitializeComponent();
             // Status bar
             toolStripStatusLabelConnection.Text = "Inactive";

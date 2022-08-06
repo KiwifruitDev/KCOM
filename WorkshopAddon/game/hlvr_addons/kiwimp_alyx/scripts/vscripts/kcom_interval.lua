@@ -52,11 +52,13 @@ else
                     entcache[name] = object;
                 end
             else
+                --[[
                 if name ~= "" and not string.find(class, "prop") then
                     print("EREM "..name.." KCOM");
                 elseif name ~= "" then
                     print("BRAK "..name.." KCOM");
                 end
+                ]]--
                 entcache[name] = nil;
             end
         end
@@ -185,6 +187,30 @@ else
         entity:RedirectOutput("OnEntitySpawned", "KCOM_EntitySync", thisEntity);
     end
 
+    -- game events --
+
+    -- UNTESTED! --
+    function KCOM_player_retrieved_backpack_clip()
+        -- player takes out a clip from their backpack ("tossing to a friend" mechanic)
+        for _, clip in kcom_ammoclips do
+            local clipents = Entities:FindAllByClassname(clip);
+            for _, clipent in pairs(clipents) do
+                -- check if clip lacks a name (if it does, it's a clip that's been taken out of the backpack)
+                local name = clipent:GetName();
+                if name == "" then
+                    -- assign a new name to the clip so it can be networked
+                    local origin = clipent:GetOrigin();
+                    local name = "kcom_object_kcoords_"..math.floor(origin[1]).."_"..math.floor(origin[2]).."_"..math.floor(origin[3]);
+                    clipent:SetEntityName(name);
+                    -- tell server that we took out a clip with this specific name
+                    print("CLIP "..name.." KCOM");
+                    print("CMND /clip KCOM");
+                end
+            end
+        end
+    end
+    ListenToGameEvent("player_retrieved_backpack_clip", KCOM_player_retrieved_backpack_clip, _G)
+
     -- thank you Epic#4527 from the source 2 modding discord!
     -- https://discord.com/channels/692784980304330853/713548145358929990/715966997103509578
     function GetHandFromController(controller)
@@ -195,6 +221,7 @@ else
         end
         return controller
     end
+
     kcom_found = {};
     kcom_npcs = {
         ["npc_headcrab_armored"] = true,
@@ -211,6 +238,13 @@ else
         ["npc_manhack"] = true,
         ["npc_barnacle"] = true,
     };
+    kcom_ammoclips = {
+        ["item_hlvr_clip_energygun"] = true, -- single pistol clip
+        ["item_hlvr_clip_energygun_multiple"] = true, -- four pistol clips
+        ["item_hlvr_clip_rapidfire"] = true, -- single combine power cell
+        ["item_hlvr_clip_shotgun_single"] = true, -- single shotgun shell
+        ["item_hlvr_clip_shotgun_multiple"] = true, -- box of shotgun shells
+    }
     kcom_trackers = {
         -- triggers
         ["trigger_multiple"] = true,
@@ -550,6 +584,16 @@ else
                 --end
             end
         --end
+    end, "Kiwi's Co-Op Mod", 0);
+    -- used specifically for billboarding name tags to player's view
+    Convars:RegisterCommand("kcom_setlocationlocal", function(command, name, x, y, z)
+        local entity = Entities:FindByName(nil, name);
+        if entity ~= nil then
+            local player = Entities:GetLocalPlayer();
+            local headang = head:GetAnglesAsVector();
+            entity:SetOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+            entity:SetAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
+        end
     end, "Kiwi's Co-Op Mod", 0);
     Convars:RegisterCommand("kcom_fireoutput", function(command, name, type)
         local entity = Entities:FindByName(nil, name);

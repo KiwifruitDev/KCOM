@@ -24,6 +24,8 @@ using Fleck;
 using System.Reflection;
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using System.Drawing;
+using System.IO;
 
 namespace KiwisCoOpMod
 {

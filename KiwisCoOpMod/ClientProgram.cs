@@ -23,6 +23,7 @@ using System.ComponentModel;
 using KiwisCoOpModCore;
 using Websocket.Client;
 using System.Diagnostics;
+using System.Drawing;
 
 namespace KiwisCoOpMod
 {
@@ -46,6 +47,7 @@ namespace KiwisCoOpMod
         {
             if (ws == null)
             {
+                map = "";
                 PluginHandler.Handle(pluginTypes, PluginHandleType.Client_PreStart, ui);
                 plugins = pluginTypes;
                 ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort))

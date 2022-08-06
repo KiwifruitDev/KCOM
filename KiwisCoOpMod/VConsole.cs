@@ -159,8 +159,8 @@ namespace KiwisCoOpMod
                 byte[] completeData = dataList.ToArray();
                 if (!killed)
                     stream.Write(completeData);
-                //else
-                    //commandQueue.Add(completeData);
+                else
+                    commandQueue.Add(completeData);
             }
         }
         public void WriteCommand(string command, bool urgent = false)

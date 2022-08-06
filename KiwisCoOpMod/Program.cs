@@ -15,6 +15,9 @@
 */
 using KiwisCoOpModCore;
 using Microsoft.Win32;
+using System;
+using System.Windows.Forms;
+using System.Configuration;
 
 namespace KiwisCoOpMod
 {
@@ -29,7 +32,10 @@ namespace KiwisCoOpMod
         [STAThread]
         static void Main(string[] args)
         {
-            ApplicationConfiguration.Initialize();
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
+            Application.SetHighDpiMode(HighDpiMode.DpiUnaware);
+
             RegistryKey key = Registry.CurrentUser.CreateSubKey("SOFTWARE\\Classes\\" + UriScheme);
             RegistryKey defaultIcon = key.CreateSubKey("DefaultIcon");
             RegistryKey commandKey = key.CreateSubKey(@"shell\open\command");

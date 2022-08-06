@@ -67,11 +67,19 @@
 
 ## Debugging
 
-- Use Visual Studio 2022 or later to rebuild all projects for KCOM (x64)
-- Place [DiscordRPC.dll](https://github.com/discord/discord-rpc/releases) (x64) in the `libraries/` folder where KCOM was compiled
-- Place [lua54.dll](http://luabinaries.sourceforge.net/download.html) (x64) in the root folder where KCOM was compiled
-- In Visual Studio, set "KiwisCoOpMod" as the startup project and click the start button
-- Visual Studio will automatically launch KCOM
+### Requirements
+- [Visual Studio 2022 or later](https://visualstudio.microsoft.com/downloads/)
+	- Select ".NET desktop development" during installation
+- [7-Zip](https://www.7-zip.org/download.html)
+- [Git](https://git-scm.com/downloads)
+
+### Instructions
+- Clone the repository within Visual Studio
+- Build all projects for KCOM (x64) by pressing `Ctrl+Shift+B` or by clicking "Build" > "Build Solution"
+	- Note: You may need to build the `KiwisCoOpModCore` project first, this can be done by right-clicking the project and selecting "Build"
+- In Visual Studio, set `KiwisCoOpMod` as the startup project by right-clicking the project and selecting "Set as Startup Project"
+- Click on the green "Start" button to start debugging
+- Visual Studio will automatically launch KCOM with debugging enabled
 
 ## Help & Support
 

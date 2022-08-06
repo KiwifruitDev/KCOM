@@ -1,4 +1,6 @@
-﻿namespace KiwisCoOpMod
+﻿using System.Windows.Forms;
+
+namespace KiwisCoOpMod
 {
     partial class UserInterface
     {

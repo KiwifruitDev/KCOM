@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.0.32112.339
+VisualStudioVersion = 17.2.32630.192
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "KiwisCoOpMod", "KiwisCoOpMod\KiwisCoOpMod.csproj", "{1E2DE4C1-E083-47FB-A7A3-C346B342C5B6}"
 EndProject

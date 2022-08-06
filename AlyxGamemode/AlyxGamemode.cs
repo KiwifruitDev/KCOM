@@ -16,7 +16,11 @@
 using Fleck;
 using KiwisCoOpModCore;
 using Newtonsoft.Json;
+using System;
+using System.Collections.Generic;
 using System.Globalization;
+using System.Linq;
+using System.Threading;
 
 namespace AlyxGamemode
 {
@@ -76,6 +80,36 @@ namespace AlyxGamemode
                                         {
                                             Response vconsoleInput = new("command", "sv_cheats 1;echo INIT KCOM");
                                             socket.Send(JsonConvert.SerializeObject(vconsoleInput));
+                                            if (AlyxGlobalData.instance.GetPlayer(socket.ConnectionInfo.Id) == null)
+                                            {
+                                                foreach (IndexedClient client in connections)
+                                                {
+                                                    if (client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
+                                                    {
+                                                        Player? player = AlyxGlobalData.instance.AddPlayer(client);
+                                                        if (player != null)
+                                                        {
+                                                            Response output2 = new("status", "♫ " + client.Username + " joined as index " + player.Index);
+                                                            Response blip = new("command", "play kcom/blip" + rnd.Next(1, 4));
+                                                            connections.ForEach(c =>
+                                                            {
+                                                                if (c.Session.ConnectionInfo.Id != client.Session.ConnectionInfo.Id)
+                                                                {
+                                                                    c.Session.Send(JsonConvert.SerializeObject(blip));
+                                                                    c.Session.Send(JsonConvert.SerializeObject(output2));
+                                                                }
+                                                            });
+                                                        }
+                                                        else
+                                                        {
+                                                            Response output2 = new("status", "The server is currently at maximum capacity, please try again later.");
+                                                            socket.Send(JsonConvert.SerializeObject(output2));
+                                                            socket.Close();
+                                                        }
+                                                        break;
+                                                    }
+                                                }
+                                            }
                                         }
                                         else if (response.data.Contains("KCOM"))
                                         {
@@ -131,7 +165,7 @@ namespace AlyxGamemode
                                                                 HeadOrigin.Y,
                                                                 HeadOrigin.Z + 10
                                                             );
-                                                            Angle HatAngles = new(
+                                                            Vector HatAngles = new(
                                                                 0,
                                                                 HeadAngles.Yaw + 90,
                                                                 90
@@ -230,6 +264,7 @@ namespace AlyxGamemode
                                                             break;
                                                         case PacketType.MapName:
                                                             string suffix = "";
+                                                            /*
                                                             if (packet.args[0] != player.Client.Map)
                                                             {
                                                                 Response mapOutput = new("command", "addon_play " + packet.args[0] + "; addon_tools_map " + packet.args[0]);
@@ -243,6 +278,7 @@ namespace AlyxGamemode
                                                                 }
                                                                 suffix = " - Telling all clients to switch...";
                                                             }
+                                                            */
                                                             Response output2 = new("status", "Detected map: " + packet.args[0] + suffix);
                                                             socket.Send(JsonConvert.SerializeObject(output2));
                                                             int gamemodeAPIVersion = int.Parse(packet.args[1]);
@@ -320,38 +356,6 @@ namespace AlyxGamemode
                             IWebSocketConnection socket = (IWebSocketConnection)vs[2];
                             switch (response.type)
                             {
-                                case "client":
-                                    if (AlyxGlobalData.instance.GetPlayer(socket.ConnectionInfo.Id) == null)
-                                    {
-                                        foreach (IndexedClient client in connections)
-                                        {
-                                            if (client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
-                                            {
-                                                Player? player = AlyxGlobalData.instance.AddPlayer(client);
-                                                if (player != null)
-                                                {
-                                                    Response output2 = new("status", "♫ " + client.Username + " joined as index " + player.Index);
-                                                    Response blip = new("command", "play kcom/blip" + rnd.Next(1, 4));
-                                                    connections.ForEach(c =>
-                                                    {
-                                                        if (c.Session.ConnectionInfo.Id != client.Session.ConnectionInfo.Id)
-                                                        {
-                                                            c.Session.Send(JsonConvert.SerializeObject(blip));
-                                                            c.Session.Send(JsonConvert.SerializeObject(output2));
-                                                        }
-                                                    });
-                                                }
-                                                else
-                                                {
-                                                    Response output2 = new("status", "The server is currently at maximum capacity, please try again later.");
-                                                    socket.Send(JsonConvert.SerializeObject(output2));
-                                                    socket.Close();
-                                                }
-                                                break;
-                                            }
-                                        }
-                                    }
-                                    break;
                                 case "chat":
                                     if (AlyxGlobalData.instance.GetPlayer(socket.ConnectionInfo.Id) != null)
                                     {

@@ -38,7 +38,8 @@ namespace KiwisCoOpModCore
         PostResponse,
         ClientOpen,
         ClientClose,
-        Command
+        Command,
+        Think,
     }
     public static class GamemodeHandler
     {

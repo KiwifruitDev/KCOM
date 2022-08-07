@@ -57,6 +57,8 @@ namespace KiwisCoOpModCore
         Server_PostGamemode_ClientClose,
         Server_PreGamemode_Command,
         Server_PostGamemode_Command,
+        Server_PreGamemode_Think,
+        Server_PostGamemode_Think,
     }
     public static class PluginHandler
     {

@@ -38,6 +38,18 @@ namespace KiwisCoOpMod
         public Type? gamemodeType;
         public List<Type> plugins = new();
         public Channel channel = new("SV", "Server", Color.Olive);
+        public int tickrate = 66;
+        public bool executeThink = false;
+        public void Tick()
+        {
+            PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
+            LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
+            if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.Think, tickrate, connections, map) == HandleState.Continue)
+            {
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
+            }
+        }
         public void Start(Type type, List<Type> plugins)
         {
             if (wss == null)
@@ -69,35 +81,22 @@ namespace KiwisCoOpMod
                         PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
                         LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
                     }
-                    string? appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    if (appDir != null)
+                    executeThink = true;
+                    // Tick/thinking
+                    Task.Run(() =>
                     {
-                        // Load character customization options in gamemodes
-                        string gamemodesFolderPath = Path.Combine(appDir, "gamemodes");
-                        Directory.CreateDirectory(gamemodesFolderPath);
-                        string[] files = Directory.GetFiles(gamemodesFolderPath, "*.dll", SearchOption.TopDirectoryOnly);
-                        foreach (string dll in files)
+                        while (executeThink)
                         {
-                            LoadFromDllFile(appDir, dll);
+                            Tick();
+                            Thread.Sleep(tickrate);
                         }
-                        // Load character customization options in plugins
-                        string pluginsFolderPath = Path.Combine(appDir, "plugins");
-                        Directory.CreateDirectory(pluginsFolderPath);
-                        string[] pluginFiles = Directory.GetFiles(pluginsFolderPath, "*.dll", SearchOption.TopDirectoryOnly);
-                        foreach (string dll in pluginFiles)
-                        {
-                            LoadFromDllFile(appDir, dll);
-                        }
-                    }
+                    });
                 }
             }
         }
-        private void LoadFromDllFile(string appDir, string dll)
-        {
-            Assembly.LoadFrom(Path.Combine(appDir, dll));
-        }
         public void Close()
         {
+            executeThink = false;
             if (wss != null)
             {
                 if (gamemodeType != null)

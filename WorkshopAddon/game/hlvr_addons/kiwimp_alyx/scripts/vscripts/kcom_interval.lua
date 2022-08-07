@@ -503,6 +503,22 @@ else
     entcachenames = {};
     npccache = {};
     npcnames = {};
+    SpawnEntityFromTableSynchronous("point_worldtext", {
+        origin = "16128 16128 16128",
+        targetname = "kcom_hud",
+        fullbright = "1",
+        color = "255 255 255 255",
+        world_units_per_pixel = "0.005",
+        font_size = "128",
+        justify_horizontal = "1",
+        justify_vertical = "1",
+        message = "",
+        font_name = "Arial Black",
+        reorient_mode = "0",
+        depth_render_offset = "0.125",
+        rendercolor = "255 255 255 255",
+        enabled = "1",
+    });
     for i = 0, kcom_player_count - 1 do
         table.insert(kcom_heads, SpawnEntityFromTableSynchronous("prop_dynamic", {
             origin = "16128 16128 16128",

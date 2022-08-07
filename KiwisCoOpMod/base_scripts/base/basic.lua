@@ -18,24 +18,21 @@ if not lua_env.persistence["script_basic"] then
     lua_env.persistence["script_basic"] = #lua_env.handlers + 1
 end
 
-lua_env.persistence["bans"] = lua_env.persistence["bans"] or {}
-lua_env.persistence["ipbans"] = lua_env.persistence["ipbans"] or {}
+lua_env.persistence["configjson"] = {
+    ["bans"] = {},
+    ["ipbans"] = {},
+    ["sub_gamemode"] = "campaign",
+}
 lua_env.persistence["players"] = lua_env.persistence["players"] or {}
 
 lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg1, arg2, arg3, arg4)
     if handleType == "Server_PreGamemode_PreStart" then
-        -- Load bans from file
-        local file = io.open("bans.json", "r")
-        if file then
-            local data = file:read("*all")
-            file:close()
-            lua_env.persistence["bans"] = json.decode(data)
-        end
-        local file2 = io.open("ipbans.json", "r")
+        -- Load config from file
+        local file2 = io.open("config.json", "r")
         if file2 then
             local data = file2:read("*all")
             file2:close()
-            lua_env.persistence["ipbans"] = json.decode(data)
+            lua_env.persistence["configjson"] = json.decode(data)
         end
     elseif handleType == "Server_PostGamemode_PreStart" then
         -- Set gamemode type
@@ -99,8 +96,19 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                             if #packet <= 1 then return end
                             if packet[1] == "PLYR" then
                                 if #packet < 9 then return end
-                                lua_env.persistence["players"][arg2[i].Username] = {
-                                    ["health"] = tonumber(packet[8]),
+                                lua_env.persistence["players"][arg2[i].Username]["health"] = tonumber(packet[8])
+                                lua_env.persistence["players"][arg2[i].Username]["origin"] = {
+                                    ["x"] = tonumber(packet[2]),
+                                    ["y"] = tonumber(packet[3]),
+                                    ["z"] = tonumber(packet[4])
+                                }
+                                lua_env.persistence["players"][arg2[i].Username]["angles"] = {
+                                    ["pitch"] = tonumber(packet[5]),
+                                    ["yaw"] = tonumber(packet[6]),
+                                    ["roll"] = tonumber(packet[7])
+                                }
+                            elseif packet[1] == "HEAD" then
+                                lua_env.persistence["players"][arg2[i].Username]["head"] = {
                                     ["origin"] = {
                                         ["x"] = tonumber(packet[2]),
                                         ["y"] = tonumber(packet[3]),
@@ -112,6 +120,32 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                                         ["roll"] = tonumber(packet[7])
                                     },
                                 }
+                                -- Place hud in front of player, get directional vectors
+                                local hudDistance = 10
+                                local dirX = math.cos(math.rad(lua_env.persistence["players"][arg2[i].Username]["head"]["angles"]["yaw"]))
+                                local dirY = math.sin(math.rad(lua_env.persistence["players"][arg2[i].Username]["head"]["angles"]["yaw"]))
+                                local dirZ = math.sin(math.rad(lua_env.persistence["players"][arg2[i].Username]["head"]["angles"]["pitch"]) * -1)
+                                local hudX = lua_env.persistence["players"][arg2[i].Username]["head"]["origin"]["x"] + (dirX * hudDistance)
+                                local hudY = lua_env.persistence["players"][arg2[i].Username]["head"]["origin"]["y"] + (dirY * hudDistance)
+                                local hudZ = lua_env.persistence["players"][arg2[i].Username]["head"]["origin"]["z"] + (dirZ * hudDistance)
+                                -- Hud angles
+                                local hudPitch = 0
+                                local hudYaw = lua_env.persistence["players"][arg2[i].Username]["head"]["angles"]["yaw"] - 90
+                                local hudRoll = 90
+                                local hudResp = Response("command", "kcom_setlocation kcom_hud " .. hudX .. " " .. hudY .. " " .. hudZ .. " " .. hudPitch .. " " .. hudYaw .. " " .. hudRoll)
+                                lua_env.persistence["players"][arg2[i].Username]["hud"] = {
+                                    ["origin"] = {
+                                        ["x"] = hudX,
+                                        ["y"] = hudY,
+                                        ["z"] = hudZ
+                                    },
+                                    ["angles"] = {
+                                        ["pitch"] = hudPitch,
+                                        ["yaw"] = hudYaw,
+                                        ["roll"] = hudRoll
+                                    }
+                                }
+                                arg3:Send(hudResp:ToString())
                             end
                         end
                     end
@@ -216,7 +250,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 return
             end
             -- Check if player is already banned
-            for k, v in pairs(lua_env.persistence["bans"]) do
+            for k, v in pairs(lua_env.persistence["configjson"].bans) do
                 if v == arg1[1] then
                     print("Player is already banned")
                     return
@@ -225,10 +259,10 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             for i = 0, arg2.Count - 1 do
                 if arg2[i].Username == arg1[1] then
                     arg2[i].Session:Close()
-                    lua_env.persistence["bans"][#lua_env.persistence["bans"] + 1] = arg2[i].Username
+                    lua_env.persistence["configjson"].bans[#lua_env.persistence["configjson"].bans + 1] = arg2[i].Username
                     -- Save bans
-                    local file = io.open("bans.json", "w")
-                    file:write(json.encode(lua_env.persistence["bans"]))
+                    local file = io.open("config.json", "w")
+                    file:write(json.encode(lua_env.persistence["configjson"]))
                     file:close()
                     print("Banned " .. arg1[1])
                     return
@@ -245,17 +279,17 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             for i = 0, arg2.Count - 1 do
                 if arg2[i].Username == arg1[1] then
                     -- Check if player is already banned
-                    for k, v in pairs(lua_env.persistence["ipbans"]) do
+                    for k, v in pairs(lua_env.persistence["configjson"].ipbans) do
                         if v == arg2[i].Session.ConnectionInfo.ClientIpAddress then
                             print("Player is already banned by IP address")
                             return
                         end
                     end
                     arg2[i].Session:Close()
-                    lua_env.persistence["ipbans"][#lua_env.persistence["ipbans"] + 1] = arg2[i].Session.ConnectionInfo.ClientIpAddress
+                    lua_env.persistence["configjson"].ipbans[#lua_env.persistence["configjson"].ipbans + 1] = arg2[i].Session.ConnectionInfo.ClientIpAddress
                     -- Save bans
-                    local file = io.open("ipbans.json", "w")
-                    file:write(json.encode(lua_env.persistence["ipbans"]))
+                    local file = io.open("config.json", "w")
+                    file:write(json.encode(lua_env.persistence["configjson"]))
                     file:close()
                     print("Banned " .. arg1[1] .. " by IP address")
                     return
@@ -269,39 +303,39 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 return
             end
             local done = false
-            for k, v in pairs(lua_env.persistence["bans"]) do
+            for k, v in pairs(lua_env.persistence["configjson"].bans) do
                 if v == arg1[1] then
-                    lua_env.persistence["bans"][k] = nil
+                    lua_env.persistence["configjson"].bans[k] = nil
                     -- Shift bans
                     local newBans = {}
-                    for k, v in pairs(lua_env.persistence["bans"]) do
+                    for k, v in pairs(lua_env.persistence["configjson"].bans) do
                         if v then
                             newBans[#newBans + 1] = v
                         end
                     end
-                    lua_env.persistence["bans"] = newBans
+                    lua_env.persistence["configjson"].bans = newBans
                     -- Save bans
                     local file = io.open("bans.json", "w")
-                    file:write(json.encode(lua_env.persistence["bans"]))
+                    file:write(json.encode(lua_env.persistence["configjson"].bans))
                     file:close()
                     print("Unbanned " .. arg1[1])
                     break
                 end
             end
-            for k, v in pairs(lua_env.persistence["ipbans"]) do
+            for k, v in pairs(lua_env.persistence["configjson"].ipbans) do
                 if v == arg1[1] then
-                    lua_env.persistence["ipbans"][k] = nil
+                    lua_env.persistence["configjson"].ipbans[k] = nil
                     -- Shift bans
                     local newBans = {}
-                    for k, v in pairs(lua_env.persistence["ipbans"]) do
+                    for k, v in pairs(lua_env.persistence["configjson"].ipbans) do
                         if v then
                             newBans[#newBans + 1] = v
                         end
                     end
-                    lua_env.persistence["ipbans"] = newBans
+                    lua_env.persistence["configjson"].ipbans = newBans
                     -- Save bans
                     local file = io.open("ipbans.json", "w")
-                    file:write(json.encode(lua_env.persistence["ipbans"]))
+                    file:write(json.encode(lua_env.persistence["configjson"].ipbans))
                     file:close()
                     print("Unbanned " .. arg1[1] .. " by IP address")
                     break
@@ -383,11 +417,26 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 end
                 print("Teleported all players to " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
             end
+        -- Set subgamemode type
+        elseif arg1[0] == "subgamemode" then
+            if arg1.Count < 2 then
+                print("Usage: 'subgamemode <type>'")
+                return
+            end
+            if lua_config.sub_gamemodes[arg1[1]] then
+                lua_env.persistence["configjson"].sub_gamemode = arg1[1]
+                local file = io.open("config.json", "w")
+                file:write(json.encode(lua_env.persistence["configjson"]))
+                file:close()
+                print("Subgamemode set to " .. arg1[1])
+            else
+                print("Invalid subgamemode")
+            end
         end
     elseif handleType == "Server_PreGamemode_ClientOpen" then
         if not arg2 or not arg3 then return end
         -- Username ban check
-        for k, v in pairs(lua_env.persistence["bans"]) do
+        for k, v in pairs(lua_env.persistence["configjson"].bans) do
             if v == arg3 then
                 local bannedMsg = Response("status", "You are banned")
                 arg2:Send(bannedMsg:ToString())
@@ -396,7 +445,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             end
         end
         -- IP ban check
-        for k, v in pairs(lua_env.persistence["ipbans"]) do
+        for k, v in pairs(lua_env.persistence["configjson"].ipbans) do
             if v == arg2.ConnectionInfo.ClientIpAddress then
                 local bannedMsg = Response("status", "You are banned by IP address")
                 arg2:Send(bannedMsg:ToString())
@@ -417,6 +466,30 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 ["yaw"] = 0,
                 ["roll"] = 0,
             },
+            ["head"] = {
+                ["origin"] = {
+                    ["x"] = 0,
+                    ["y"] = 0,
+                    ["z"] = 0,
+                },
+                ["angles"] = {
+                    ["pitch"] = 0,
+                    ["yaw"] = 0,
+                    ["roll"] = 0,
+                },
+            },
+            ["hud"] = {
+                ["origin"] = {
+                    ["x"] = 0,
+                    ["y"] = 0,
+                    ["z"] = 0,
+                },
+                ["angles"] = {
+                    ["pitch"] = 0,
+                    ["yaw"] = 0,
+                    ["roll"] = 0,
+                },
+            },
         }
         -- Send an introductory message
         for k, v in pairs(lua_config.client_introduction_message) do
@@ -431,6 +504,11 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 gamemodename = lua_config.gamemodes[lua_env.persistence["gamemode"]]
             end
             str = str:gsub("~gamemode", gamemodename)
+            local subgamemodename = lua_env.persistence["configjson"].sub_gamemode
+            if lua_config.sub_gamemodes[lua_env.persistence["configjson"].sub_gamemode] then
+                subgamemodename = lua_config.sub_gamemodes[lua_env.persistence["configjson"].sub_gamemode]
+            end
+            str = str:gsub("~subgamemode", subgamemodename)
             arg2:Send(str)
         end
     elseif handleType == "Server_PreGamemode_ClientClose" then

@@ -178,6 +178,10 @@ namespace KiwisCoOpMod
                         case PluginHandleType.Server_PostGamemode_Command:
                             scriptFunc.Call(handleType.ToString(), (List<string>)vs[0], (List<IndexedClient>)vs[1], (Type)vs[2]);
                             break;
+                        case PluginHandleType.Server_PreGamemode_Think:
+                        case PluginHandleType.Server_PostGamemode_Think:
+                            scriptFunc.Call(handleType.ToString(), (int)vs[0], (List<IndexedClient>)vs[1], (string)vs[2]);
+                            break;
                         default:
                             scriptFunc.Call(handleType.ToString());
                             break;

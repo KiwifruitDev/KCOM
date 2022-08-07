@@ -83,6 +83,7 @@
 	- `persistent_get_all` - List all persistent Lua values
 	- `persistent_clear` - Clear all persistent Lua values
 	- `script_refresh <script>` - Refresh a Lua script
+	- `script_refresh_all` - Refresh all Lua scripts
 	- `kick <username>` - Kick a player from the server
 	- `ban <username>` - Ban a player from the server
 	- `ipban <username>` - Ban a player from the server by IP

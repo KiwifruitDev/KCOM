@@ -43,12 +43,34 @@ namespace KiwisCoOpMod
         {
             this.ui = ui;
         }
+
+        public void ConnectVConsole(WebsocketClient ws)
+        {
+            if (ws != null && vConsole != null)
+            {
+                ui.Invoke(() => ui.LogToOutput(channel, "Connecting to VConsole using port " + Settings.Default.VconsolePort));
+                if (!vConsole.Connect(ws))
+                {
+                    ui.Invoke(() =>
+                    {
+                        ui.LogToOutput(channel, "Failed to connect to VConsole");
+                        DialogResult res = MessageBox.Show("An error occured while connecting to VConsole.\nMake sure that Half-Life: Alyx is open.\nWould you like to re-connect?", "Error", MessageBoxButtons.YesNo);
+                        if (res == DialogResult.Yes)
+                            ConnectVConsole(ws);
+                        else
+                            ui.Invoke(() => ui.LogToOutput(channel, "Disconnected from VConsole"));
+                    });
+                }
+            }
+        }
         public void Start(List<Type> pluginTypes)
         {
+            bool error = false;
             if (ws == null)
             {
                 map = "";
                 PluginHandler.Handle(pluginTypes, PluginHandleType.Client_PreStart, ui);
+                LuaEnvironment.instance.Handle(PluginHandleType.Client_PreStart, ui);
                 plugins = pluginTypes;
                 ws = new WebsocketClient(new Uri("ws://" + Settings.Default.ClientIpAddress + ":" + Settings.Default.ClientPort))
                 {
@@ -66,6 +88,7 @@ namespace KiwisCoOpMod
                     if (response != null && response.type != null)
                     {
                         PluginHandler.Handle(plugins, PluginHandleType.Client_PreResponse, response);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Client_PreResponse, response);
                         switch (response.type)
                         {
                             case "authenticated":
@@ -118,6 +141,7 @@ namespace KiwisCoOpMod
                                 break;
                         }
                         PluginHandler.Handle(plugins, PluginHandleType.Client_PostResponse, response);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Client_PostResponse, response);
                     }
                     else
                     {
@@ -131,15 +155,13 @@ namespace KiwisCoOpMod
                         clientUsername = Settings.Default.ClientUsername,
                         password = Settings.Default.ClientPassword,
                         timestamp = (long)DateTime.UtcNow.Subtract(DateTime.UnixEpoch).TotalSeconds
-                };
+                    };
                     ws.Send(JsonConvert.SerializeObject(input));
                     ui.Invoke(() => ui.LogToOutput(channel, "Client attempted connection to IP " + Settings.Default.ClientIpAddress + ":" + Settings.Default.ServerPort));
                 });
-                if (vConsole != null)
-                {
-                    vConsole.Connect(ws);
-                }
-                PluginHandler.Handle(plugins, PluginHandleType.Client_PostStart, ui, ws);
+                ConnectVConsole(ws);
+                PluginHandler.Handle(plugins, PluginHandleType.Client_PostStart, ui, ws, error);
+                LuaEnvironment.instance.Handle(PluginHandleType.Client_PostStart, ui, ws, error);
             }
         }
         public void Close()
@@ -147,6 +169,7 @@ namespace KiwisCoOpMod
             if (ws != null)
             {
                 PluginHandler.Handle(plugins, PluginHandleType.Client_PreClose, ui, ws);
+                LuaEnvironment.instance.Handle(PluginHandleType.Client_PreClose, ui, ws);
                 ws.Stop(System.Net.WebSockets.WebSocketCloseStatus.NormalClosure, "Closed by KCOM.");
                 ws.Dispose();
                 ws = null;

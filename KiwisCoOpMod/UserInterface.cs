@@ -174,6 +174,8 @@ namespace KiwisCoOpMod
             clientProgram = new ClientProgram(this);
             if(!Settings.Default.ClickedUPnP)
                 AskUPnP(true);
+            // Lua version of initializing
+            LuaEnvironment.instance.Handle(PluginHandleType.UserInterface_Initialized);
         }
         public void UseUriScheme(Uri uri)
         {
@@ -221,8 +223,9 @@ namespace KiwisCoOpMod
         }
         private void Exit(object? sender, EventArgs e)
         {
-            Save();
+            Save();          
         }
+
         public void Start()
         {
             if(!started && (checkBoxServerEnabled.Checked || checkBoxClientEnabled.Checked))
@@ -233,6 +236,7 @@ namespace KiwisCoOpMod
                 else if (checkBoxClientEnabled.Checked)
                     checkBoxServerEnabled.Checked = false;
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PreStart, this);
+                LuaEnvironment.instance.Handle(PluginHandleType.UserInterface_PreStart, this);
                 started = true;
                 buttonStart.Text = "Stop";
                 SetStatus(Color.Green, "Active");
@@ -245,10 +249,12 @@ namespace KiwisCoOpMod
                     clientProgram.Start(plugins);
                 }
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PostStart, this);
+                LuaEnvironment.instance.Handle(PluginHandleType.UserInterface_PostStart, this);
             }
             else
             {
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PreClose, this);
+                LuaEnvironment.instance.Handle(PluginHandleType.UserInterface_PreClose, this);
                 buttonStart.Text = "Start";
                 SetStatus(Color.Red, "Inactive");
                 ServerProgram.instance.Close();
@@ -257,6 +263,7 @@ namespace KiwisCoOpMod
                 DateTime endTime = DateTime.Now;
                 LogToOutput(channel, "Stopped at", endTime.ToString(@"hh\:mm\:ss") + ", active for", (endTime - startTime).ToString(@"hh\:mm\:ss"));
                 PluginHandler.Handle(plugins, PluginHandleType.UserInterface_PostClose, this);
+                LuaEnvironment.instance.Handle(PluginHandleType.UserInterface_PostClose, this);
                 //Save();
                 //Application.Restart();
             }

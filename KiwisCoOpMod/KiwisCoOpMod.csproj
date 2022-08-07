@@ -25,9 +25,30 @@
     <Content Include="kcom.ico" />
   </ItemGroup>
 
+  
+	<ItemGroup>
+    <BaseLuaScripts Include="$(ProjectDir)base_scripts\**\*.*" />
+ 	</ItemGroup>
+	<Target Name="CopyDLLs" AfterTargets="Build">
+		<MakeDir Directories="$(ProjectDir)bin\Release\scripts" />
+		<Copy SourceFiles="@(BaseLuaScripts)" DestinationFiles="$(ProjectDir)bin\Release\scripts\%(RecursiveDir)%(Filename)%(Extension)" />
+		<MakeDir Directories="$(ProjectDir)bin\Debug\scripts" />
+		<Copy SourceFiles="@(BaseLuaScripts)" DestinationFiles="$(ProjectDir)bin\Debug\scripts\%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\nlua\1.6.0\lib\net6.0\NLua.dll" DestinationFolder="$(ProjectDir)bin\Release\libraries" />
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\nlua\1.6.0\lib\net6.0\NLua.dll" DestinationFolder="$(ProjectDir)bin\Debug\libraries" />
+
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\lib\net6.0\KeraLua.dll" DestinationFolder="$(ProjectDir)bin\Release\libraries" />
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\lib\net6.0\KeraLua.dll" DestinationFolder="$(ProjectDir)bin\Debug\libraries" />
+
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\runtimes\win-x64\native\lua54.dll" DestinationFolder="$(ProjectDir)bin\Release" />
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\runtimes\win-x64\native\lua54.dll" DestinationFolder="$(ProjectDir)bin\Debug" />
+	</Target>
+
   <ItemGroup>
     <PackageReference Include="Fleck" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+    <PackageReference Include="NLua" Version="1.6.0" />
     <PackageReference Include="Open.Nat" Version="2.1.0" />
     <PackageReference Include="Websocket.Client" Version="4.4.43" />
   </ItemGroup>

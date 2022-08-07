@@ -19,6 +19,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Reflection;
+using System.Threading;
+using System.Diagnostics;
 
 namespace KiwisCoOpModCore
 {
@@ -58,23 +60,9 @@ namespace KiwisCoOpModCore
     }
     public static class PluginHandler
     {
-        public static bool Handle(List<Type> plugins, PluginHandleType handleType, params object[]? vs)
-        {
-            bool handled = false;
-            foreach(Type pluginType in plugins)
-            {
-                IPlugin? newGamemode;
-                if (vs == null)
-                    newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType);
-                else
-                    newGamemode = (IPlugin?)Activator.CreateInstance(pluginType, handleType, vs);
-                if (newGamemode != null)
-                    handled = true;
-            }
-            return handled;
-        }
         public static bool Handle(Type pluginType, PluginHandleType handleType, params object[]? vs)
         {
+            //Debug.WriteLine($"Handling {handleType} on {(CheckForMainThread() ? "main" : "worker")} thread");
             bool handled = false;
             IPlugin? newGamemode;
             if (vs == null)
@@ -85,9 +73,16 @@ namespace KiwisCoOpModCore
                 handled = true;
             return handled;
         }
-        public static IPlugin? Instance(Type pluginType)
+        public static bool Handle(List<Type> plugins, PluginHandleType handleType, params object[]? vs)
         {
-            return (IPlugin?)Activator.CreateInstance(pluginType, PluginHandleType.None);
+            bool handled = false;
+            foreach (Type pluginType in plugins)
+            {
+                handled = Handle(pluginType, handleType, vs);
+                if(handled)
+                    break;
+            }
+            return handled;
         }
     }
     public interface IPlugin

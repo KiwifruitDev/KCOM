@@ -41,8 +41,8 @@ namespace KiwisCoOpMod
             this.editToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.gamemodeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pluginsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.serverDisableUserVConsoleInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.clientPrintVConsoleToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.serverDisableUserVConsoleInputToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.saveOptionsOnExitToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.viewToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.alwaysOnTopToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -185,14 +185,6 @@ namespace KiwisCoOpMod
             this.pluginsToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.pluginsToolStripMenuItem.Text = "Plugins";
             // 
-            // serverDisableUserVConsoleInputToolStripMenuItem
-            // 
-            this.serverDisableUserVConsoleInputToolStripMenuItem.CheckOnClick = true;
-            this.serverDisableUserVConsoleInputToolStripMenuItem.Name = "serverDisableUserVConsoleInputToolStripMenuItem";
-            this.serverDisableUserVConsoleInputToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
-            this.serverDisableUserVConsoleInputToolStripMenuItem.Text = "Server: Disable User VConsole Input";
-            this.serverDisableUserVConsoleInputToolStripMenuItem.Click += new System.EventHandler(this.ServerDisableUserVConsoleInputToolStripMenuItem_CheckedChanged);
-            // 
             // clientPrintVConsoleToolStripMenuItem
             // 
             this.clientPrintVConsoleToolStripMenuItem.CheckOnClick = true;
@@ -200,6 +192,14 @@ namespace KiwisCoOpMod
             this.clientPrintVConsoleToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
             this.clientPrintVConsoleToolStripMenuItem.Text = "Client: Print VConsole";
             this.clientPrintVConsoleToolStripMenuItem.Click += new System.EventHandler(this.ClientPrintVConsoleToolStripMenuItem_CheckedChanged);
+            // 
+            // serverDisableUserVConsoleInputToolStripMenuItem
+            // 
+            this.serverDisableUserVConsoleInputToolStripMenuItem.CheckOnClick = true;
+            this.serverDisableUserVConsoleInputToolStripMenuItem.Name = "serverDisableUserVConsoleInputToolStripMenuItem";
+            this.serverDisableUserVConsoleInputToolStripMenuItem.Size = new System.Drawing.Size(260, 22);
+            this.serverDisableUserVConsoleInputToolStripMenuItem.Text = "Server: Disable User VConsole Input";
+            this.serverDisableUserVConsoleInputToolStripMenuItem.Click += new System.EventHandler(this.ServerDisableUserVConsoleInputToolStripMenuItem_CheckedChanged);
             // 
             // saveOptionsOnExitToolStripMenuItem
             // 
@@ -222,7 +222,7 @@ namespace KiwisCoOpMod
             // alwaysOnTopToolStripMenuItem
             // 
             this.alwaysOnTopToolStripMenuItem.Name = "alwaysOnTopToolStripMenuItem";
-            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(154, 22);
+            this.alwaysOnTopToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
             this.alwaysOnTopToolStripMenuItem.Text = "Always On Top";
             this.alwaysOnTopToolStripMenuItem.Click += new System.EventHandler(this.alwaysOnTopToolStripMenuItem_Click);
             // 
@@ -304,7 +304,7 @@ namespace KiwisCoOpMod
             this.toolStripStatusLabelVconsolePort,
             this.toolStripStatusLabelVconsoleProtocol,
             this.toolStripStatusLabelLibraries});
-            this.statusStrip.Location = new System.Drawing.Point(0, 429);
+            this.statusStrip.Location = new System.Drawing.Point(0, 428);
             this.statusStrip.Name = "statusStrip";
             this.statusStrip.Size = new System.Drawing.Size(800, 22);
             this.statusStrip.SizingGrip = false;
@@ -321,7 +321,7 @@ namespace KiwisCoOpMod
             // toolStripStatusLabelVersion
             // 
             this.toolStripStatusLabelVersion.Name = "toolStripStatusLabelVersion";
-            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(91, 17);
+            this.toolStripStatusLabelVersion.Size = new System.Drawing.Size(90, 17);
             this.toolStripStatusLabelVersion.Text = "Version: v0.0.0.0";
             // 
             // toolStripStatusLabelVconsolePort
@@ -418,7 +418,7 @@ namespace KiwisCoOpMod
             this.label2.AutoSize = true;
             this.label2.Location = new System.Drawing.Point(345, 122);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(309, 15);
+            this.label2.Size = new System.Drawing.Size(307, 15);
             this.label2.TabIndex = 39;
             this.label2.Text = "Type in a VConsole command to be input by every client.";
             // 
@@ -427,7 +427,7 @@ namespace KiwisCoOpMod
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(345, 92);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(399, 15);
+            this.label1.Size = new System.Drawing.Size(398, 15);
             this.label1.TabIndex = 38;
             this.label1.Text = "The current map, players will be forced to load this map when connecting.";
             // 
@@ -571,7 +571,7 @@ namespace KiwisCoOpMod
             this.labelHelpUsername.AutoSize = true;
             this.labelHelpUsername.Location = new System.Drawing.Point(275, 92);
             this.labelHelpUsername.Name = "labelHelpUsername";
-            this.labelHelpUsername.Size = new System.Drawing.Size(357, 15);
+            this.labelHelpUsername.Size = new System.Drawing.Size(355, 15);
             this.labelHelpUsername.TabIndex = 23;
             this.labelHelpUsername.Text = "Type a username to identify yourself to both the server and others.\r\n";
             // 
@@ -681,7 +681,7 @@ namespace KiwisCoOpMod
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 451);
+            this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.tabControlBottom);
             this.Controls.Add(this.tabControlTop);
             this.Controls.Add(this.buttonCommandType);

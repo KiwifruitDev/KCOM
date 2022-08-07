@@ -12,7 +12,7 @@
 	  <Description>Play Half-Life: Alyx cooperatively with up to 16 players!</Description>
 	  <Company>KiwifruitDev</Company>
   </PropertyGroup>
-
+  
   <ItemGroup>
     <PackageReference Include="Fleck" Version="1.2.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />

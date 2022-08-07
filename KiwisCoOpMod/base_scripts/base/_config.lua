@@ -20,10 +20,20 @@ lua_config = {}
 
 -- An introduction message to be sent to a player when they join the server
 lua_config.client_introduction_message = {
+    "-----------------------------",
     "Welcome to my server!",
     "This is a server for Half-Life: Alyx.",
     "Type /help for a list of commands.",
-    "Enjoy your stay!"
+    "There ~areis ~playercount~plural player on ~map (~gamemode)",
+    "Enjoy your stay here!",
+    "-----------------------------",
+}
+
+-- Gamemode types
+lua_config.gamemodes = {
+    ["AlyxGamemode"] = "Half-Life: Alyx",
+    ["AlyxDeathmatch"] = "Alyx Deathmatch",
+    ["CoreGamemode"] = "Core Gamemode",
 }
 
 -- The output of the /help command
@@ -45,7 +55,10 @@ lua_config.server_helptable = {
     "persistent_get_all - List all persistent Lua values.",
     "persistent_clear - Clear all persistent Lua values.",
     "script_refresh <script> - Refresh a Lua script.",
-    "kick <username> - Force a player to reconnect to the server.",
-    "ban <username> - Temporarily ban a player from the server.",
+    "kick <username> - Kick a player from the server.",
+    "ban <username> - Ban a player from the server.",
+    "ipban <username> - Ban a player from the server by IP.",
+    "unban <username> - Remove a player's ban from the server.",
+    "lua <code> - Run Lua code.",
     "--------------------",
 }

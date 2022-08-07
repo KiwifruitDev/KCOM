@@ -38,14 +38,27 @@ namespace KiwisCoOpMod
         public VConsole()
         {
         }
-        public void Connect(WebsocketClient ws)
+        public bool Connect(WebsocketClient ws)
         {
             this.ws = ws;
-            Connect();
+            return Connect();
         }
-        public void Connect()
+        public bool Connect()
         {
             WriteCommand("disconnect");
+            // Check if the port is listening before attempting to connect
+            System.Net.IPEndPoint[] endPoints = System.Net.NetworkInformation.IPGlobalProperties.GetIPGlobalProperties().GetActiveTcpListeners();
+            bool listening = false;
+            foreach (System.Net.IPEndPoint endPoint in endPoints)
+            {
+                if (endPoint.Port == Settings.Default.VconsolePort)
+                {
+                    listening = true;
+                    break;
+                }
+            }
+            if (!listening)
+                return false;
             client = new TcpClient("127.0.0.1", Settings.Default.VconsolePort);
             stream = client.GetStream();
             watcher = new StreamWatcher(stream);
@@ -62,6 +75,7 @@ namespace KiwisCoOpMod
                 }
                 commandQueue.Clear();
             }
+            return true;
         }
 
         private void MessageAvailable(object sender, MessageAvailableEventArgs e)
@@ -99,6 +113,7 @@ namespace KiwisCoOpMod
             }
         }
 
+        /*
         public void Reconnect()
         {
             killed = true;
@@ -112,6 +127,7 @@ namespace KiwisCoOpMod
             stream = client.GetStream();
             Connect();
         }
+        */
 
         public void Disconnect()
         {

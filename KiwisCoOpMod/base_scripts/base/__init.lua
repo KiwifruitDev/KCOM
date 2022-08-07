@@ -26,6 +26,10 @@ import('System.Diagnostics')
 import('System')
 import('Newtonsoft.Json, Version=13.0.1`, Culture=neutral')
 import('Newtonsoft.Json')
+json = require('scripts/include/json')
+lua_env = {}
+lua_env.persistence = {}
+lua_env.handlers = {}
 print = function(...)
     local channel = Channel('LUA', 'Lua Scripting', Color.CornflowerBlue)
     local varargTable = {...}
@@ -35,39 +39,32 @@ print = function(...)
         end)
     end
 end
-lua_env = {}
-lua_env.persistence = {}
-function lua_env.persistence.set(_, k, v)
-    LuaEnvironment.instance:SetPersistent(k, v)
+printdebug = function(...)
+    Debug.WriteLine(...)
 end
-function lua_env.persistence.remove(_, k)
-    LuaEnvironment.instance:RemovePersistent(k)
+printerr = function(...)
+    local channel = Channel('ERR', 'Lua Errors', Color.Red)
+    local varargTable = {...}
+    if Program.userInterface then
+        Program.userInterface:Invoke(function()
+            Program.userInterface:LogToOutput(channel, table.unpack(varargTable))
+        end)
+    end
 end
-function lua_env.persistence.get(_, k)
-    return LuaEnvironment.instance:GetPersistent(k)
+string.split = function(str, delimiter)
+    LuaEnvironment.instance:SplitString(str, delimiter)
 end
-function lua_env.persistence.getall()
-    return LuaEnvironment.instance:GetPersistentAll()
+refresh = function(script)
+    LuaEnvironment.instance:RunFile(script)
 end
-function lua_env.persistence.clear()
-    LuaEnvironment.instance:ClearPersistent()
-end
-lua_env.cachedscripts = {}
-function lua_env.cachedscripts.set(k, v)
-    LuaEnvironment.instance:SetCachedScript(k, v)
-end
-function lua_env.cachedscripts.remove(k)
-    LuaEnvironment.instance:RemoveCachedScript(k)
-end
-function lua_env.cachedscripts.get(k)
-    return LuaEnvironment.instance:GetCachedScript(k)
-end
-function lua_env.cachedscripts.getall()
-    return LuaEnvironment.instance:GetCachedScriptAll()
-end
-function lua_env.cachedscripts.clear()
-    LuaEnvironment.instance:ClearCachedScript()
-end
-function lua_env.cachedscripts.refresh()
+refresh_all = function()
     LuaEnvironment.instance:LoadFiles()
+end
+handle = function(handleType, arg1, arg2, arg3, arg4)
+    for _, func in pairs(lua_env.handlers) do
+        func(handleType, arg1, arg2, arg3, arg4)
+    end
+end
+luarun = function(code)
+    LuaEnvironment.instance:RunLua(code)
 end

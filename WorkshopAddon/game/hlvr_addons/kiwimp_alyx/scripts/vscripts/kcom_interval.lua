@@ -7,6 +7,7 @@ if kcom_active then
         local playerAngles = player:GetAnglesAsVector();
         local playerHealth = player:GetHealth();
         local head = player:GetHMDAvatar()
+        
         if head then
             local leftController = head:GetVRHand(0)
             local rightController = head:GetVRHand(1)
@@ -26,7 +27,7 @@ if kcom_active then
             print("HEAD "..playerCenter[1].." "..playerCenter[2].." "..(playerCenter[3]+30).." "..playerAngles[1].." "..playerAngles[2].." "..playerAngles[3].." KCOM");
         end
 
-        --print("PLYR "..playerOrigin[1].." "..playerOrigin[2].." "..playerOrigin[3].." "..playerAngles[1].." "..playerAngles[2].." "..playerAngles[3].." "..playerHealth.." KCOM");
+        print("PLYR "..playerOrigin[1].." "..playerOrigin[2].." "..playerOrigin[3].." "..playerAngles[1].." "..playerAngles[2].." "..playerAngles[3].." "..playerHealth.." KCOM");
 
         KCOM_CacheSync();
         --kcom_inbetween = 0;

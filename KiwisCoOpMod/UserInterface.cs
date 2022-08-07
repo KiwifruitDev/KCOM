@@ -423,34 +423,11 @@ namespace KiwisCoOpMod
         {
             Start();
         }
-
-        private void TextBoxInput_Enter(object sender, EventArgs e)
-        {
-            string prefix = "";
-            LogToOutputGeneric("> " + prefix + textBoxInput.Text);
-            switch (buttonCommandType.Text)
-            {
-                case "Command":
-                    prefix = "/";
-                    break;
-                case "VConsole":
-                    prefix = "/vc ";
-                    break;
-                case "Server":
-                    ServerProgram.instance.Command(textBoxInput.Text.Split(" ").ToList());
-                    textBoxInput.Text = "";
-                    return;
-            }
-            clientProgram.Chat(prefix + textBoxInput.Text);
-            textBoxInput.Text = "";
-        }
-
         private void TextBoxInput_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (e.KeyChar == (char)Keys.Return)
             {
                 string prefix = "";
-                LogToOutputGeneric("> " + prefix + textBoxInput.Text);
                 switch (buttonCommandType.Text)
                 {
                     case "Command":
@@ -461,9 +438,11 @@ namespace KiwisCoOpMod
                         break;
                     case "Server":
                         ServerProgram.instance.Command(textBoxInput.Text.Split(" ").ToList());
+                        LogToOutputGeneric("> " + textBoxInput.Text);
                         textBoxInput.Text = "";
                         return;
                 }
+                LogToOutputGeneric("> " + prefix + textBoxInput.Text);
                 clientProgram.Chat(prefix + textBoxInput.Text);
                 textBoxInput.Text = "";
             }

@@ -24,7 +24,7 @@ lua_config.client_introduction_message = {
     "Welcome to my server!",
     "This is a server for Half-Life: Alyx.",
     "Type /help for a list of commands.",
-    "There ~areis ~playercount~plural player on ~map (~gamemode)",
+    "There ~areis ~playercount player~plural on ~map (~gamemode)",
     "Enjoy your stay here!",
     "-----------------------------",
 }
@@ -39,6 +39,7 @@ lua_config.gamemodes = {
 -- The output of the /help command
 lua_config.client_helptable = {
     "- Command help: -",
+    "/echo <message> - Echo a message.",
     "/ping - Check your ping.",
     "/help - This help menu.",
     "/list - List all players on the server.",
@@ -60,5 +61,7 @@ lua_config.server_helptable = {
     "ipban <username> - Ban a player from the server by IP.",
     "unban <username> - Remove a player's ban from the server.",
     "lua <code> - Run Lua code.",
+    "tp <username> (<username>/<x> <y> <z>) - Teleport a player to a location.",
+    "tpall (<username>/<x> <y> <z>) - Teleport all players to a location.",
     "--------------------",
 }

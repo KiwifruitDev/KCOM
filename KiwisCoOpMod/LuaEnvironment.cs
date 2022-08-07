@@ -85,9 +85,9 @@ namespace KiwisCoOpMod
         }
 
         // Lua does not implement splitting
-        public List<string> StringSplit(string str, string delimiter)
+        public string StringSplit(string str, string delimiter)
         {
-            return str.Split(delimiter).ToList();
+            return JsonConvert.SerializeObject(str.Split(delimiter));
         }
         public void LuaError(Exception e)
         {

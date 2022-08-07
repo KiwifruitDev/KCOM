@@ -10,7 +10,7 @@
 
 [![Discord](https://img.shields.io/discord/738131767944282183?label=discord)](https://discord.gg/3X3teNecWs)
 
-[![License](https://img.shields.io/github/license/teampopplio/kcom)](https://github.com/TeamPopplio/KCOM/blob/main/LICENSE)
+[![License](https://img.shields.io/github/license/teampopplio/kcom)](https://github.com/TeamPopplio/KCOM/blob/main/LICENSE.md)
 
 [![Contributors](https://img.shields.io/github/contributors/teampopplio/kcom)](https://github.com/teampopplio/kcom/graphs/contributors)
 
@@ -53,7 +53,6 @@
 - KCOM will connect to the remote server and start playing!
 
 ## Hosting a Server
-
 - Follow the [instructions](#installation) to install KCOM
 - *(Optional)* Follow the [client instructions](#connecting-to-a-server) to create a listen server
 	- Note: Non-listen servers are not fully developed yet, please follow the above instructions for now
@@ -64,6 +63,33 @@
 - Ensure that the port is forwarded, try UPnP mapping via "File" > "Forward Port via UPnP"
 - Click on the "Start" button to start the server
 - KCOM is now hosting a server! You can now provide your *public* IP address to peers
+
+## Client Commands
+- Type "/help" into the chat box as a client to view a list of commands
+- Default commands:
+	- `/echo <message>` - Echo a message
+	- `/ping` - Check your ping
+	- `/help` - This help menu
+	- `/list` - List all players on the server.
+
+## Server Commands
+- As a server host, click on the "Chat" button in KCOM until it says "Server" to enter server operator mode
+- Type "help" to view a list of server operator commands
+- Default commands:
+	- `echo <message>` - Echo a message
+	- `persistent_set <key> <value>` - Set a persistent Lua value
+	- `persistent_get <key>` - Get a persistent Lua value
+	- `persistent_remove <key>` - Remove a persistent Lua value
+	- `persistent_get_all` - List all persistent Lua values
+	- `persistent_clear` - Clear all persistent Lua values
+	- `script_refresh <script>` - Refresh a Lua script
+	- `kick <username>` - Kick a player from the server
+	- `ban <username>` - Ban a player from the server
+	- `ipban <username>` - Ban a player from the server by IP
+	- `unban <username>` - Remove a player's ban from the server
+	- `lua <code>` - Run Lua code
+	- `tp <username> (<username>/<x> <y> <z>)` - Teleport a player to a location
+	- `tpall (<username>/<x> <y> <z>)` - Teleport all players to a location.
 
 ## Lua Scripting
 
@@ -100,7 +126,8 @@ Feel free to provide scripts to the KCOM community via the [Discord](https://dis
 	- Select ".NET desktop development" during installation
 - [7-Zip](https://www.7-zip.org/download.html)
 - [Git](https://git-scm.com/downloads)
-- [Half-Life: Alyx - Workshop Tools](steam://install/1295040)
+- Half-Life: Alyx - Workshop Tools
+	- You can find this under the DLC section of Half-Life: Alyx within your Steam library
 
 ### Instructions
 - Clone the repository within Visual Studio

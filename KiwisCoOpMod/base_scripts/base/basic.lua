@@ -20,6 +20,7 @@ end
 
 lua_env.persistence["bans"] = lua_env.persistence["bans"] or {}
 lua_env.persistence["ipbans"] = lua_env.persistence["ipbans"] or {}
+lua_env.persistence["players"] = lua_env.persistence["players"] or {}
 
 lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg1, arg2, arg3, arg4)
     if handleType == "Server_PreGamemode_PreStart" then
@@ -41,19 +42,25 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
         if not arg1 then return end
         lua_env.persistence["gamemode"] = arg1.Name
     elseif handleType == "Server_PreGamemode_PreResponse" then
-        if not arg1 or not arg4 then return end
+        if not arg1 or not arg2 or not arg3 or not arg4 then return end
         lua_env.persistence["map"] = arg4
         if not arg1.type then return end
         if arg1.type == "chat" then
             if not arg1.data then return end
+            -- Echo command
+            if string.find(arg1.data, "^/echo") then -- Message starts with "/echo"
+                local message = string.sub(arg1.data, 7) -- Remove "/echo " from the message
+                local respMsg = Response("status", message) -- Create response
+                arg3:Send(respMsg:ToString()) -- Send response to websocket
+                arg1.type = "lua_chat_handled" -- Let the server know that we handled it
             -- Ping command
-            if arg1.data == "/ping" then
+            elseif arg1.data == "/ping" then
                 if not arg1.timestamp then return end
                 -- Getting ping time (ms)
                 local ping = (DateTime.UtcNow:Subtract(DateTime.UnixEpoch).TotalMilliseconds - arg1.timestamp) 
                 local pingMsg = Response("status", "Pong! " .. math.floor(ping+0.5) .. "ms")
                 arg3:Send(pingMsg:ToString())
-                arg1.type = "lua_chat_handled" -- Let the server know that we handled it
+                arg1.type = "lua_chat_handled"
             -- Help command
             elseif arg1.data == "/help" then
                 if not arg3 then return end
@@ -75,14 +82,42 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 arg3:Send(listfooter:ToString())
                 arg1.type = "lua_chat_handled"
             end
-        -- Test print function
-        --[[
         elseif arg1.type == "print" then
             if not arg1.data then return end
+            -- Test print function
+            --[[
             if string.find(arg1.data, "joined the game") then
                 print(arg1.data)
             end
-        ]]--
+            ]]--
+            -- Get player's coordinates
+            for i = 0, arg2.Count - 1 do
+                if arg2[i].Session.ConnectionInfo.Id:ToString() == arg3.ConnectionInfo.Id:ToString() then
+                    if string.find(arg1.data, "KCOM") then
+                        local packet = split(arg1.data, " ")
+                        if packet ~= nil then
+                            if #packet <= 1 then return end
+                            if packet[1] == "PLYR" then
+                                if #packet < 9 then return end
+                                lua_env.persistence["players"][arg2[i].Username] = {
+                                    ["health"] = tonumber(packet[8]),
+                                    ["origin"] = {
+                                        ["x"] = tonumber(packet[2]),
+                                        ["y"] = tonumber(packet[3]),
+                                        ["z"] = tonumber(packet[4])
+                                    },
+                                    ["angles"] = {
+                                        ["pitch"] = tonumber(packet[5]),
+                                        ["yaw"] = tonumber(packet[6]),
+                                        ["roll"] = tonumber(packet[7])
+                                    },
+                                }
+                            end
+                        end
+                    end
+                    break
+                end
+            end
         end
     elseif handleType == "Server_PreGamemode_Command" then
         -- Echo command
@@ -123,7 +158,11 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             or arg1[0] == "persistent_get_all" then
             print("- Persistent variables: -")
             for k, v in pairs(lua_env.persistence) do
-                print(k .. " = " .. v)
+                if type(v) == "table" then
+                    print(k .. " = *table*")
+                else
+                    print(k .. " = " .. v)
+                end
             end
             print("------------------------")
         -- Remove a persistent variable
@@ -282,33 +321,103 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 code = code .. " " .. arg1[i]
             end
             luarun(code)
-        end
-    elseif handleType == "Server_PreGamemode_ClientOpen" then
-        if not arg1 or not arg2 then return end
-        -- Check if player is banned
-        for i = 0, arg1.Count - 1 do
-            if arg1[i].Session.ConnectionInfo.Id:ToString() == arg2.ConnectionInfo.Id:ToString() then
-                -- Username ban check
-                for k, v in pairs(lua_env.persistence["bans"]) do
-                    if v == arg1[i].Username then
-                        local bannedMsg = Response("status", "You are banned")
-                        arg2:Send(bannedMsg:ToString())
-                        arg2:Close()
+        -- Teleport a player to a location
+        elseif arg1[0] == "tp" then
+            if not arg2 then return end
+            if arg1.Count < 2 then
+                print("Usage: 'tp <username> (<username>/<x> <y> <z>)'")
+                return
+            end
+            if arg1.Count < 5 then
+                for i = 0, arg2.Count - 1 do
+                    if arg2[i].Username == arg1[1] then
+                        for j = 0, arg2.Count - 1 do
+                            if arg2[j].Username == arg1[2] then
+                                if not lua_env.persistence["players"][arg1[2]] then
+                                    print("Invalid player")
+                                    return
+                                end
+                                local teleresp = Response("command", "ent_setpos 1 " .. lua_env.persistence["players"][arg1[2]].origin.x .. " " .. lua_env.persistence["players"][arg1[2]].origin.y .. " " .. lua_env.persistence["players"][arg1[2]].origin.z)
+                                arg2[i].Session:Send(teleresp:ToString())
+                                print("Teleported " .. arg1[1] .. " to " .. arg1[2])
+                                return
+                            end
+                        end
+                        break
+                    end
+                end
+            else
+                local teleresp = Response("command", "ent_setpos 1 " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
+                for i = 0, arg2.Count - 1 do
+                    if arg2[i].Username == arg1[1] then
+                        arg2[i].Session:Send(teleresp:ToString())
+                        print("Teleported " .. arg1[1] .. " to " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
                         return
                     end
                 end
-                -- IP ban check
-                for k, v in pairs(lua_env.persistence["ipbans"]) do
-                    if v == arg2.ConnectionInfo.ClientIpAddress then
-                        local bannedMsg = Response("status", "You are banned by IP address")
-                        arg2:Send(bannedMsg:ToString())
-                        arg2:Close()
+            end
+            print("Player not found")
+        -- Teleport all players to a location
+        elseif arg1[0] == "tpall" then
+            if not arg2 then return end
+            if arg1.Count < 2 then
+                print("Usage: 'tpall (<username>/<x> <y> <z>)'")
+                return
+            end
+            if arg1.Count < 4 then
+                for i = 0, arg2.Count - 1 do
+                    if arg2[i].Username == arg1[1] then
+                        local teleresp = Response("command", "ent_setpos 1 " .. lua_env.persistence["players"][arg1[1]].origin.x .. " " .. lua_env.persistence["players"][arg1[1]].origin.y .. " " .. lua_env.persistence["players"][arg1[1]].origin.z)
+                        for j = 0, arg2.Count - 1 do
+                            arg2[j].Session:Send(teleresp:ToString())
+                        end
+                        print("Teleported all players to " .. arg1[1])
                         return
                     end
                 end
-                break
+                print("Player not found")
+            else
+                local teleresp = Response("command", "ent_setpos 1 " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
+                for i = 0, arg2.Count - 1 do
+                    arg2[i].Session:Send(teleresp:ToString())
+                end
+                print("Teleported all players to " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
             end
         end
+    elseif handleType == "Server_PreGamemode_ClientOpen" then
+        if not arg2 or not arg3 then return end
+        -- Username ban check
+        for k, v in pairs(lua_env.persistence["bans"]) do
+            if v == arg3 then
+                local bannedMsg = Response("status", "You are banned")
+                arg2:Send(bannedMsg:ToString())
+                arg2:Close()
+                return
+            end
+        end
+        -- IP ban check
+        for k, v in pairs(lua_env.persistence["ipbans"]) do
+            if v == arg2.ConnectionInfo.ClientIpAddress then
+                local bannedMsg = Response("status", "You are banned by IP address")
+                arg2:Send(bannedMsg:ToString())
+                arg2:Close()
+                return
+            end
+        end
+        -- Add username to table
+        lua_env.persistence["players"][arg3] = {
+            ["health"] = 100,
+            ["origin"] = {
+                ["x"] = 0,
+                ["y"] = 0,
+                ["z"] = 0,
+            },
+            ["angles"] = {
+                ["pitch"] = 0,
+                ["yaw"] = 0,
+                ["roll"] = 0,
+            },
+        }
         -- Send an introductory message
         for k, v in pairs(lua_config.client_introduction_message) do
             local help = Response("status", v)
@@ -324,5 +433,9 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             str = str:gsub("~gamemode", gamemodename)
             arg2:Send(str)
         end
+    elseif handleType == "Server_PreGamemode_ClientClose" then
+        if not arg3 then return end
+        -- Remove username from table
+        lua_env.persistence["players"][arg3] = nil
     end
 end

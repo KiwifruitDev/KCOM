@@ -51,8 +51,8 @@ printerr = function(...)
         end)
     end
 end
-string.split = function(str, delimiter)
-    LuaEnvironment.instance:SplitString(str, delimiter)
+split = function(str, delimiter)
+    return json.decode(LuaEnvironment.instance:StringSplit(str, delimiter))
 end
 refresh = function(script)
     LuaEnvironment.instance:RunFile(script)

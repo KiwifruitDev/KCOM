@@ -24,11 +24,9 @@ namespace KiwisCoOpModCore
     public class Client
     {
         public string Username { get; set; } = "";
-        public string AuthId { get; set; } = "";
-        public Client(string username, string authid)
+        public Client(string username)
         {
             Username = username;
-            AuthId = authid;
         }
     }
     

@@ -22,6 +22,10 @@ using Newtonsoft.Json;
 using KiwisCoOpModCore;
 using Fleck;
 using System.Reflection;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System.Drawing;
+using System.IO;
 
 namespace KiwisCoOpMod
 {
@@ -33,82 +37,84 @@ namespace KiwisCoOpMod
         public List<IndexedClient> connections = new() { };
         public Type? gamemodeType;
         public List<Type> plugins = new();
-        public List<ICustomizationOption> customizationOptions = new();
+        public Channel channel = new("SV", "Server", Color.Olive);
+        public int tickrate = 66;
+        public bool executeThink = false;
+        public void Tick()
+        {
+            PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
+            LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
+            if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.Think, tickrate, connections, map) == HandleState.Continue)
+            {
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
+            }
+        }
         public void Start(Type type, List<Type> plugins)
         {
             if (wss == null)
             {
                 PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreStart);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreStart);
                 if (GamemodeHandler.Handle(type, GamemodeHandleType.PreStart) == HandleState.Continue)
                 {
                     map = Settings.Default.ServerMap;
                     this.plugins = plugins;
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreStart, type, plugins);
+
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreStart, type, plugins, map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreStart, type, plugins, map);
+
                     gamemodeType = type;
-                    wss = new WebSocketServer("ws://" + Settings.Default.ServerIpAddress + ":" + Settings.Default.ServerPort);
+                    wss = new WebSocketServer("ws://[::]:" + Settings.Default.ServerPort);
                     wss.Start(socket =>
                     {
-                        socket.OnOpen = () => OnClose(socket);
+                        //socket.OnOpen = () => OnOpen(socket);
                         socket.OnClose = () => OnClose(socket);
                         socket.OnMessage = message => OnMessage(message, socket);
                     });
                     if (gamemodeType != null)
                     {
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins);
+                        Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, "Starting " + gamemodeType.Name + " gamemode on map " + map + " with port " + Settings.Default.ServerPort));
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, map);
                         GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostStart, gamemodeType, plugins);
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
                     }
-                    string? appDir = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-                    if (appDir != null)
+                    executeThink = true;
+                    // Tick/thinking
+                    Task.Run(() =>
                     {
-                        // Load character customization options in gamemodes
-                        string gamemodesFolderPath = Path.Combine(appDir, "gamemodes");
-                        Directory.CreateDirectory(gamemodesFolderPath);
-                        string[] files = Directory.GetFiles(gamemodesFolderPath, "*.dll", SearchOption.TopDirectoryOnly);
-                        foreach (string dll in files)
+                        while (executeThink)
                         {
-                            LoadFromDllFile(appDir, dll);
+                            Tick();
+                            Thread.Sleep(tickrate);
                         }
-                        // Load character customization options in plugins
-                        string pluginsFolderPath = Path.Combine(appDir, "plugins");
-                        Directory.CreateDirectory(pluginsFolderPath);
-                        string[] pluginFiles = Directory.GetFiles(pluginsFolderPath, "*.dll", SearchOption.TopDirectoryOnly);
-                        foreach (string dll in pluginFiles)
-                        {
-                            LoadFromDllFile(appDir, dll);
-                        }
-                    }
-                }
-            }
-        }
-        private void LoadFromDllFile(string appDir, string dll)
-        {
-            Assembly gamemodeAssembly = Assembly.LoadFrom(Path.Combine(appDir, dll));
-            foreach (Type assemblyType in gamemodeAssembly.GetTypes())
-            {
-                if (assemblyType.GetInterface("ICustomizationOption") != null)
-                {
-                    ICustomizationOption? customizationOption = (ICustomizationOption?)Activator.CreateInstance(assemblyType);
-                    if (customizationOption != null)
-                    {
-                        customizationOptions.Add(customizationOption);
-                    }
+                    });
                 }
             }
         }
         public void Close()
         {
-            if (wss != null && gamemodeType != null)
+            executeThink = false;
+            if (wss != null)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreClose);
-                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreClose, wss) == HandleState.Continue)
+                if (gamemodeType != null)
                 {
-                    wss.Dispose();
-                    wss = null;
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins);
-                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostClose, gamemodeType, plugins);
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, map);
+                    if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreClose, wss) == HandleState.Continue)
+                    {
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, map);
+                        GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostClose, gamemodeType, plugins, map);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, map);
+                    }
                 }
+                Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, "Closing server on port " + Settings.Default.ServerPort));
+                wss.Dispose();
+                wss = null;
             }
         }
         public void ChangeMap(string map)
@@ -120,37 +126,92 @@ namespace KiwisCoOpMod
                 con.Session.Send(JsonConvert.SerializeObject(output2));
             }
         }
+        public void GlobalVConsole(string command)
+        {
+            Response output2 = new("command", command);
+            foreach (IndexedClient con in connections)
+            {
+                con.Session.Send(JsonConvert.SerializeObject(output2));
+            }
+        }
         public void OnOpen(IWebSocketConnection socket)
         {
-            if (gamemodeType != null)
+            foreach (IndexedClient client in connections)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_ClientOpen, connections, socket);
-                GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.ClientOpen, connections, socket);
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_ClientOpen, connections, socket);
+                if (client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
+                {
+                    Response outputDisconnect = new("status")
+                    {
+                        data = client.Username + " connected"
+                    };
+                    if (gamemodeType != null)
+                    {
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_ClientOpen, connections, socket, client.Username);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_ClientOpen, connections, socket, client.Username);
+                        GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.ClientOpen, connections, socket, client.Username);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_ClientOpen, connections, socket, client.Username);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_ClientOpen, connections, socket, client.Username);
+                    }
+                    connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(outputDisconnect)));
+                    Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, client.Username + " connected"));
+                    break;
+                }
             }
         }
         public void OnClose(IWebSocketConnection socket)
         {
+            foreach(IndexedClient client in connections)
+            {
+                if(client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
+                {
+                    Response outputDisconnect = new("status")
+                    {
+                        data = client.Username + " disconnected"
+                    };
+                    if (gamemodeType != null)
+                    {
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_ClientClose, connections, socket, client.Username);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_ClientClose, connections, socket, client.Username);
+                        GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.ClientClose, connections, socket, client.Username);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_ClientClose, connections, socket, client.Username);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_ClientClose, connections, socket, client.Username);
+                    }
+                    connections.ForEach(c => c.Session.Send(JsonConvert.SerializeObject(outputDisconnect)));
+                    Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, client.Username + " disconnected"));
+                    connections.Remove(client);
+                    break;
+                }
+            }
+        }
+
+        public void Command(List<string> command)
+        {
             if (gamemodeType != null)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_ClientClose, connections, socket);
-                GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.ClientClose, connections, socket);
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_ClientClose, connections, socket);
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_Command, command, connections, gamemodeType);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_Command, command, connections, gamemodeType);
+                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.Command, command, connections, gamemodeType) != HandleState.Handled)
+                {
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_Command, command, connections, gamemodeType);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_Command, command, connections, gamemodeType);
+                }
             }
         }
         public void OnMessage(string message, IWebSocketConnection socket)
         {
-            Response? response = JsonConvert.DeserializeObject<Response>(message);
+            Response ? response = JsonConvert.DeserializeObject<Response>(message);
             if (gamemodeType != null && response != null && response.type != null)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map, customizationOptions);
-                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, map, customizationOptions) == HandleState.Continue)
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map);
+                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, map) == HandleState.Continue)
                 {
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map, customizationOptions);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map);
                     switch (response.type.ToLower())
                     {
                         case "client":
-                            if (response.clientUsername != null && response.clientAuthId != null && response.password != null)
+                            if (response.clientUsername != null && response.password != null)
                             {
                                 if (Settings.Default.ServerPassword != "" && response.password != Settings.Default.ServerPassword)
                                 {
@@ -161,14 +222,7 @@ namespace KiwisCoOpMod
                                 {
                                     foreach (IndexedClient indexed1 in connections)
                                     {
-                                        if (indexed1.Username == response.clientUsername && indexed1.AuthId != response.clientAuthId)
-                                        {
-                                            Response output2 = new("status", "A client is already connected with this username: " + response.clientUsername);
-                                            socket.Send(JsonConvert.SerializeObject(output2));
-                                            socket.Close();
-                                            break;
-                                        }
-                                        else if (indexed1.Username == response.clientUsername)
+                                        if (indexed1.Username == response.clientUsername)
                                         {
                                             Response output2 = new("status", "Client reconnected elsewhere, closing connection...");
                                             socket.Send(JsonConvert.SerializeObject(output2));
@@ -177,47 +231,32 @@ namespace KiwisCoOpMod
                                             break;
                                         }
                                     }
-                                    if(response.clientUsername != null && response.clientAuthId != null)
+                                    if (response.clientUsername != null)
                                     {
-                                        Response output2 = new("authenticated")
+                                        if (response.clientUsername.Length > 32 || Regex.Match(response.clientUsername, @"[\;""]").Success)
                                         {
-                                            clientUsername = response.clientUsername,
-                                            clientAuthId = response.clientAuthId,
-                                            map = map,
-                                            customizationOptionsName = new string[customizationOptions.Count],
-                                            customizationOptionsDescription = new string[customizationOptions.Count],
-                                            customizationOptionsAuthor = new string[customizationOptions.Count],
-                                            customizationOptionsImage = new string[customizationOptions.Count],
-                                            customizationOptionsDefault = new bool[customizationOptions.Count],
-                                            customizationOptionsType = new string[customizationOptions.Count],
-                                            customizationOptionsModelName = new string[customizationOptions.Count],
-                                        };
-                                        for(int i = 0; i < customizationOptions.Count; i++)
-                                        {
-                                            output2.customizationOptionsName[i] = customizationOptions[i].Name;
-                                            output2.customizationOptionsDescription[i] = customizationOptions[i].Description;
-                                            output2.customizationOptionsAuthor[i] = customizationOptions[i].Author;
-                                            output2.customizationOptionsImage[i] = customizationOptions[i].DisplayImageBase64;
-                                            output2.customizationOptionsDefault[i] = customizationOptions[i].Default;
-                                            output2.customizationOptionsModelName[i] = customizationOptions[i].ModelName;
-                                            output2.customizationOptionsType[i] = customizationOptions[i].Type switch
-                                            {
-                                                CustomizationOptionType.Head => "head",
-                                                CustomizationOptionType.LeftHand => "lefthand",
-                                                CustomizationOptionType.RightHand => "righthand",
-                                                CustomizationOptionType.Hat => "hat",
-                                                CustomizationOptionType.Collider => "collider",
-                                                _ => "none",
-                                            };
+                                            Response outputRegex = new("status", "Invalid username, closing connection...");
+                                            socket.Send(JsonConvert.SerializeObject(outputRegex));
+                                            socket.Close();
                                         }
-                                        connections.Add(new IndexedClient(socket, response.clientUsername, response.clientAuthId, map));
-                                        socket.Send(JsonConvert.SerializeObject(output2));
+                                        else
+                                        {
+                                            Response output2 = new("authenticated")
+                                            {
+                                                clientUsername = response.clientUsername,
+                                                map = map,
+                                            };
+                                            IndexedClient client = new(socket, response.clientUsername, map);
+                                            connections.Add(client);
+                                            socket.Send(JsonConvert.SerializeObject(output2));
+                                            OnOpen(socket);
+                                        }
                                     }
                                 }
                             }
                             else
                             {
-                                Response output2 = new("status", "Invalid username and/or AuthID! Closing connection...");
+                                Response output2 = new("status", "Invalid username! Closing connection...");
                                 socket.Send(JsonConvert.SerializeObject(output2));
                                 socket.Close();
                             }
@@ -228,6 +267,8 @@ namespace KiwisCoOpMod
                             {
                                 if (response.data != null)
                                 {
+                                    if (response.data.Length == 0) return;
+                                    Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, indexedClient.Username + ": " + response.data));
                                     if (response.data.StartsWith("/"))
                                     {
                                         string command = response.data.Split(" ").ToArray().First().Replace("/", "").ToLower();
@@ -235,7 +276,6 @@ namespace KiwisCoOpMod
                                         Response output3 = new("status", response.data)
                                         {
                                             clientUsername = indexedClient.Username,
-                                            clientAuthId = indexedClient.AuthId,
                                             data = "Unknown command '" + command + "'"
                                         };
                                         switch (command)
@@ -281,25 +321,36 @@ namespace KiwisCoOpMod
                                     {
                                         Response output5 = new("vconsole", response.data)
                                         {
-                                            clientUsername = indexed2.Username,
-                                            clientAuthId = indexed2.AuthId
+                                            clientUsername = indexed2.Username
                                         };
                                         socket.Send(JsonConvert.SerializeObject(output5));
                                     }
                                 }
                             }
                             break;
+                        case "lua_chat_handled":
+                            // Workaround for plugins to "handle" chat commands.
+                            IndexedClient? indexedClient0 = connections.Find(c => c.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id);
+                            if (indexedClient0 != null)
+                            {
+                                if (response.data != null)
+                                {
+                                    if (response.data.Length == 0) return;
+                                    Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, indexedClient0.Username + ": " + response.data));
+                                }
+                            }
+                            break;
                         default:
-                            Response output = new("status", "The server did not recognize a command: " + response.type.ToLower());
-                            socket.Send(JsonConvert.SerializeObject(output));
-                            IndexedClient? indexed = connections.Find(c => c.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id);
-                            if (indexed != null) connections.Remove(indexed);
-                            socket.Close();
+                            //IndexedClient? indexed = connections.Find(c => c.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id);
+                            //if (indexed != null) connections.Remove(indexed);
+                            //socket.Close();
                             break;
                     }
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map, customizationOptions);
-                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, map, customizationOptions);
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map, customizationOptions);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map);
+                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map);
                 }
             }
         }

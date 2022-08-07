@@ -1,10 +1,10 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net6.0-windows7.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
+    <TargetFramework>net6.0-windows</TargetFramework>
+	<ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-	  <Version>2.0.1.0</Version>
+	  <Version>3.0.0.0</Version>
 	  <AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	  <AppendRuntimeIdentifierToOutputPath>false</AppendRuntimeIdentifierToOutputPath>
 	  <Product>Kiwi's Co-Op Mod - Discord RPC Plugin</Product>
@@ -13,12 +13,11 @@
 	  <Company>KiwifruitDev</Company>
   </PropertyGroup>
 	<Target Name="CopyDLLs" AfterTargets="Build">
-		<Message Text="Executing CopyDLLs task" Importance="High" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll" DestinationFolder="$(ProjectDir)..\KiwisCoOpMod\bin\Release\plugins" />
+		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)$(ProjectName).pdb" DestinationFolder="$(ProjectDir)..\KiwisCoOpMod\bin\Debug\plugins" />
 
-		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)$(ProjectName).pdb" DestinationFolder="$(TargetDir)\..\..\..\KiwisCoOpMod\bin\Release\plugins" />
-		<Copy SourceFiles="$(TargetDir)$(ProjectName).dll;$(TargetDir)$(ProjectName).pdb" DestinationFolder="$(TargetDir)\..\..\..\KiwisCoOpMod\bin\Debug\plugins" />
-
-		<Message Text="Copied build files" Importance="High" />
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\discordrichpresence\1.0.175\lib\net35\DiscordRPC.dll" DestinationFolder="$(ProjectDir)..\KiwisCoOpMod\bin\Release\libraries" />
+		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\discordrichpresence\1.0.175\lib\net35\DiscordRPC.dll" DestinationFolder="$(ProjectDir)..\KiwisCoOpMod\bin\Debug\libraries" />
 	</Target>
 	<ItemGroup>
 	  <PackageReference Include="DiscordRichPresence" Version="1.0.175" />

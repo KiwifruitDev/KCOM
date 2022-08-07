@@ -5,19 +5,7 @@
     <Setting Name="ServerEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
-    <Setting Name="ServerIpAddress" Type="System.String" Scope="User">
-      <Value Profile="(Default)">[::]</Value>
-    </Setting>
     <Setting Name="ServerPassword" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ServerMemo" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ServerHostUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ServerHostAuthId" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ServerPort" Type="System.Int32" Scope="User">
@@ -26,22 +14,10 @@
     <Setting Name="ServerMaxPlayers" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">16</Value>
     </Setting>
-    <Setting Name="ServerUpdateInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">10</Value>
-    </Setting>
-    <Setting Name="ServerTimeoutInterval" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">30000</Value>
-    </Setting>
     <Setting Name="ClientEnabled" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
-    <Setting Name="ClientPlayerCollision" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
     <Setting Name="ClientPrintVconsole" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="ClientHostMode" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ClientIpAddress" Type="System.String" Scope="User">
@@ -50,20 +26,11 @@
     <Setting Name="ClientPassword" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
-    <Setting Name="ClientMemo" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
     <Setting Name="ClientUsername" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="ClientAuthId" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
+      <Value Profile="(Default)">Someone</Value>
     </Setting>
     <Setting Name="ClientPort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">27025</Value>
-    </Setting>
-    <Setting Name="ClientGracePeriod" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">5000</Value>
     </Setting>
     <Setting Name="VconsolePort" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">29000</Value>
@@ -84,6 +51,12 @@
       <Value Profile="(Default)">False</Value>
     </Setting>
     <Setting Name="ClickedUPnP" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">False</Value>
+    </Setting>
+    <Setting Name="CurrentAddons" Type="System.String" Scope="User">
+      <Value Profile="(Default)">["Half-Life: Alyx","Discord Rich Presence"]</Value>
+    </Setting>
+    <Setting Name="AlwaysOnTop" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">False</Value>
     </Setting>
   </Settings>

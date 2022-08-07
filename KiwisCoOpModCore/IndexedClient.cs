@@ -27,7 +27,7 @@ namespace KiwisCoOpModCore
     {
         public string Map = "";
         public IWebSocketConnection Session;
-        public IndexedClient(IWebSocketConnection session, string username, string authId, string map) : base(username, authId)
+        public IndexedClient(IWebSocketConnection session, string username, string map) : base(username)
         {
             Map = map;
             Session = session;

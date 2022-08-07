@@ -1,4 +1,4 @@
-﻿/*
+--[[
     Kiwi's Co-Op Mod for Half-Life: Alyx
     Copyright (c) 2022 KiwifruitDev
     All rights reserved.
@@ -12,26 +12,10 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
     -----------------------------------------------------------------------------
-*/
-using KiwisCoOpModCore;
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+]]--
 
-namespace AlyxGamemode
-{
-    public class AlyxTask_Precache : BaseTask
-    {
-        public AlyxTask_Precache() : base()
-        {
-            Author = "KiwifruitDev";
-            Name = "Force all players to precache";
-            Description = "Changes everyone's map to mp_kiwitest and back.";
-            Type = TaskType.Button;
-            DisplayColor = Color.Orange;
-        }
-    }
-}
+lua_config.sub_gamemodes["campaign"] = "Story Mode"
+
+campaign_config = {}
+
+campaign_config.enabled = true -- Pretty self-explanatory, but this actually tells the server if the campaign mode is enabled or not.

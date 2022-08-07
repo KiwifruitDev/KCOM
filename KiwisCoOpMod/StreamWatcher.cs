@@ -15,6 +15,7 @@
 */
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -67,16 +68,20 @@ namespace KiwisCoOpMod
             {
                 if (stream != null)
                 {
-                    byte[] headerBuffer = new byte[10];
-                    await stream.ReadAsync(headerBuffer);
-                    byte[] type = new byte[4] {
-                        headerBuffer[0], headerBuffer[1], headerBuffer[2], headerBuffer[3]
-                    };
-                    string commandType = Encoding.ASCII.GetString(type);
-                    byte length = (byte)(headerBuffer[9] - headerBuffer.Length);
-                    byte[] data = new byte[length];
-                    await stream.ReadAsync(data.AsMemory(0, length));
-                    OnMessageAvailable(new MessageAvailableEventArgs(commandType, data));
+                    try
+                    {
+                        byte[] headerBuffer = new byte[10];
+                        await stream.ReadAsync(headerBuffer);
+                        byte[] type = new byte[4] {
+                            headerBuffer[0], headerBuffer[1], headerBuffer[2], headerBuffer[3]
+                        };
+                        string commandType = Encoding.ASCII.GetString(type);
+                        byte length = (byte)(headerBuffer[9] - headerBuffer.Length);
+                        byte[] data = new byte[length];
+                        await stream.ReadAsync(data.AsMemory(0, length));
+                        OnMessageAvailable(new MessageAvailableEventArgs(commandType, data));
+                    }
+                    catch { }
                 }
             }
         }

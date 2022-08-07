@@ -43,12 +43,13 @@ namespace AlyxGamemode
         ButtonIndexStartPos,
         ButtonPressIndex,
         DoorIndexStartPos,
-        BrokenPropIndex,
+        BrokenProp,
         TriggerIndexStartPos,
         TriggerActivateIndex,
         EntityRemoved,
         EntityFired,
         NPCHealth,
+        KCOMCommand,
     }
     public class Packet
     {
@@ -116,12 +117,13 @@ namespace AlyxGamemode
                 "BUTN" => PacketType.ButtonIndexStartPos,
                 "BPRS" => PacketType.ButtonPressIndex,
                 "DOOR" => PacketType.DoorIndexStartPos,
-                "BRAK" => PacketType.BrokenPropIndex,
+                "BRAK" => PacketType.BrokenProp,
                 "TRIG" => PacketType.TriggerIndexStartPos,
                 "TRGD" => PacketType.TriggerActivateIndex,
                 "EREM" => PacketType.EntityRemoved,
                 "FIRE" => PacketType.EntityFired,
                 "NPHP" => PacketType.NPCHealth,
+                "CMND" => PacketType.KCOMCommand,
                 _ => PacketType.None,
             };
         }
@@ -148,12 +150,13 @@ namespace AlyxGamemode
                 PacketType.ButtonIndexStartPos => "BUTN",
                 PacketType.ButtonPressIndex => "BUTN",
                 PacketType.DoorIndexStartPos => "DOOR",
-                PacketType.BrokenPropIndex => "BRAK",
+                PacketType.BrokenProp => "BRAK",
                 PacketType.TriggerIndexStartPos => "TRIG",
                 PacketType.TriggerActivateIndex => "TRGD",
                 PacketType.EntityRemoved => "EREM",
                 PacketType.EntityFired => "FIRE",
                 PacketType.NPCHealth => "NPHP",
+                PacketType.KCOMCommand => "CMND",
                 _ => "NONE",
             };
         }

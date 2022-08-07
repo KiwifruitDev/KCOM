@@ -38,6 +38,8 @@ namespace KiwisCoOpModCore
         PostResponse,
         ClientOpen,
         ClientClose,
+        Command,
+        Think,
     }
     public static class GamemodeHandler
     {
@@ -60,7 +62,6 @@ namespace KiwisCoOpModCore
         public string? Name { get; set; }
         public string? Description { get; set; }
         public string? Author { get; set; }
-        public bool Default { get; set; }
         public HandleState? State { get; set; }
     }
 }

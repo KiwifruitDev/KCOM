@@ -10,7 +10,7 @@
 
 [![Discord](https://img.shields.io/discord/738131767944282183?label=discord)](https://discord.gg/3X3teNecWs)
 
-[![License](https://img.shields.io/github/license/teampopplio/kcom)](https://github.com/TeamPopplio/KCOM/blob/main/LICENSE.md)
+[![License](https://img.shields.io/badge/license-mit-green.svg)](https://github.com/TeamPopplio/KCOM/blob/main/LICENSE.md)
 
 [![Contributors](https://img.shields.io/github/contributors/teampopplio/kcom)](https://github.com/teampopplio/kcom/graphs/contributors)
 

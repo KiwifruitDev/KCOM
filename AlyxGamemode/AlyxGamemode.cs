@@ -34,7 +34,7 @@ namespace AlyxGamemode
         }
         public AlyxGamemode(GamemodeHandleType type, params object[]? vs)
         {
-            int APIVersion = 3;
+            int APIVersion = 4;
             State = HandleState.Continue;
             bool overrideState = false;
             Random rnd = new Random();
@@ -227,8 +227,8 @@ namespace AlyxGamemode
                                                             Thread thr = new(new ThreadStart(() =>
                                                             {
                                                                 Thread.Sleep(2500);
-                                                                Response vconsoleInput5 = new("command", "play kcom/jingle_up2;unpause;ent_fire kcom_timer addoutput OnTimer>kcom_script>RunScriptFile>kcom_interval>0>-1");
-                                                                Response output4 = new("status", "♫ Co-op initialized!");
+                                                                Response vconsoleInput5 = new("command", "unpause;buddha;ent_fire kcom_timer addoutput OnTimer>kcom_script>RunScriptFile>kcom_interval>0>-1");
+                                                                Response output4 = new("status", "Co-op initialized!");
                                                                 socket.Send(JsonConvert.SerializeObject(output4));
                                                                 socket.Send(JsonConvert.SerializeObject(vconsoleInput5));
                                                             }));
@@ -279,7 +279,9 @@ namespace AlyxGamemode
                                                                 suffix = " - Telling all clients to switch...";
                                                             }
                                                             */
-                                                            Response output2 = new("status", "Detected map: " + packet.args[0] + suffix);
+                                                            Response jingle = new("command", "play kcom/jingle_up2");
+                                                            Response output2 = new("status", "♫ Detected map: " + packet.args[0] + suffix);
+                                                            socket.Send(JsonConvert.SerializeObject(jingle));
                                                             socket.Send(JsonConvert.SerializeObject(output2));
                                                             int gamemodeAPIVersion = int.Parse(packet.args[1]);
                                                             if (gamemodeAPIVersion != APIVersion)

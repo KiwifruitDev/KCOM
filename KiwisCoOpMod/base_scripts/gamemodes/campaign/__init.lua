@@ -22,7 +22,7 @@ local gamemodetype = "campaign"
 
 lua_env.persistence["frozen_players"] = lua_env.persistence["frozen_players"] or {}
 lua_env.persistence["pregame_map"] = lua_env.persistence["pregame_map"] or ""
-lua_env.persistence["pregame_timer"] = lua_env.persistence["pregame_timer"] or 30
+lua_env.persistence["pregame_timer"] = lua_env.persistence["pregame_timer"] or 60
 lua_env.persistence["pregame_timer_display"] = lua_env.persistence["pregame_timer_display"] or 30
 lua_env.persistence["pregame_timer_start"] = lua_env.persistence["pregame_timer_start"] or 0
 lua_env.persistence["pregame_timer_active"] = lua_env.persistence["pregame_timer_active"] or false
@@ -35,7 +35,7 @@ lua_env.handlers[lua_env.persistence["gamemode_campaign"]] = function(handleType
     if handleType == "Server_PreGamemode_PreStart" then
         -- Gamemode initialized
         lua_env.persistence["pregame_map"] = ""
-        lua_env.persistence["pregame_timer"] = 30
+        lua_env.persistence["pregame_timer"] = 60
         lua_env.persistence["pregame_timer_start"] = os.time()
         lua_env.persistence["pregame_timer_active"] = true
         lua_env.persistence["pregame_timer_count"] = 0
@@ -46,7 +46,7 @@ lua_env.handlers[lua_env.persistence["gamemode_campaign"]] = function(handleType
         if not allPlayers or not map then return end
         if map ~= lua_env.persistence["pregame_map"] then
             lua_env.persistence["pregame_map"] = map
-            lua_env.persistence["pregame_timer"] = 30
+            lua_env.persistence["pregame_timer"] = 60
             lua_env.persistence["pregame_timer_start"] = os.time()
             lua_env.persistence["pregame_timer_active"] = true
             lua_env.persistence["pregame_timer_count"] = 0

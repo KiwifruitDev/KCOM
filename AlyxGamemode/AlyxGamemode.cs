@@ -89,7 +89,7 @@ namespace AlyxGamemode
                                                         Player? player = AlyxGlobalData.instance.AddPlayer(client);
                                                         if (player != null)
                                                         {
-                                                            Response output2 = new("status", "♫ " + client.Username + " joined as index " + player.Index);
+                                                            Response output2 = new("status", "♩ " + client.Username + " joined as index " + player.Index);
                                                             Response blip = new("command", "play kcom/blip" + rnd.Next(1, 4));
                                                             connections.ForEach(c =>
                                                             {
@@ -125,30 +125,27 @@ namespace AlyxGamemode
                                                     Player player = pair;
                                                     switch (packet.type)
                                                     {
-                                                        /*
-                                                        case PacketType.PlayerPosAng:
-                                                            player.Origin = new Vector(
+                                                        case PacketType.Teleport:
+                                                            Vector TeleOrigin = new(
                                                                 float.Parse(packet.args[0], CultureInfo.InvariantCulture.NumberFormat),
                                                                 float.Parse(packet.args[1], CultureInfo.InvariantCulture.NumberFormat),
                                                                 float.Parse(packet.args[2], CultureInfo.InvariantCulture.NumberFormat)
                                                             );
-                                                            player.Angles = new Angle(
+                                                            Angle TeleAngles = new(
+                                                                float.Parse(packet.args[3], CultureInfo.InvariantCulture.NumberFormat),
                                                                 float.Parse(packet.args[4], CultureInfo.InvariantCulture.NumberFormat),
-                                                                float.Parse(packet.args[5], CultureInfo.InvariantCulture.NumberFormat),
-                                                                float.Parse(packet.args[6], CultureInfo.InvariantCulture.NumberFormat)
+                                                                float.Parse(packet.args[5], CultureInfo.InvariantCulture.NumberFormat)
                                                             );
-                                                            int health = int.Parse(packet.args[7]);
-                                                            //Response npcmove = new("command", "kcom_setlocation kcom_collider_" + player.Index + " " + player.Origin + " " + player.Angles);
+                                                            Response teleport = new("command", "kcom_teleportangles " + TeleOrigin.X + " " + TeleOrigin.Y + " " + TeleOrigin.Z + " " + TeleAngles.Pitch + " " + TeleAngles.Yaw + " " + TeleAngles.Roll);
                                                             foreach (IndexedClient broadcastClient2 in connections)
                                                             {
                                                                 Player? keyValuePair = AlyxGlobalData.instance.GetPlayer(broadcastClient2.Session.ConnectionInfo.Id);
                                                                 if (keyValuePair != null && broadcastClient2.Session.ConnectionInfo.Id != socket.ConnectionInfo.Id)
                                                                 {
-                                                                    broadcastClient2.Session.Send(JsonConvert.SerializeObject(npcmove));
+                                                                    broadcastClient2.Session.Send(JsonConvert.SerializeObject(teleport));
                                                                 }
                                                             }
                                                             break;
-                                                        */
                                                         case PacketType.HeadPosAng:
                                                             Vector HeadOrigin = new(
                                                                 float.Parse(packet.args[0], CultureInfo.InvariantCulture.NumberFormat),

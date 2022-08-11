@@ -62,7 +62,9 @@ else
                             if oldhealth == nil then
                                 oldhealth = health;
                             end
-                            print("NPHP "..name.." "..health.." KCOM");
+							if oldhealth ~= health then
+                                print("NPHP "..name.." "..health.." KCOM");
+							end
                             kcom_npc_damage_cache[name] = health;
                         end
                     end
@@ -80,6 +82,13 @@ else
         end
     end
 
+    function KCOM_Teleport()
+        local player = Entities:GetLocalPlayer();
+        local origin = player:GetAbsOrigin();
+	    local angles = player:GetAnglesAsVector();
+        print("TELE "..origin[1].." "..origin[2].." "..origin[3].." "..angles[1].." "..angles[2].." "..angles[3].." KCOM");
+    end
+
     function KCOM_EntitySyncSpecific(entity)
         local index = entity:GetName();
         local object = {};
@@ -95,6 +104,9 @@ else
                 end
                 for _, output in pairs(kcom_outputs) do
                     entity:RedirectOutput(output, "KCOM_"..output, thisEntity);
+                end
+                if object.class == "trigger_teleport" then
+                    entity:RedirectOutput("OnTrigger", "KCOM_Teleport", thisEntity);
                 end
             end
         elseif string.find(object.class, "door") then
@@ -145,6 +157,7 @@ else
         ["trigger_once"] = true, -- special case
         ["trigger_look"] = true,
         ["trigger_proximity"] = true,
+        ["trigger_teleport"] = true,
 
         -- buttons
         ["func_button"] = true,
@@ -196,6 +209,7 @@ else
         ["trigger_once"] = {"Disable", "Enable"},
         ["trigger_look"] = {"Disable", "Enable"},
         ["trigger_proximity"] = {"Disable", "Enable"},
+        ["trigger_teleport"] = {"Disable", "Enable"},
 
         ["func_button"] = {"Lock", "Unlock"},
         ["func_physical_button"] = {"Lock", "Unlock"},
@@ -448,10 +462,24 @@ else
         local player = Entities:GetLocalPlayer();
         if player then
             local anchor = player:GetHMDAnchor();
-            if anchor then
+            if player:GetHMDAvatar() then
                 anchor:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
             else
                 player:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+            end
+        end
+    end, "Kiwi's Co-Op Mod", 0);
+
+	Convars:RegisterCommand("kcom_teleportangles", function(command, x, y, z, pitch, yaw, roll)
+        local player = Entities:GetLocalPlayer();
+        if player then
+            local anchor = player:GetHMDAnchor();
+            if player:GetHMDAvatar() then
+                anchor:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+				anchor:SetAbsAngles(Angle(tonumber(pitch), tonumber(yaw), tonumber(roll)));
+            else
+                player:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+				player:SetAbsAngles(Angle(tonumber(pitch), tonumber(yaw), tonumber(roll)));
             end
         end
     end, "Kiwi's Co-Op Mod", 0);

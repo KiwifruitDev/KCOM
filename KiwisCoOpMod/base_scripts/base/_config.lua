@@ -45,6 +45,7 @@ lua_config.client_helptable = {
     "/ping - Check your ping.",
     "/help - This help menu.",
     "/list - List all players on the server.",
+    "/vc - Enter a VConsole command.",
     "--------------------",
 }
 

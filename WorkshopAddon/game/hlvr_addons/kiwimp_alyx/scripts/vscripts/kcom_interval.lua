@@ -96,32 +96,24 @@ else
         object.angles = entity:GetAnglesAsVector();
         object.class = entity:GetClassname();
         object.entity = entity;
-        if string.find(object.class, "trigger_") or string.find(object.class, "func_") then
-            if entcache[index] == nil then
-                if index == "" then
-                    index = "kcom_trigger_"..math.floor(object.origin[1]).."_kcoords_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
-                    entity:SetEntityName(index);
-                end
-                for _, output in pairs(kcom_outputs) do
-                    entity:RedirectOutput(output, "KCOM_"..output, thisEntity);
-                end
-                if object.class == "trigger_teleport" then
-                    entity:RedirectOutput("OnTrigger", "KCOM_Teleport", thisEntity);
-                end
-            end
-        elseif string.find(object.class, "door") then
+        for _, output in pairs(kcom_outputs) do
+            entity:RedirectOutput(output, "KCOM_"..output, thisEntity);
+        end
+        if string.find(object.class, "door") then
             DoEntFireByInstanceHandle(entity, "Unlock", "", 0, nil, nil);
             DoEntFireByInstanceHandle(entity, "DisableLatch", "", 0, nil, nil);
-        elseif entcache[index] ~= nil and not string.find(index, "_kcoords_") then
-            if index == "" then
-                entcache[index] = nil;
-                index = "kcom_object_kcoords_"..math.floor(object.origin[1]).."_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
-                entity:SetEntityName(index);
-            else
-                entcache[index] = nil;
-                index = index .. "_kcoords_"..math.floor(object.origin[1]).."_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
-                entity:SetEntityName(index);
-            end
+        end
+        if object.class == "trigger_teleport" then
+            entity:RedirectOutput("OnStartTouch", "KCOM_Teleport", thisEntity);
+        end
+        if entcache[index] == nil and index == "" then
+            index = "kcom_sync_"..math.floor(object.origin[1]).."_kcoords_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
+            entity:SetEntityName(index);
+        else
+            index = index .. "_kcoords_"..math.floor(object.origin[1]).."_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
+            entity:SetEntityName(index);
+            -- Notify map developers for breaking changes
+            print("[KIWI ERROR] Entity with name '"..entity:GetName().."' already exists. Renaming to '"..index.."'");
         end
         entcache[index] = object;
     end
@@ -158,6 +150,9 @@ else
         ["trigger_look"] = true,
         ["trigger_proximity"] = true,
         ["trigger_teleport"] = true,
+
+        -- logic
+        ["logic_relay"] = true,
 
         -- buttons
         ["func_button"] = true,
@@ -210,6 +205,8 @@ else
         ["trigger_look"] = {"Disable", "Enable"},
         ["trigger_proximity"] = {"Disable", "Enable"},
         ["trigger_teleport"] = {"Disable", "Enable"},
+
+        ["logic_relay"] = {"Disable", "Enable"},
 
         ["func_button"] = {"Lock", "Unlock"},
         ["func_physical_button"] = {"Lock", "Unlock"},

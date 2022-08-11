@@ -44,6 +44,9 @@
 		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\runtimes\win-x64\native\lua54.dll" DestinationFolder="$(ProjectDir)bin\Release" />
 		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\keralua\1.3.1\runtimes\win-x64\native\lua54.dll" DestinationFolder="$(ProjectDir)bin\Debug" />
 	</Target>
+	<ItemGroup>
+	  <BaseLuaScripts Remove="base_scripts\gamemodes\campaign\campaign.lua" />
+	</ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Fleck" Version="1.2.0" />

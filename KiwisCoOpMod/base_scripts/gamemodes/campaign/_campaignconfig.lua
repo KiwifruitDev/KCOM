@@ -18,4 +18,5 @@ lua_config.sub_gamemodes["campaign"] = "Story Mode"
 
 campaign_config = {}
 
+campaign_config.pregame_timer = 60 -- Time in seconds before the game starts
 campaign_config.enabled = true -- Pretty self-explanatory, but this actually tells the server if the campaign mode is enabled or not.

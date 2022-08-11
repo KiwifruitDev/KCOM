@@ -1,6 +1,6 @@
 if kcom_active then
-    KCOM_NPCSync();
-    --if kcom_inbetween >= 5 then
+    if kcom_inbetween >= 5 then
+        KCOM_NPCSync();
         local player = Entities:GetLocalPlayer();
         local playerOrigin = player:GetOrigin();
         local playerCenter = player:GetCenter();
@@ -30,10 +30,10 @@ if kcom_active then
         print("PLYR "..playerOrigin[1].." "..playerOrigin[2].." "..playerOrigin[3].." "..playerAngles[1].." "..playerAngles[2].." "..playerAngles[3].." "..playerHealth.." KCOM");
 
         KCOM_CacheSync();
-        --kcom_inbetween = 0;
-    --else
-        --kcom_inbetween = kcom_inbetween + 1;
-    --end
+        kcom_inbetween = 0;
+    else
+        kcom_inbetween = kcom_inbetween + 1;
+    end
 else
     kcom_api_version = 3; -- this value will change if breaking changes are pushed to workshop
     function KCOM_CacheSync()

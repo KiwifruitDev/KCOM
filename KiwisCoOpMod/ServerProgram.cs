@@ -160,7 +160,7 @@ namespace KiwisCoOpMod
         }
         public void OnClose(IWebSocketConnection socket)
         {
-            foreach(IndexedClient client in connections)
+            foreach(IndexedClient client in connections.ToList())
             {
                 if(client.Session.ConnectionInfo.Id == socket.ConnectionInfo.Id)
                 {

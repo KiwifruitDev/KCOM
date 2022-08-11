@@ -371,7 +371,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                                     print("Invalid player")
                                     return
                                 end
-                                local teleresp = Response("command", "ent_setpos 1 " .. lua_env.persistence["players"][arg1[2]].origin.x .. " " .. lua_env.persistence["players"][arg1[2]].origin.y .. " " .. lua_env.persistence["players"][arg1[2]].origin.z)
+                                local teleresp = Response("command", "setpos_player " .. lua_env.persistence["players"][arg1[2]].origin.x .. " " .. lua_env.persistence["players"][arg1[2]].origin.y .. " " .. lua_env.persistence["players"][arg1[2]].origin.z)
                                 arg2[i].Session:Send(teleresp:ToString())
                                 print("Teleported " .. arg1[1] .. " to " .. arg1[2])
                                 return
@@ -381,7 +381,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                     end
                 end
             else
-                local teleresp = Response("command", "ent_setpos 1 " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
+                local teleresp = Response("command", "setpos_player " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
                 for i = 0, arg2.Count - 1 do
                     if arg2[i].Username == arg1[1] then
                         arg2[i].Session:Send(teleresp:ToString())
@@ -401,7 +401,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
             if arg1.Count < 4 then
                 for i = 0, arg2.Count - 1 do
                     if arg2[i].Username == arg1[1] then
-                        local teleresp = Response("command", "ent_setpos 1 " .. lua_env.persistence["players"][arg1[1]].origin.x .. " " .. lua_env.persistence["players"][arg1[1]].origin.y .. " " .. lua_env.persistence["players"][arg1[1]].origin.z)
+                        local teleresp = Response("command", "setpos_player " .. lua_env.persistence["players"][arg1[1]].origin.x .. " " .. lua_env.persistence["players"][arg1[1]].origin.y .. " " .. lua_env.persistence["players"][arg1[1]].origin.z)
                         for j = 0, arg2.Count - 1 do
                             arg2[j].Session:Send(teleresp:ToString())
                         end
@@ -411,7 +411,7 @@ lua_env.handlers[lua_env.persistence["script_basic"]] = function(handleType, arg
                 end
                 print("Player not found")
             else
-                local teleresp = Response("command", "ent_setpos 1 " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
+                local teleresp = Response("command", "setpos_player " .. arg1[2] .. " " .. arg1[3] .. " " .. arg1[4])
                 for i = 0, arg2.Count - 1 do
                     arg2[i].Session:Send(teleresp:ToString())
                 end

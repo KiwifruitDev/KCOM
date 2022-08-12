@@ -1,7 +1,7 @@
 if kcom_active then
     --if kcom_inbetween >= 5 then
         --kcom_inbetween = 0;
-
+        
         local player = Entities:GetLocalPlayer();
         local playerOrigin = player:GetOrigin();
         local playerCenter = player:GetCenter();
@@ -29,55 +29,69 @@ if kcom_active then
         end
 
         print("PLYR "..playerOrigin[1].." "..playerOrigin[2].." "..playerOrigin[3].." "..playerAngles[1].." "..playerAngles[2].." "..playerAngles[3].." "..playerHealth.." KCOM");
-
+        
         KCOM_CacheSync();
     --else
         --kcom_inbetween = kcom_inbetween + 1;
     --end
 else
+    kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false = true;
     kcom_api_version = 4; -- this value will change if breaking changes are pushed to workshop
 
+    function uuid(name, x, y, z, classname)
+        -- this system ensures that entities always have a unique ID
+        -- it brings the most unique attributes of an entity together
+        return classname.."+"..name.."+"..x.."+"..y.."+"..z;
+    end
+
     function KCOM_CacheSync()
-        for name, object in pairs(entcache) do
-            if object.entity ~= nil and IsValidEntity(object.entity) then
+        for i, object in pairs(entcache) do
+            local entity = object.entity;
+            if IsValidEntity(entity) then
                 if not string.find(object.class, "trigger_") and not string.find(object.class, "func_") then
-                    local origin = object.entity:GetAbsOrigin();
-                    local angles = object.entity:GetAnglesAsVector();
+                    local origin = entity:GetAbsOrigin();
+                    local angles = entity:GetAnglesAsVector();
                     if object.class == "prop_door_rotating_physics" and (math.floor(angles[1]) ~= math.floor(object.angles[1])) or (math.floor(angles[2]) ~= math.floor(object.angles[2])) or (math.floor(angles[3]) ~= math.floor(object.angles[3])) then
-                        print("PHYS "..name.." "..origin[1].." "..origin[2].." "..origin[3].." "..angles[1].." "..angles[2].." "..angles[3].." KCOM");
-                        entcache[name].angles = angles;
+                        print("PHYS "..object.name.." "..origin[1].." "..origin[2].." "..origin[3].." "..angles[1].." "..angles[2].." "..angles[3].." KCOM");
+                        object.angles = angles;
                     elseif (math.floor(origin[1]) ~= math.floor(object.origin[1])) or (math.floor(origin[2]) ~= math.floor(object.origin[2])) or (math.floor(origin[3]) ~= math.floor(object.origin[3])) then
-                        print("PHYS "..name.." "..origin[1].." "..origin[2].." "..origin[3].." "..angles[1].." "..angles[2].." "..angles[3].." KCOM");
-                        entcache[name].origin = origin;
-                        entcache[name].angles = angles;
+                        print("PHYS "..object.name.." "..origin[1].." "..origin[2].." "..origin[3].." "..angles[1].." "..angles[2].." "..angles[3].." KCOM");
+                        object.origin = origin;
+                        object.angles = angles;
                     end
-                    entcache[name] = object;
                     if string.find(object.class, "npc_") or object.class == "generic_actor" then
-                        if not object.entity:IsAlive() then
-                            npccache[name] = nil;
-                            print("NPHP "..name.." 0 KCOM");
-                        else
-                            local health = object.entity:GetHealth();
-                            local oldhealth = kcom_npc_damage_cache[name]
-                            if oldhealth == nil then
-                                oldhealth = health;
-                            end
-							if oldhealth ~= health then
-                                print("NPHP "..name.." "..health.." KCOM");
-							end
-                            kcom_npc_damage_cache[name] = health;
+                        local health = entity:GetHealth();
+                        if health <= 0 then
+                            print("NPHP "..object.name.." 0 KCOM");
+                        elseif object.health ~= health then
+                            print("NPHP "..object.name.." "..health.." KCOM");
+                            object.health = health;
                         end
                     end
                 end
             else
-                if name ~= "" then
+                if object.name ~= "" then
+                    if string.find(object.class, "npc_") or object.class == "generic_actor" then
+                        -- bruteforce npc death
+                        if object.health > 0 then
+                            object.health = 0
+                            print("NPHP "..object.name.." 0 KCOM");
+                        end
+                        object = nil;
+                        return
+                    end
                     if string.find(object.class, "prop_") or string.find(object.class, "item_") then
-                        print("BRAK "..name.." KCOM");
+                        print("BRAK "..object.name.." KCOM");
                     else
-                        print("EREM "..name.." KCOM");
+                        print("EREM "..object.name.." KCOM");
                     end
                 end
-                entcache[name] = nil;
+                object = nil;
+            end
+            if object == nil then
+                entcache[i] = nil;
+            else
+                entcache[i] = object;
             end
         end
     end
@@ -90,46 +104,62 @@ else
     end
 
     function KCOM_EntitySyncSpecific(entity)
-        local index = entity:GetName();
         local object = {};
+        object.name = entity:GetName();
         object.origin = entity:GetAbsOrigin();
         object.angles = entity:GetAnglesAsVector();
         object.class = entity:GetClassname();
-        object.entity = entity;
+        object.model = entity:GetModelName();
+        object.entity = entity; --entity:GetEntityIndex();
+        
         for _, output in pairs(kcom_outputs) do
             entity:RedirectOutput(output, "KCOM_"..output, thisEntity);
         end
+
         if string.find(object.class, "door") then
             DoEntFireByInstanceHandle(entity, "Unlock", "", 0, nil, nil);
             DoEntFireByInstanceHandle(entity, "DisableLatch", "", 0, nil, nil);
         end
+
         if object.class == "trigger_teleport" then
             entity:RedirectOutput("OnStartTouch", "KCOM_Teleport", thisEntity);
         end
-        if entcache[index] == nil and index == "" then
-            index = "kcom_sync_"..math.floor(object.origin[1]).."_kcoords_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
-            entity:SetEntityName(index);
-        else
-            index = index .. "_kcoords_"..math.floor(object.origin[1]).."_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
-            entity:SetEntityName(index);
-            -- Notify map developers for breaking changes
-            print("[KIWI ERROR] Entity with name '"..entity:GetName().."' already exists. Renaming to '"..index.."'");
+
+        if object.name == "" then
+            object.name = "kcom_kcoords_"..math.floor(object.origin[1]).."_"..math.floor(object.origin[2]).."_"..math.floor(object.origin[3]);
         end
-        entcache[index] = object;
+        
+        entity:SetEntityName(object.name);
+        if kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            object.name = uuid(object.name, object.origin[1], object.origin[2], object.origin[3], object.class);
+            entcache[object.name] = object;
+        else
+            entcache[#entcache+1] = object;
+        end
     end
 
-    function KCOM_EntitySync()
-        entcache = {};
-        for prop, _  in pairs(kcom_trackers) do
+    function KCOM_EntitySync(first)
+        if first then
+            entcache = {};
+        end
+        for prop, _ in pairs(kcom_trackers) do
             local props = Entities:FindAllByClassname(prop);
+            local precached = {}
+            if not first then
+                for i, object in pairs(entcache) do
+                    if IsValidEntity(object.entity) then
+                        precached[object.entity:GetEntityIndex()] = true;
+                    else
+                        entcache[i] = nil;
+                    end
+                end
+            end
             for _, entity in pairs(props) do
-                KCOM_EntitySyncSpecific(entity)
+                if (not first and not precached[entity:GetEntityIndex()]) or first then
+                    KCOM_EntitySyncSpecific(entity);
+                end
             end
         end
-    end
-    
-    for _, entity in pairs(Entities:FindAllByClassname("point_template")) do
-        entity:RedirectOutput("OnEntitySpawned", "KCOM_EntitySync", thisEntity);
     end
 
     -- thank you Epic#4527 from the source 2 modding discord!
@@ -165,7 +195,8 @@ else
         ["prop_dry_erase_marker"] = true,
         ["prop_animinteractable"] = true,
         ["prop_door_rotating_physics"] = true,
-        ["prop_handpose"] = true,
+        ["prop_handpose"] = false, -- experimental
+        ["prop_ragdoll"] = true,
         ["prop_animating_breakable"] = true,
 
         -- gameplay
@@ -191,13 +222,14 @@ else
         ["npc_headcrab_runner"] = true,
         ["npc_headcrab_black"] = true,
         ["npc_zombie"] = true,
-        ["npc_zombie_blind"] = true,
+        ["npc_zombie_blind"] = false, -- jeff responds to sound, intentionally disabled for a more fun experience
         ["npc_headcrab"] = true,
         ["npc_combine_s"] = true,
         ["npc_antlion"] = true,
         ["npc_strider"] = true,
         ["generic_actor"] = true,
         ["npc_manhack"] = true,
+        ["npc_barnacle"] = true,
     };
     kcom_toggletypes = {
         ["trigger_multiple"] = {"Disable", "Enable"},
@@ -218,9 +250,10 @@ else
         ["prop_animinteractable"] = {"DisableInteraction", "EnableInteraction"},
         ["prop_door_rotating_physics"] = {"DisableMotion", "EnableMotion"},
         ["prop_animating_breakable"] = {"DisableMotion", "EnableMotion"},
+        ["prop_ragdoll"] = {"DisableMotion", "EnableMotion"},
         --["prop_handpose"] = {"Disable", "Enable"},
-        ["item_healthvial"] = {"DisableMotion", "EnableMotion"},
 
+        ["item_healthvial"] = {"DisableMotion", "EnableMotion"},
         ["item_hlvr_clip_energygun"] = {"DisableMotion", "EnableMotion"},
         ["item_hlvr_clip_energygun_multiple"] = {"DisableMotion", "EnableMotion"},
         ["item_hlvr_clip_rapidfire"] = {"DisableMotion", "EnableMotion"},
@@ -241,9 +274,21 @@ else
 
     function fireit(params, output)
         local ent = params.caller;
+        if not IsValidEntity(ent) then
+            return -- the entity must have been deleted?
+        end
         local name = ent:GetName();
-        if name ~= "" then
-            print("FIRE "..name.." "..output.." KCOM");
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            if name ~= "" then
+                print("FIRE "..name.." "..output.." KCOM");
+            end
+        else
+            local origin = ent:GetAbsOrigin();
+            local class = ent:GetClassname();
+            local uuid = uuid(name, origin[1], origin[2], origin[3], class);
+            if uuid ~= nil then
+                print("FIRE "..uuid.." "..output.." KCOM");
+            end
         end
     end
 
@@ -397,7 +442,6 @@ else
     kcom_righthands = {};
     kcom_text = {};
     kcom_player_count = 16;
-    kcom_npc_damage_cache = {};
     kcom_inbetween = 0;
     entcache = {};
 
@@ -473,51 +517,160 @@ else
             local anchor = player:GetHMDAnchor();
             if player:GetHMDAvatar() then
                 anchor:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
-				anchor:SetAbsAngles(Angle(tonumber(pitch), tonumber(yaw), tonumber(roll)));
+				anchor:SetAbsAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
             else
                 player:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
-				player:SetAbsAngles(Angle(tonumber(pitch), tonumber(yaw), tonumber(roll)));
+				player:SetAbsAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
             end
         end
     end, "Kiwi's Co-Op Mod", 0);
 
     Convars:RegisterCommand("kcom_setlocation", function(command, name, x, y, z, pitch, yaw, roll)
-        local entity = Entities:FindByName(nil, name);
-        if entity ~= nil then
-            local class = entity:GetClassname();
-            if kcom_toggletypes[class] ~= nil then -- TODO: what does this code do? why do you need to re-enable entities?
-                DoEntFireByInstanceHandle(entity, kcom_toggletypes[entity:GetClassname()][1], "", 0, nil, nil);
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(name);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    local class = entity:GetClassname();
+                    if kcom_toggletypes[class] ~= nil then
+                        DoEntFireByInstanceHandle(entity, kcom_toggletypes[class][1], "", 0, nil, nil);
+                    end
+                    entity:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+                    entity:SetAbsAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
+                end
+            end
+        else
+            local object = entcache[name];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
+            if kcom_toggletypes[object.class] ~= nil then
+                DoEntFireByInstanceHandle(entity, kcom_toggletypes[object.class][1], "", 0, nil, nil);
             end
             entity:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
             entity:SetAbsAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
         end
     end, "Kiwi's Co-Op Mod", 0);
 
+    Convars:RegisterCommand("kcom_setlocation_nonuuid", function(command, name, x, y, z, pitch, yaw, roll)
+        local entities = Entities:FindAllByName(name);
+        if entities ~= nil then
+            for _, entity in pairs(entities) do
+                local class = entity:GetClassname();
+                if kcom_toggletypes[class] ~= nil then
+                    DoEntFireByInstanceHandle(entity, kcom_toggletypes[class][1], "", 0, nil, nil);
+                end
+                entity:SetAbsOrigin(Vector(tonumber(x), tonumber(y), tonumber(z)));
+                entity:SetAbsAngles(tonumber(pitch), tonumber(yaw), tonumber(roll));
+            end
+        end
+    end, "Kiwi's Co-Op Mod", 0);
+
     Convars:RegisterCommand("kcom_fireoutput", function(command, name, type)
-        local entity = Entities:FindByName(nil, name);
-        if entity ~= nil then
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(name);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    local class = entity:GetClassname();
+                    if class == "trigger_once" then
+                        -- TODO: trigger_once, does it disable after firing?
+                        DoEntFireByInstanceHandle(entity, "Disable", "", 0, nil, nil);
+                    end
+                    entity:FireOutput(type, player, player, {}, 0);
+                end
+            end
+        else
+            local object = entcache[name];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
             entity:FireOutput(type, player, player, {}, 0);
-            -- TODO: trigger_once, does it disable after firing?
-            --DoEntFireByInstanceHandle(entity, "Disable", "", 0, nil, nil);
         end
     end, "Kiwi's Co-Op Mod", 0);
 
     Convars:RegisterCommand("kcom_grace", function(command, name, type)
-        local entity = Entities:FindByName(nil, name);
-        if entity ~= nil then
-            local class = entity:GetClassname();
-            if kcom_toggletypes[class] ~= nil then
-                DoEntFireByInstanceHandle(entity, kcom_toggletypes[entity:GetClassname()][2], "", 0, nil, nil);
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(name);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    local class = entity:GetClassname();
+                    if kcom_toggletypes[class] ~= nil then
+                        DoEntFireByInstanceHandle(entity, kcom_toggletypes[class][2], "", 0, nil, nil);
+                    end
+                end
+            end
+        else
+            local object = entcache[name];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
+            if kcom_toggletypes[object.class] ~= nil then
+                DoEntFireByInstanceHandle(entity, kcom_toggletypes[object.class][2], "", 0, nil, nil);
             end
         end
     end, "Kiwi's Co-Op Mod", 0);
 
     Convars:RegisterCommand("kcom_npc_sethealth", function(command, name, health)
-        local entity = Entities:FindByName(nil, name);
-        if entity ~= nil then
-            --DoEntFireByInstanceHandle(entity, "StopTemporaryRagdoll", "", 0, nil, nil);
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(name);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    local curhealth = entity:GetHealth();
+                    if curhealth <= 0 then return end
+                    entity:SetHealth(tonumber(health));
+                    local newhealth = entity:GetHealth();
+                    if newhealth < curhealth then
+                        StartSoundEvent("DamageNPC.Bullet", Entities:GetLocalPlayer());
+                    end
+                    if newhealth <= 0 then
+                        entity:SetHealth(0);
+                        StartSoundEvent("Combat.PlayerKilledNPC", Entities:GetLocalPlayer());
+                        DoEntFireByInstanceHandle(entity, "BecomeRagdoll", "", 0, nil, nil);
+                    end
+                end
+                --DoEntFireByInstanceHandle(entity, "StopTemporaryRagdoll", "", 0, nil, nil);
+                --DoEntFireByInstanceHandle(entity, "BecomeTemporaryRagdoll", "", 0, nil, nil);
+            end
+        else
+            local object = entcache[name];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
+            local curhealth = entity:GetHealth();
+            if curhealth <= 0 then return end
             entity:SetHealth(tonumber(health));
-            --DoEntFireByInstanceHandle(entity, "BecomeTemporaryRagdoll", "", 0, nil, nil);
+            local newhealth = entity:GetHealth();
+            if newhealth < curhealth then
+                StartSoundEvent("DamageNPC.Bullet", Entities:GetLocalPlayer());
+            end
+            if newhealth <= 0 then
+                entity:SetHealth(0);
+                StartSoundEvent("Combat.PlayerKilledNPC", Entities:GetLocalPlayer());
+                DoEntFireByInstanceHandle(entity, "BecomeRagdoll", "", 0, nil, nil);
+            end
+        end
+    end, "Kiwi's Co-Op Mod", 0);
+
+    Convars:RegisterCommand("kcom_break", function(command, name)
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(name);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    DoEntFireByInstanceHandle(entity, "Break", "", 0, nil, nil);
+                end
+            end
+        else
+            local object = entcache[name];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
+            DoEntFireByInstanceHandle(entity, "Break", "", 0, nil, nil);
+        end
+    end, "Kiwi's Co-Op Mod", 0);
+
+    Convars:RegisterCommand("kcom_sethealth", function(command, health)
+        local player = Entities:GetLocalPlayer();
+        if player then
+            player:SetHealth(tonumber(health));
         end
     end, "Kiwi's Co-Op Mod", 0);
 
@@ -525,7 +678,29 @@ else
         print("CMND "..kcomcommand.." KCOM");
     end, "Kiwi's Co-Op Mod", 0);
 
+    Convars:RegisterCommand("kcom_cache_entity", function(command, cacheent)
+        if not kcom_use_uuids_for_entities_yes_i_understand_the_consequences_if_this_is_false then
+            local entities = Entities:FindAllByName(cacheent);
+            if entities ~= nil then
+                for _, entity in pairs(entities) do
+                    if IsValidEntity(entity) then
+                        KCOM_EntitySyncSpecific(entity);
+                    end
+                end
+            end
+        else
+            local object = entcache[cacheent];
+            if not object then return end
+            local entity = object.entity;
+            if not IsValidEntity(entity) then return end
+            KCOM_EntitySyncSpecific(entity);
+        end
+    end, "Kiwi's Co-Op Mod", 0);
+
+    Convars:RegisterCommand("kcom_cache_all_entities", function(command)
+        KCOM_EntitySync(false)
+    end, "Kiwi's Co-Op Mod", 0);
+
     print("MAPN "..GetMapName().." "..kcom_api_version.." KCOM");
-    
-    KCOM_EntitySync();
+    KCOM_EntitySync(true);
 end

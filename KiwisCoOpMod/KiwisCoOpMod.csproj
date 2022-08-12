@@ -28,12 +28,18 @@
   
 	<ItemGroup>
     <BaseLuaScripts Include="$(ProjectDir)base_scripts\**\*.*" />
+	<BaseCheckpoints Include="$(ProjectDir)base_checkpoints\**\*.*" />
  	</ItemGroup>
 	<Target Name="CopyDLLs" AfterTargets="Build">
 		<MakeDir Directories="$(ProjectDir)bin\Release\scripts" />
 		<Copy SourceFiles="@(BaseLuaScripts)" DestinationFiles="$(ProjectDir)bin\Release\scripts\%(RecursiveDir)%(Filename)%(Extension)" />
 		<MakeDir Directories="$(ProjectDir)bin\Debug\scripts" />
 		<Copy SourceFiles="@(BaseLuaScripts)" DestinationFiles="$(ProjectDir)bin\Debug\scripts\%(RecursiveDir)%(Filename)%(Extension)" />
+
+		<MakeDir Directories="$(ProjectDir)bin\Release\scripts" />
+		<Copy SourceFiles="@(BaseCheckpoints)" DestinationFiles="$(ProjectDir)bin\Release\checkpoints\%(RecursiveDir)%(Filename)%(Extension)" />
+		<MakeDir Directories="$(ProjectDir)bin\Debug\scripts" />
+		<Copy SourceFiles="@(BaseCheckpoints)" DestinationFiles="$(ProjectDir)bin\Debug\checkpoints\%(RecursiveDir)%(Filename)%(Extension)" />
 
 		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\nlua\1.6.0\lib\net6.0\NLua.dll" DestinationFolder="$(ProjectDir)bin\Release\libraries" />
 		<Copy SourceFiles="$(USERPROFILE)\.nuget\packages\nlua\1.6.0\lib\net6.0\NLua.dll" DestinationFolder="$(ProjectDir)bin\Debug\libraries" />

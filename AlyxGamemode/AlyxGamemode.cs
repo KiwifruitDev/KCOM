@@ -125,6 +125,17 @@ namespace AlyxGamemode
                                                     Player player = pair;
                                                     switch (packet.type)
                                                     {
+                                                        case PacketType.Spawn:
+                                                            Response spawn = new("command", "ent_create " + packet.args[0] + " {targetname \"" + packet.args[1] + "\" origin \"" + packet.args[2] + " " + packet.args[3] + " " + packet.args[4] + "\"}");
+                                                            foreach (IndexedClient broadcastClient2 in connections)
+                                                            {
+                                                                Player? keyValuePair = AlyxGlobalData.instance.GetPlayer(broadcastClient2.Session.ConnectionInfo.Id);
+                                                                if (keyValuePair != null && broadcastClient2.Session.ConnectionInfo.Id != socket.ConnectionInfo.Id)
+                                                                {
+                                                                    broadcastClient2.Session.Send(JsonConvert.SerializeObject(spawn));
+                                                                }
+                                                            }
+                                                            break;
                                                         case PacketType.Teleport:
                                                             Vector TeleOrigin = new(
                                                                 float.Parse(packet.args[0], CultureInfo.InvariantCulture.NumberFormat),
@@ -215,7 +226,7 @@ namespace AlyxGamemode
                                                             }
                                                             break;
                                                         case PacketType.Initialization:
-                                                            Response vconsoleInput2 = new("command", "ent_create logic_script {targetname kcom_script};ent_create logic_timer {targetname kcom_timer refiretime 0.01};echo IENT KCOM");
+                                                            Response vconsoleInput2 = new("command", "ent_create logic_script {targetname kcom_script vscripts kcom_interval};ent_create logic_timer {targetname kcom_timer refiretime 0.01};echo IENT KCOM");
                                                             Response output3 = new("status", "Initializing co-op...");
                                                             socket.Send(JsonConvert.SerializeObject(output3));
                                                             socket.Send(JsonConvert.SerializeObject(vconsoleInput2));
@@ -224,7 +235,7 @@ namespace AlyxGamemode
                                                             Thread thr = new(new ThreadStart(() =>
                                                             {
                                                                 Thread.Sleep(2500);
-                                                                Response vconsoleInput5 = new("command", "buddha 1;unpause;ent_fire kcom_timer addoutput OnTimer>kcom_script>RunScriptFile>kcom_interval>0>-1");
+                                                                Response vconsoleInput5 = new("command", "buddha 1;unpause;ent_fire kcom_timer addoutput OnTimer>kcom_script>CallScriptFunction>KiwisCoOpMod>0>-1");
                                                                 Response output4 = new("status", "Co-op initialized!");
                                                                 socket.Send(JsonConvert.SerializeObject(output4));
                                                                 socket.Send(JsonConvert.SerializeObject(vconsoleInput5));
@@ -286,6 +297,7 @@ namespace AlyxGamemode
                                                                 Response versionOutput = new("status", "Version mismatch! This client reports API version " + APIVersion + ", gamemode reported API version " + gamemodeAPIVersion + ". Please update the client and respective Workshop addons.");
                                                                 socket.Send(JsonConvert.SerializeObject(versionOutput));
                                                             }
+                                                            Map.map = packet.args[0];
                                                             break;
                                                         case PacketType.ButtonIndexStartPos:
                                                         case PacketType.ButtonPressIndex:

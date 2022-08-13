@@ -18,6 +18,9 @@
 
 lua_config = {}
 
+-- The sub-gamemode name currently loaded.
+lua_config.sub_gamemode = "campaign"
+
 -- An introduction message to be sent to a player when they join the server
 lua_config.client_introduction_message = {
     "-----------------------------",

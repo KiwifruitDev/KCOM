@@ -1,4 +1,4 @@
---[[
+﻿/*
     Kiwi's Co-Op Mod for Half-Life: Alyx
     Copyright (c) 2022 KiwifruitDev
     All rights reserved.
@@ -12,18 +12,18 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
     -----------------------------------------------------------------------------
-]]--
+*/
 
-campaign_config = {}
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-campaign_config.gamemodetype = "campaign"
-campaign_config.pregame_timer = 60 -- Time in seconds before the game starts
-campaign_config.checkpoints = true -- Enable checkpoints
-campaign_config.respawn = true -- Enable respawning
-
-campaign_config.sharing = {}
-campaign_config.sharing.resin = false -- Share resin with other players
-campaign_config.sharing.ammo = false -- Share ammo with other players
-campaign_config.sharing.health = false -- Share health with other players
-
-lua_config.sub_gamemodes[campaign_config.gamemodetype] = "Story Mode"
+namespace KiwisCoOpModCore
+{
+    public static class Map
+    {
+        public static string map = "";
+    }
+}

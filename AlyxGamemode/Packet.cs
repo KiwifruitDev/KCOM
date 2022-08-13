@@ -52,6 +52,7 @@ namespace AlyxGamemode
         KCOMCommand,
         Teleport,
         TemplateEntity,
+        Spawn,
     }
     public class Packet
     {
@@ -128,6 +129,7 @@ namespace AlyxGamemode
                 "CMND" => PacketType.KCOMCommand,
                 "TELE" => PacketType.Teleport,
                 "TENT" => PacketType.TemplateEntity,
+                "SPWN" => PacketType.Spawn,
                 _ => PacketType.None,
             };
         }
@@ -163,6 +165,7 @@ namespace AlyxGamemode
                 PacketType.KCOMCommand => "CMND",
                 PacketType.Teleport => "TELE",
                 PacketType.TemplateEntity => "TENT",
+                PacketType.Spawn => "SPWN",
                 _ => "NONE",
             };
         }

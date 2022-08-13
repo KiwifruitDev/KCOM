@@ -32,7 +32,6 @@ namespace KiwisCoOpMod
     public class ServerProgram
     {
         public static readonly ServerProgram instance = new();
-        public string map = "";
         public WebSocketServer? wss;
         public List<IndexedClient> connections = new() { };
         public Type? gamemodeType;
@@ -42,12 +41,12 @@ namespace KiwisCoOpMod
         public bool executeThink = false;
         public void Tick()
         {
-            PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
-            LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_Think, tickrate, connections, map);
-            if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.Think, tickrate, connections, map) == HandleState.Continue)
+            PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_Think, tickrate, connections, Map.map);
+            LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_Think, tickrate, connections, Map.map);
+            if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.Think, tickrate, connections, Map.map) == HandleState.Continue)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
-                LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_Think, tickrate, connections, map);
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_Think, tickrate, connections, Map.map);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_Think, tickrate, connections, Map.map);
             }
         }
         public void Start(Type type, List<Type> plugins)
@@ -58,11 +57,11 @@ namespace KiwisCoOpMod
                 LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreStart);
                 if (GamemodeHandler.Handle(type, GamemodeHandleType.PreStart) == HandleState.Continue)
                 {
-                    map = Settings.Default.ServerMap;
+                    Map.map = Settings.Default.ServerMap;
                     this.plugins = plugins;
 
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreStart, type, plugins, map);
-                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreStart, type, plugins, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreStart, type, plugins, Map.map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreStart, type, plugins, Map.map);
 
                     gamemodeType = type;
                     wss = new WebSocketServer("ws://[::]:" + Settings.Default.ServerPort);
@@ -74,12 +73,12 @@ namespace KiwisCoOpMod
                     });
                     if (gamemodeType != null)
                     {
-                        Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, "Starting " + gamemodeType.Name + " gamemode on map " + map + " with port " + Settings.Default.ServerPort));
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, map);
-                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, map);
+                        Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, "Starting " + gamemodeType.Name + " gamemode on map " + Map.map + " with port " + Settings.Default.ServerPort));
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, Map.map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostStart, gamemodeType, plugins, Map.map);
                         GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostStart, gamemodeType, plugins);
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
-                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, map);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, Map.map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostStart, gamemodeType, plugins, Map.map);
                     }
                     executeThink = true;
                     // Tick/thinking
@@ -101,15 +100,15 @@ namespace KiwisCoOpMod
             {
                 if (gamemodeType != null)
                 {
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, map);
-                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, Map.map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreClose, gamemodeType, plugins, Map.map);
                     if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreClose, wss) == HandleState.Continue)
                     {
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, map);
-                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, map);
-                        GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostClose, gamemodeType, plugins, map);
-                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, map);
-                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, map);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, Map.map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostClose, gamemodeType, plugins, Map.map);
+                        GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostClose, gamemodeType, plugins, Map.map);
+                        PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, Map.map);
+                        LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostClose, gamemodeType, plugins, Map.map);
                     }
                 }
                 Program.userInterface.Invoke(() => Program.userInterface.LogToOutput(channel, "Closing server on port " + Settings.Default.ServerPort));
@@ -119,7 +118,7 @@ namespace KiwisCoOpMod
         }
         public void ChangeMap(string map)
         {
-            this.map = map;
+            Map.map = map;
             Response output2 = new("command", "addon_play "+map+"; addon_tools_map "+map);
             foreach (IndexedClient con in connections)
             {
@@ -202,12 +201,12 @@ namespace KiwisCoOpMod
             Response ? response = JsonConvert.DeserializeObject<Response>(message);
             if (gamemodeType != null && response != null && response.type != null)
             {
-                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map);
-                LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, map);
-                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, map) == HandleState.Continue)
+                PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, Map.map);
+                LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PreResponse, response, connections, socket, Map.map);
+                if (GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PreResponse, response, connections, socket, Map.map) == HandleState.Continue)
                 {
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map);
-                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, Map.map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PreResponse, response, connections, socket, Map.map);
                     switch (response.type.ToLower())
                     {
                         case "client":
@@ -244,9 +243,9 @@ namespace KiwisCoOpMod
                                             Response output2 = new("authenticated")
                                             {
                                                 clientUsername = response.clientUsername,
-                                                map = map,
+                                                map = Map.map,
                                             };
-                                            IndexedClient client = new(socket, response.clientUsername, map);
+                                            IndexedClient client = new(socket, response.clientUsername, Map.map);
                                             connections.Add(client);
                                             socket.Send(JsonConvert.SerializeObject(output2));
                                             OnOpen(socket);
@@ -346,11 +345,11 @@ namespace KiwisCoOpMod
                             //socket.Close();
                             break;
                     }
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map);
-                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, map);
-                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, map);
-                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map);
-                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, Map.map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PreGamemode_PostResponse, response, connections, socket, Map.map);
+                    GamemodeHandler.Handle(gamemodeType, GamemodeHandleType.PostResponse, response, connections, socket, Map.map);
+                    PluginHandler.Handle(plugins, PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, Map.map);
+                    LuaEnvironment.instance.Handle(PluginHandleType.Server_PostGamemode_PostResponse, response, connections, socket, Map.map);
                 }
             }
         }

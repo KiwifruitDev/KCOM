@@ -34,7 +34,6 @@ namespace KiwisCoOpMod
         private bool killed = false;
         private List<byte[]> commandQueue = new();
         private StreamWatcher? watcher;
-        private int vcAmount;
         public VConsole()
         {
         }

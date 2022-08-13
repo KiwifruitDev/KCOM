@@ -50,6 +50,9 @@ namespace AlyxGamemode
         EntityFired,
         NPCHealth,
         KCOMCommand,
+        Teleport,
+        TemplateEntity,
+        Spawn,
     }
     public class Packet
     {
@@ -124,6 +127,9 @@ namespace AlyxGamemode
                 "FIRE" => PacketType.EntityFired,
                 "NPHP" => PacketType.NPCHealth,
                 "CMND" => PacketType.KCOMCommand,
+                "TELE" => PacketType.Teleport,
+                "TENT" => PacketType.TemplateEntity,
+                "SPWN" => PacketType.Spawn,
                 _ => PacketType.None,
             };
         }
@@ -157,6 +163,9 @@ namespace AlyxGamemode
                 PacketType.EntityFired => "FIRE",
                 PacketType.NPCHealth => "NPHP",
                 PacketType.KCOMCommand => "CMND",
+                PacketType.Teleport => "TELE",
+                PacketType.TemplateEntity => "TENT",
+                PacketType.Spawn => "SPWN",
                 _ => "NONE",
             };
         }

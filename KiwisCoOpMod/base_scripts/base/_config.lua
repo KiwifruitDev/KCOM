@@ -18,6 +18,9 @@
 
 lua_config = {}
 
+-- The sub-gamemode name currently loaded.
+lua_config.sub_gamemode = "campaign"
+
 -- An introduction message to be sent to a player when they join the server
 lua_config.client_introduction_message = {
     "-----------------------------",
@@ -45,6 +48,7 @@ lua_config.client_helptable = {
     "/ping - Check your ping.",
     "/help - This help menu.",
     "/list - List all players on the server.",
+    "/vc - Enter a VConsole command.",
     "--------------------",
 }
 

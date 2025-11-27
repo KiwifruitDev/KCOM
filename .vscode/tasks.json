@@ -1,0 +1,72 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "watch",
+            "type": "shell",
+            "command": "${workspaceFolder}\\KiwisCoOpMod\\bin\\x64\\debug\\net6.0-windows\\KiwisCoOpMod.exe",
+            "options":
+            {
+                "cwd": "${workspaceFolder}\\KiwisCoOpMod\\bin\\x64\\debug\\net6.0-windows",
+            }
+        },
+        {
+            "label": "build",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}\\KiwisCoOpMod\\KiwisCoOpMod.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/p:Configuration=Debug",
+                "/p:Platform=x64",
+                "/p:DefineConstants=DEBUG KIWIFRUITDEV",
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "publish",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "build",
+                "${workspaceFolder}\\KiwisCoOpMod\\KiwisCoOpMod.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/p:Configuration=Release",
+                "/p:Platform=x64",
+                "/p:DefineConstants=RELEASE KIWIFRUITDEV",
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "restore",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "restore",
+                "${workspaceFolder}\\KiwisCoOpMod\\KiwisCoOpMod.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/p:Platform=x64",
+            ],
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "label": "clean",
+            "command": "dotnet",
+            "type": "process",
+            "args": [
+                "clean",
+                "${workspaceFolder}\\KiwisCoOpMod\\KiwisCoOpMod.csproj",
+                "/property:GenerateFullPaths=true",
+                "/consoleloggerparameters:NoSummary",
+                "/p:Platform=x64",
+            ],
+            "problemMatcher": "$msCompile"
+        }
+    ]
+}

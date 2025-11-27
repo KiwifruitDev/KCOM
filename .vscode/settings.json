@@ -1,0 +1,4 @@
+{
+    "cmake.configureOnOpen": false,
+    "dotnet.defaultSolution": "${workspaceFolder}/KiwisCoOpMod/KiwisCoOpMod.sln"
+}

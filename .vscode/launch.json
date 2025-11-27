@@ -1,0 +1,27 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Build and Launch (Debug)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceFolder}/KiwisCoOpMod/bin/x64/debug/net6.0-windows/KiwisCoOpMod.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/KiwisCoOpMod/bin/x64/debug/net6.0-windows",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        },
+        {
+            "name": "Build and Launch (Release)",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "publish",
+            "program": "${workspaceFolder}/KiwisCoOpMod/bin/x64/release/net6.0-windows/KiwisCoOpMod.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/KiwisCoOpMod/bin/x64/release/net6.0-windows",
+            "console": "internalConsole",
+            "stopAtEntry": false
+        }
+    ]
+}
